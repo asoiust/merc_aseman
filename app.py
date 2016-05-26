@@ -22,8 +22,12 @@ def link_extractor(my_html):
 def make_list(my_list):
     result = []
     for item in my_list:
-        result.append(item.text)
+        result.append(item.text.replace('\t', '').replace('\n', '').replace('\r', ''))
     return result
+
+
+def string_corrector(string):
+    return string.replace('\t', '').replace('\n', '').replace('\r', '')
 
 
 def scrapper_first_layer(page):
@@ -39,9 +43,11 @@ def go_in_link(url):
     request = requests.get(url)
     content = request.content
     result = dict()
-    result.update({'title':get_title(content),'price':get_price(content),
+    result.update({'title':get_title(content),'purchase_price': get_purchase_price(content),
                    'details':get_details(content), 'description':get_description(content),
-                   'tags':get_tags(content),'overall':get_overall(content),'date':get_rdate(content)})
+                   'tags':get_tags(content),'overall':get_overall(content),'date':get_rdate(content),
+                   'discount': get_discount(content), 'before_discount_original': get_before_discount(content),
+                   'after_discount': get_after_discount(content)})
     result.update(system_req(content))
     return result
 
@@ -49,7 +55,7 @@ def go_in_link(url):
 def get_title(content):
     soup = BeautifulSoup(content, "lxml")
     game_title = soup.find_all("div",{"class":"apphub_AppName"},True)
-    return game_title[0].text.encode("utf-8").decode('utf-8')
+    return string_corrector(game_title[0].text.encode("utf-8").decode('utf-8'))
 
 
 def system_req(content):
@@ -92,28 +98,28 @@ def system_req(content):
     return result
 
 
-def get_price(content):
+def get_purchase_price(content):
     soup = BeautifulSoup(content, "lxml")
     price = soup.find_all("div",{"class":"game_purchase_price"},True)
-    return price[0].text.encode("utf-8")
+    return string_corrector(price[0].text.encode("utf-8"))
 
 
 def get_details(content):
     soup = BeautifulSoup(content, "lxml")
     details = soup.find_all("div",{"class":"details_block"},True)
-    return details[0].text.encode("utf-8")
+    return string_corrector(details[0].text.encode("utf-8"))
 
 
 def get_description(content):
     soup = BeautifulSoup(content, "lxml")
     description = soup.find_all("div",{"class":"game_description_snippet"},True)
-    return description[0].text.encode("utf-8")
+    return string_corrector(description[0].text.encode("utf-8"))
 
 
 def get_overall(content):
     soup = BeautifulSoup(content, "lxml")
     overall = soup.find_all("span",{"class":"game_review_summary positive"},True)
-    return overall[0].text.encode("utf-8")
+    return string_corrector(overall[0].text.encode("utf-8"))
 
 
 def get_tags(content):
@@ -125,15 +131,37 @@ def get_tags(content):
 def get_rdate(content):
     soup = BeautifulSoup(content, "lxml")
     rdate = soup.find_all("span",{"class":"date"},True)
-    return rdate[0].text.encode("utf-8")
+    return string_corrector(rdate[0].text.encode("utf-8"))
 
 
 def get_discount(content):
-    soup = BeautifulSoup(content, "lxml")
-    discount = soup.find_all("span",{"class":"date"},True)
-    return discount[0].text.encode("utf-8")
+    try:
+        soup = BeautifulSoup(content, "lxml")
+        discount = soup.find_all("div",{"class":"discount_pct"},True)
+        return string_corrector(discount[0].text.encode("utf-8"))
+    except:
+        return '$none$'
 
-print go_in_link(scrapper_first_layer('1')[0])
-#print go_in_link('http://store.steampowered.com/app/292030/?snr=1_7_7_230_150_1')
-#div.discount_pct
 
+def get_before_discount(content):
+    try:
+        soup = BeautifulSoup(content, "lxml")
+        before = soup.find_all("div",{"class":"discount_original_price"},True)
+        return string_corrector(before[0].text.encode("utf-8"))
+    except:
+        return '$none$'
+
+
+def get_after_discount(content):
+    try:
+        soup = BeautifulSoup(content, "lxml")
+        after = soup.find_all("div",{"class":"discount_final_price"},True)
+        return string_corrector(after[0].text.encode("utf-8"))
+    except:
+        return '$none$'
+
+
+#print go_in_link(scrapper_first_layer('1')[0])
+#print go_in_link('http://store.steampowered.com/app/292030/?snr=1_7_7_230_150_1')#  HANDLE SYS REQUIRE
+#print go_in_link('http://store.steampowered.com/agecheck/app/359870/?snr=1_7_7_230_150_1') #####  HANDLE ALL DEFS
+#.replace('\t','')
