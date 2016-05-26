@@ -23,9 +23,22 @@ def scrapper_first_layer(page):
     url = 'http://store.steampowered.com/search/results?sort_by=_ASC&tags=-1&category1=998&page=%s&snr=1_7_7_230_7' % (page,)
     request = requests.get(url)
     content = request.content
-    print url
     soup = BeautifulSoup(content, "lxml")
     my_html = soup.find_all("a",{"class":"search_result_row ds_collapse_flag"},True)
     return link_extractor(my_html)
 
-#print scrapper_first_layer('2')
+
+def go_in_link(url):
+    request = requests.get(url)
+    content  = request.content
+    result = dict()
+    result.update({'title':get_title(content)})
+
+
+def get_title(content):
+    soup = BeautifulSoup(content, "lxml")
+    game_title = soup.find_all("div",{"class":"apphub_AppName"},True)
+    return game_title[0].text.encode("utf-8")
+
+content = go_in_link(scrapper_first_layer('1')[0])
+print get_title(content)
