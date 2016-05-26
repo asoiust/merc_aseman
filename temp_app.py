@@ -80,7 +80,8 @@ def go_in_link(url):
                    'details':get_details(content), 'description':get_description(content),
                    'tags':get_tags(content),'overall':get_overall(content),'date':get_rdate(content),
                    'discount': get_discount(content), 'before_discount_original': get_before_discount(content),
-                   'after_discount': get_after_discount(content), 'statistics': get_statistics(content)})
+                   'after_discount': get_after_discount(content), 'statistics': get_statistics(content),
+                   'url': url})
     try:
         result.update(system_req(content))
     except TypeError:
