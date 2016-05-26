@@ -91,46 +91,44 @@ def get_title(content):
 
 
 def system_req(content):
+    soup = BeautifulSoup(content, "lxml")
+    os = soup.find_all("div", {"data-os":"win"},True)
+    details_string = os[0].text.encode("utf-8").replace("\r", ": ")              # All details in a string
+    minimum_system_str = details_string.split("\n\n\n\nRecommended")[0]
     try:
-        soup = BeautifulSoup(content, "lxml")
-        os = soup.find_all("div", {"data-os":"win"},True)
-        details_string = os[0].text.encode("utf-8").replace("\r", ": ")              # All details in a string
-        minimum_system_str = details_string.split("\n\n\n\nRecommended")[0]
+        recommended_system_str = details_string.split("\n\n\n\nRecommended")[1]
+    except IndexError:
+        recommended_system_str = ""
+    result = dict()                             # The result dictionary
+    minimum_system_list = minimum_system_str.split(": ")
+    recommended_system_list = recommended_system_str.split(": ")
+    # minimum system Requirements section
+    # list of attributes names
+    list_of_attr = ["OS", "Processor", "Memory", "Graphics", "DirectX", "Storage", "Additional Notes"]
+    # list of minimum attributes names .
+    min_attr_name = ["min_os", "min_processor", "min_memory", "min_graphics", "min_directx", "min_storage", "min_notes"]
+    loop_counter = 0
+    for attr in list_of_attr:
         try:
-            recommended_system_str = details_string.split("\n\n\n\nRecommended")[1]
-        except IndexError:
-            recommended_system_str = ""
-        minimum_system_list = minimum_system_str.split(": ")
-        recommended_system_list = recommended_system_str.split(": ")
-        # minimum system Requirements
-        min_os = minimum_system_list[minimum_system_list.index("OS") + 1]
-        min_processor = minimum_system_list[minimum_system_list.index("Processor") + 1]
-        min_memory = minimum_system_list[minimum_system_list.index("Memory") + 1]
-        min_graphics = minimum_system_list[minimum_system_list.index("Graphics") + 1]
-        min_directx = minimum_system_list[minimum_system_list.index("DirectX") + 1]
-        min_storage = minimum_system_list[minimum_system_list.index("Storage") + 1]
-        min_notes= minimum_system_list[minimum_system_list.index("Additional Notes") + 1]
+            pre_result = [minimum_system_list[minimum_system_list.index(attr) + 1]]
+        except TypeError:
+            pre_result = [None]
+        result.update({min_attr_name[loop_counter]: pre_result})                # Add result to the result dict
+        loop_counter += 1
 
-
-        # result dictionary
-        result = {"min_os": min_os, "min_processor": min_processor, "min_memory": min_memory, "min_graphics": min_graphics}
-        result.update({"min_directs": min_directx, "min_storage": min_storage, "min_notes": min_notes})
-
-        # recommended system Requirements
-        if recommended_system_list:
-            rec_os = recommended_system_list[recommended_system_list.index("OS") + 1]
-            rec_processor = recommended_system_list[recommended_system_list.index("Processor") + 1]
-            rec_memory = recommended_system_list[recommended_system_list.index("Memory") + 1]
-            rec_graphics = recommended_system_list[recommended_system_list.index("Graphics") + 1]
-            rec_directx = recommended_system_list[recommended_system_list.index("DirectX") + 1]
-            rec_storage = recommended_system_list[recommended_system_list.index("Storage") + 1]
-            rec_notes = recommended_system_list[recommended_system_list.index("Additional Notes") + 1]
+    # recommended system Requirements
+    loop_counter = 0                                        # Restart counting
+    if recommended_system_list:
+        rec_attr_name = ["rec_os", "rec_processor", "rec_memory", "rec_graphics", "rec_directx", "rec_storage", "rec_notes"]
+        for attr in list_of_attr:
+            try:
+                pre_result = recommended_system_list[recommended_system_list.index("Processor") + 1]
+            except TypeError:
+                pre_result = None
             # Add to the result
-            result = {"rec_os": rec_os, "rec_processor": rec_processor, "rec_memory": rec_memory, "rec_graphics": rec_graphics}
-            result.update({"rec_directs": rec_directx, "rec_storage": rec_storage, "rec_notes": rec_notes})
-        return result
-    except:
-        return {'system_req': 'no access'}
+            result.update({rec_attr_name[loop_counter]: pre_result})
+            loop_counter += 1
+    return result
 
 
 def get_purchase_price(content):
