@@ -32,13 +32,25 @@ def go_in_link(url):
     request = requests.get(url)
     content  = request.content
     result = dict()
-    result.update({'title':get_title(content)})
-
+    result.update({'title':get_title(content),'os':system_req(content),'price':get_price(content)})
+    return result
 
 def get_title(content):
     soup = BeautifulSoup(content, "lxml")
     game_title = soup.find_all("div",{"class":"apphub_AppName"},True)
-    return game_title[0].text.encode("utf-8")
+    return game_title[0].text.encode("utf-8").decode('utf-8')
 
-content = go_in_link(scrapper_first_layer('1')[0])
-print get_title(content)
+
+def system_req(content):
+    soup = BeautifulSoup(content, "lxml")
+    os = soup.find_all("div",{"data-os":"win"},True)
+    return os[0].text.encode("utf-8")
+
+def get_price(content):
+    soup = BeautifulSoup(content, "lxml")
+    os = soup.find_all("div",{"data-os":"win"},True)
+    return os[0].text.encode("utf-8")
+
+
+
+print go_in_link(scrapper_first_layer('1')[0])
