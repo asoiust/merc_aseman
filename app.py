@@ -37,12 +37,12 @@ def scrapper_first_layer(page):
 
 def go_in_link(url):
     request = requests.get(url)
-    content  = request.content
+    content = request.content
     result = dict()
-    result.update({'title':get_title(content),'sys':system_req(content),'price':get_price(content),
+    result.update({'title':get_title(content),'price':get_price(content),
                    'details':get_details(content), 'description':get_description(content),
                    'tags':get_tags(content),'overall':get_overall(content),'date':get_rdate(content)})
-
+    result.update(system_req(content))
     return result
 
 
@@ -54,8 +54,42 @@ def get_title(content):
 
 def system_req(content):
     soup = BeautifulSoup(content, "lxml")
-    os = soup.find_all("div",{"data-os":"win"},True)
-    return os[0].text.encode("utf-8")
+    os = soup.find_all("div", {"data-os":"win"},True)
+    details_string = os[0].text.encode("utf-8").replace("\r", ": ")              # All details in a string
+    minimum_system_str = details_string.split("\n\n\n\nRecommended")[0]
+    try:
+        recommended_system_str = details_string.split("\n\n\n\nRecommended")[1]
+    except IndexError:
+        recommended_system_str = ""
+    minimum_system_list = minimum_system_str.split(": ")
+    recommended_system_list = recommended_system_str.split(": ")
+    # minimum system Requirements
+    min_os = minimum_system_list[minimum_system_list.index("OS") + 1]
+    min_processor = minimum_system_list[minimum_system_list.index("Processor") + 1]
+    min_memory = minimum_system_list[minimum_system_list.index("Memory") + 1]
+    min_graphics = minimum_system_list[minimum_system_list.index("Graphics") + 1]
+    min_directx = minimum_system_list[minimum_system_list.index("DirectX") + 1]
+    min_storage = minimum_system_list[minimum_system_list.index("Storage") + 1]
+    min_notes= minimum_system_list[minimum_system_list.index("Additional Notes") + 1]
+
+
+    # result dictionary
+    result = {"min_os": min_os, "min_processor": min_processor, "min_memory": min_memory, "min_graphics": min_graphics}
+    result.update({"min_directs": min_directx, "min_storage": min_storage, "min_notes": min_notes})
+
+    # recommended system Requirements
+    if recommended_system_list:
+        rec_os = recommended_system_list[recommended_system_list.index("OS") + 1]
+        rec_processor = recommended_system_list[recommended_system_list.index("Processor") + 1]
+        rec_memory = recommended_system_list[recommended_system_list.index("Memory") + 1]
+        rec_graphics = recommended_system_list[recommended_system_list.index("Graphics") + 1]
+        rec_directx = recommended_system_list[recommended_system_list.index("DirectX") + 1]
+        rec_storage = recommended_system_list[recommended_system_list.index("Storage") + 1]
+        rec_notes = recommended_system_list[recommended_system_list.index("Additional Notes") + 1]
+        # Add to the result
+        result = {"rec_os": rec_os, "rec_processor": rec_processor, "rec_memory": rec_memory, "rec_graphics": rec_graphics}
+        result.update({"rec_directs": rec_directx, "rec_storage": rec_storage, "rec_notes": rec_notes})
+    return result
 
 
 def get_price(content):
@@ -99,7 +133,7 @@ def get_discount(content):
     discount = soup.find_all("span",{"class":"date"},True)
     return discount[0].text.encode("utf-8")
 
-#print go_in_link(scrapper_first_layer('1')[0])
-print go_in_link('http://store.steampowered.com/app/292030/?snr=1_7_7_230_150_1')
+print go_in_link(scrapper_first_layer('1')[0])
+#print go_in_link('http://store.steampowered.com/app/292030/?snr=1_7_7_230_150_1')
 #div.discount_pct
 
