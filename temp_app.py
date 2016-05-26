@@ -2,6 +2,7 @@
 import threading
 import requests
 from bs4 import BeautifulSoup
+from database import *
 
 
 class thread_scrap(threading.Thread):
@@ -37,7 +38,10 @@ def scrapper(page=1):
             t.start()
     for l in second_layer_threads:
         l.join()
-        results.append(l.get_result())
+        # results.append(l.get_result())
+        print l.get_result()
+        print 'kir'
+        print add_game(l.get_result())
     return results
 
 

@@ -33,18 +33,21 @@ def create_game_table():
         connection_obj = MySql.connection()
         with connection_obj:
             cursor = connection_obj.cursor()
-            cursor.execute("CREATE TABLE IF NOT EXISTS games(id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,title VARCHAR NOT NULL ,"
-                           "url VARCHAR NOT NULL,description VARCHAR,user_tags VARCHAR,overall VARCHAR,statics VARCHAR,"
-                           "release_date DATE,original_price VARCHAR,discount VARCHAR,min_os VARCHAR,min_processor VALUE,"
-                           "min_memory VARCHAR,min_graphics VARCHAR,min_directx VARCHAR,min_storage VARCHAR,min_notes VARCHAR"
-                           ",req_directx VARCHAR,req_storage VARCHAR,req_notes VARCHAR,req_os VARCHAR,req_processor VALUE,"
-                           "req_memory VARCHAR,req_graphics VARCHAR)")
+            cursor.execute("CREATE TABLE IF NOT EXISTS games(id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,"
+                           "title VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci,"
+                           "url VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci,"
+                           "description VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci,"
+                           "user_tags VARCHAR(255),overall VARCHAR(255),statics VARCHAR(255),"
+                           "release_date DATE,original_price VARCHAR(255),discount VARCHAR(255),min_os VARCHAR(255),min_processor VARCHAR(255),"
+                           "min_memory VARCHAR(255),min_graphics VARCHAR(255),min_directx VARCHAR(255),min_storage VARCHAR(255),min_notes VARCHAR(255)"
+                           ",req_directx VARCHAR(255),req_storage VARCHAR(255),req_notes VARCHAR(255),req_os VARCHAR(255),req_processor VARCHAR(255),"
+                           "req_memory VARCHAR(255),req_graphics VARCHAR(255))")
             connection_obj.commit()
     except Exception as e:
         print(e)
 
 
-def add_game(title, url, **args):
+def add_game(kwargs):
     """
     | This function adds a new game in to the database;
     | if game add correctly, returns True, If title or url is None, returns False and if any problem occurs
@@ -56,31 +59,28 @@ def add_game(title, url, **args):
     """
     try:
         connection_obj = MySql.connection()
-        if title is None or url is None:
-            return False
         with connection_obj:
             cursor = connection_obj.cursor()
-            cols = ["description", "user_tags", "overall", "statics", "release_date", "original_price", "discount"]
+            cols = ["title", "url", "description", "user_tags", "overall", "statics", "release_date", "original_price", "discount"]
             cols += ["min_os", "min_processor", "min_memory", "min_graphics", "min_directx", "min_storage", "min_notes"]
-            cols += ["req_directx", "req_storage", "req_notes", "req_os", "req_processor", "req_memory", "req_graphics"]
-            args_keys = tuple(args.keys())
+            cols += ["rec_directx", "rec_storage", "rec_notes", "rec_os", "rec_processor", "rec_memory", "rec_graphics"]
+            kwargs_keys = tuple(kwargs.keys())
             for col_name in cols:
-                if col_name not in args_keys:
-                    args.update({col_name: None})
-            query_tuple = (title, url)
-            for col_name in args_keys:
-                query_tuple += (args[col_name])
+                if col_name not in kwargs_keys:
+                    kwargs.update({col_name: None})
+            query_tuple = tuple()
+            for col_name in kwargs_keys:
+                query_tuple += (kwargs[col_name])
             into_string = ""
-            for key in args_keys:
+            for key in kwargs_keys:
                 into_string += key
             cursor.execute(
-                "INSERT INTO games("+ into_string + ") VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", query_tuple)
+                "INSERT INTO games(" + into_string + ") VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", query_tuple)
             connection_obj.commit()
             return True
     except Exception as e:
         print(e)
         return -1
-
 
 
 def get_all_game():
@@ -94,3 +94,5 @@ def get_all_game():
     except Exception as e:
         print(e)
         return -1
+
+create_game_table()
