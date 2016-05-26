@@ -38,7 +38,7 @@ def scrapper(page=1):
     for l in second_layer_threads:
         l.join()
         results.append(l.get_result())
-    print results
+    return results
 
 
 def link_extractor(my_html):
@@ -77,7 +77,10 @@ def go_in_link(url):
                    'tags':get_tags(content),'overall':get_overall(content),'date':get_rdate(content),
                    'discount': get_discount(content), 'before_discount_original': get_before_discount(content),
                    'after_discount': get_after_discount(content), 'statistics': get_statistics(content)})
-    result.update(system_req(content))
+    try:
+        result.update(system_req(content))
+    except TypeError:
+        pass
     return result
 
 
@@ -93,7 +96,10 @@ def get_title(content):
 def system_req(content):
     soup = BeautifulSoup(content, "lxml")
     os = soup.find_all("div", {"data-os":"win"},True)
-    details_string = os[0].text.encode("utf-8").replace("\r", ": ")              # All details in a string
+    try:
+        details_string = os[0].text.encode("utf-8").replace("\r", ": ")              # All details in a string
+    except Exception:
+        return
     minimum_system_str = details_string.split("\n\n\n\nRecommended")[0]
     try:
         recommended_system_str = details_string.split("\n\n\n\nRecommended")[1]
@@ -111,7 +117,7 @@ def system_req(content):
     for attr in list_of_attr:
         try:
             pre_result = [minimum_system_list[minimum_system_list.index(attr) + 1]]
-        except TypeError:
+        except ValueError:
             pre_result = [None]
         result.update({min_attr_name[loop_counter]: pre_result})                # Add result to the result dict
         loop_counter += 1
@@ -123,7 +129,7 @@ def system_req(content):
         for attr in list_of_attr:
             try:
                 pre_result = recommended_system_list[recommended_system_list.index("Processor") + 1]
-            except TypeError:
+            except ValueError:
                 pre_result = None
             # Add to the result
             result.update({rec_attr_name[loop_counter]: pre_result})
@@ -226,4 +232,4 @@ def get_statistics(content):
 #print go_in_link('http://store.steampowered.com/agecheck/app/359870/?snr=1_7_7_230_150_1') #####  HANDLE ALL DEFS
 #.replace('\t','')
 #span.class : nonresponsive_hidden responsive_reviewdesc
-scrapper(1)
+print scrapper(1)
