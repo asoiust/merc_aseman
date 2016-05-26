@@ -47,7 +47,7 @@ def go_in_link(url):
                    'details':get_details(content), 'description':get_description(content),
                    'tags':get_tags(content),'overall':get_overall(content),'date':get_rdate(content),
                    'discount': get_discount(content), 'before_discount_original': get_before_discount(content),
-                   'after_discount': get_after_discount(content)})
+                   'after_discount': get_after_discount(content), 'statistics': get_statistics(content)})
     result.update(system_req(content))
     return result
 
@@ -161,7 +161,15 @@ def get_after_discount(content):
         return '$none$'
 
 
-#print go_in_link(scrapper_first_layer('1')[0])
+def get_statistics(content):
+    try:
+        soup = BeautifulSoup(content, "lxml")
+        statistics = soup.find_all("span",{"class":"nonresponsive_hidden responsive_reviewdesc"},True)
+        return string_corrector(statistics[0].text.encode("utf-8"))
+    except:
+        return 'code10'
+print go_in_link(scrapper_first_layer('1')[0])
 #print go_in_link('http://store.steampowered.com/app/292030/?snr=1_7_7_230_150_1')#  HANDLE SYS REQUIRE
 #print go_in_link('http://store.steampowered.com/agecheck/app/359870/?snr=1_7_7_230_150_1') #####  HANDLE ALL DEFS
 #.replace('\t','')
+#span.class : nonresponsive_hidden responsive_reviewdesc
