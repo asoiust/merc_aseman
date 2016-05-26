@@ -23,7 +23,6 @@ def scrapper(page=1):
     results = []
     first_layer_threads = []
     second_layer_threads = []
-    final_links = []
     for i in range(1, page+1):
         t = thread_scrap(scrapper_first_layer, str(i))
         first_layer_threads.append(t)
@@ -31,8 +30,15 @@ def scrapper(page=1):
     for j in first_layer_threads:
         j.join()
         link_in_pages.append(j.get_result())
-
-    print link_in_pages
+    for k in range(len(link_in_pages)):
+        for link in link_in_pages[k]:
+            t = thread_scrap(go_in_link, link)
+            second_layer_threads.append(t)
+            t.start()
+    for l in second_layer_threads:
+        l.join()
+        results.append(l.get_result())
+    print results
 
 
 def link_extractor(my_html):
@@ -222,4 +228,4 @@ def get_statistics(content):
 #print go_in_link('http://store.steampowered.com/agecheck/app/359870/?snr=1_7_7_230_150_1') #####  HANDLE ALL DEFS
 #.replace('\t','')
 #span.class : nonresponsive_hidden responsive_reviewdesc
-scrapper(2)
+scrapper(1)
