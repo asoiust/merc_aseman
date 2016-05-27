@@ -83,6 +83,23 @@ def create_summary_table():
         print(e)
 
 
+def check_game_exists(url):
+    """
+    | This function gets url and if a game with same url exists return that's id number in a tuple.
+    :param url:
+    :return: tuple|int
+    """
+    try:
+        connection_obj = MySql.connection()
+        with connection_obj:
+            cursor = connection_obj.cursor()
+            cursor.execute("SELECT id FROM games WHERE url = %s", (url,))
+            return cursor.fetchone()
+    except Exception as e:
+        print(e)
+        return -1
+
+
 def add_game(kwargs):
     """
     | This function adds a new game in to the database;
@@ -94,6 +111,7 @@ def add_game(kwargs):
     :return: bool|int
     """
     # try:
+    print kwargs
     if kwargs['title'] == "code1":
         return False
     connection_obj = MySql.connection()
@@ -195,7 +213,6 @@ def add_summary(input_list):
                 cursor.execute("INSERT INTO summary(title,release_date,discount,price,final_price) VALUES(%s,%s,%s,%s,%s)",
                                (title, release_date, discount, price, final_price))
                 connection_onj.commit()
-
 
 
 def check_user(username, password):

@@ -457,9 +457,13 @@ def extractor(my_list):
         discount += item['discount']
     return [url, discount, title, price, rdate]
 
+
 #print first_layer_pages_scrapper(3)
+
+# print first_layer_pages_scrapper(3)
+
 #print go_in_first_page(1)
-#print go_in_link(scrapper_first_layer('1')[2])
+# print go_in_link(scrapper_first_layer('1')[2])
 
 #print go_in_first_page(1)
 
@@ -470,7 +474,7 @@ def extractor(my_list):
 #.replace('\t','')
 #span.class : nonresponsive_hidden responsive_reviewdesc
 
-#print scrapper(1)
+print scrapper(10)
 
 #print scrapper(1)
 #print final(2)
