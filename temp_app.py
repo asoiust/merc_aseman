@@ -2,7 +2,7 @@
 import threading
 import requests
 from bs4 import BeautifulSoup
-from database import *
+#from database import *
 
 
 class thread_scrap(threading.Thread):
@@ -39,8 +39,8 @@ def scrapper(page=1):
     for l in second_layer_threads:
         l.join()
         # results.append(l.get_result())
-        print l.get_result()
-        print 'kir'
+        #print l.get_result()
+        #print 'kir'
         print add_game(l.get_result())
     return results
 
@@ -232,9 +232,80 @@ def get_statistics(content):
         return 'code8'
 
 
+
+###############################################################################################
+#FIRST LAYER
+
+def discount_lister(dis_list):
+    result = []
+    for item in dis_list:
+        if item.text == u'':       #########dorostesh kon
+            result.append("0%")
+        else:
+            result.append(string_corrector(item.text))
+    return result
+
+
+def go_in_first_page(page):
+    page = str(page)
+    url = 'http://store.steampowered.com/search/results?sort_by=_ASC&tags=-1&category1=998&page=%s&snr=1_7_7_230_7' % (page,)
+    request = requests.get(url)
+    content = request.content
+    result = dict()
+    result.update({'title': get_title_first(content), 'rdate': get_rdate_first(content),
+                   'price': get_price_first(content), 'discount': get_discount_first(content) })
+    return result
+
+
+def get_title_first(content):
+    try:
+        soup = BeautifulSoup(content, "lxml")
+        title = soup.find_all("span",{"class":"title"},True)
+        return make_list(title)
+    except:
+        return 'code9'
+
+
+def get_rdate_first(content):
+    try:
+        soup = BeautifulSoup(content, "lxml")
+        rdate = soup.find_all("div",{"class":"col search_released responsive_secondrow"},True)
+        return make_list(rdate)
+    except:
+        return 'code10'
+
+
+def get_price_first(content):
+    try:
+        soup = BeautifulSoup(content, "lxml")
+        price = soup.find_all("div",{"class":"col search_price_discount_combined responsive_secondrow"},True)
+        return make_list(price)
+    except:
+        return 'code11'
+
+
+def get_discount_first(content):
+    try:
+        soup = BeautifulSoup(content, "lxml")
+        discount = soup.find_all("div",{"class":"col search_discount responsive_secondrow"},True)
+        return discount_lister(discount)
+    except:
+        return 'code12'
+print go_in_first_page(1)
+'''
+game title : span.title
+release date : div.col search_released responsive_secondrow     # First div with this classes
+price : #parent div : div.col search_price_discount_combined responsive_secondrow
+#container div class  : div.col search_price  responsive_secondrow
+release date : div.col search_released responsive_secondrow   #first div
+discount : span child of second div.col search_discount responsive_secondrow
+before discount price: span.style="color: #888888;"
+price : last div.col search_price discounted responsive_secondrow
+'''
 #print go_in_link(scrapper_first_layer('1')[0])
 #print go_in_link('http://store.steampowered.com/app/292030/?snr=1_7_7_230_150_1')#  HANDLE SYS REQUIRE
 #print go_in_link('http://store.steampowered.com/agecheck/app/359870/?snr=1_7_7_230_150_1') #####  HANDLE ALL DEFS
 #.replace('\t','')
 #span.class : nonresponsive_hidden responsive_reviewdesc
-print scrapper(1)
+#print scrapper(1)
+#print str((repr(u'')))
