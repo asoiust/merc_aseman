@@ -181,9 +181,12 @@ def add_user(username, email, password):
         connection_obj = MySql.connection()
         with connection_obj:
             cursor = connection_obj.cursor()
+            if not check_user_with_email(email) and not check_user_with_username(username):
+                return False
             cursor.execute("INSERT INTO users(user_name,password,email) VALUES(%s,%s,%s) IF user_name != %s AND"
                            " email != %s", (username, password, email, username, email))
             connection_obj.commit()
+            return True
     except Exception as e:
         print(e)
         return -1
