@@ -78,7 +78,6 @@ def go_in_link(url):
                    'user_tags':get_tags(content),'overall':get_overall(content),'release_date':get_rdate(content),
                    'discount': get_discount(content), 'original_price': get_before_discount(content),
                    'after_discount': get_after_discount(content), 'url': url})
-    print get_statistics(content)
     result.update(get_statistics(content))
     try:
         result.update(system_req(content))
@@ -192,9 +191,12 @@ def get_tags(content):
 
 def get_rdate(content):
     try:
+        months_name = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
         soup = BeautifulSoup(content, "lxml")
         rdate = soup.find_all("span",{"class":"date"},True)
-        return string_corrector(rdate[0].text.encode("utf-8"))
+        date_list= string_corrector(rdate[0].text.encode("utf-8")).split(" ")
+        result = date_list[2] + "-" + str(months_name.index(months_name[1]) + 1) + "-" + date_list[0]
+        return result
     except:
         return 'code7'
 
@@ -226,7 +228,7 @@ def get_after_discount(content):
         after = soup.find_all("div", {"class": "discount_final_price"},True)
         after_string = string_corrector((after[0].text.encode("utf-8"))).split(" ")[0]
         after_string = after_string.replace("$", "")
-        return string_corrector(after[0].text.encode("utf-8"))
+        return after_string
     except Exception:
         return '0'
 
@@ -235,19 +237,14 @@ def get_statistics(content):
     try:
         soup = BeautifulSoup(content, "lxml")
         statistics = soup.find_all("span", {"class": "nonresponsive_hidden responsive_reviewdesc"},True)
-        print statistics
         statics_list = string_corrector((statistics[0].text.encode("utf-8"))).split(" ")
         try:
             percent = statics_list[1].replace("%", "")
         except IndexError:
-            print "KIR"
-            print statics_list
             percent = "0"
         try:
             reviews = statics_list[4].replace(",", "")
         except IndexError:
-            print "KIR"
-            print statics_list
             reviews = "0"
         return {"statics": percent, "reviews": reviews}
     except:
@@ -337,8 +334,8 @@ before discount price: span.style="color: #888888;"
 price : last div.col search_price discounted responsive_secondrow
 '''
 # print go_in_link(scrapper_first_layer('1')[0])
-#print go_in_link('http://store.steampowered.com/app/292030/?snr=1_7_7_230_150_1')#  HANDLE SYS REQUIRE
-#print go_in_link('http://store.steampowered.com/agecheck/app/359870/?snr=1_7_7_230_150_1') #####  HANDLE ALL DEFS
+# print go_in_link('http://store.steampowered.com/app/292030/?snr=1_7_7_230_150_1')#  HANDLE SYS REQUIRE
+# print go_in_link(1'http://store.steampowered.com/agecheck/app/359870/?snr=1_7_7_230_150_1') #####  HANDLE ALL DEFS
 #.replace('\t','')
 #span.class : nonresponsive_hidden responsive_reviewdesc
 print scrapper(1)
