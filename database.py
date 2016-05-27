@@ -160,7 +160,9 @@ def get_all_game():
 
 def add_summary(input_list):
     connection_onj = MySql.connection()
+    print input_list
     for input_dict in input_list:
+        print input_dict
         limit = len(input_dict['title'])
         with connection_onj:
             for counter in range(limit):
@@ -182,13 +184,15 @@ def add_summary(input_list):
                     final_price = price[1].encode('utf-8')
                 release = input_dict['rdate'][counter]
                 months_name = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-                date_list = release[0].encode("utf-8").split(" ")
-                release_date = date_list[2] + "-" + str(months_name.index(date_list[1]) + 1) + "-" + date_list[0]
+                date_list = release.encode("utf-8").split(" ")
+                print "KKKK"
+                print date_list
+                release_date = date_list[2] + "-" + str(months_name.index(date_list[1].replace(',', "")) + 1) + "-" + date_list[0]
 
                 # Send to the database
 
                 cursor = connection_onj.cursor()
-                cursor.execute("INSERT INTO summary(title,release_date,discount,price,final_price)",
+                cursor.execute("INSERT INTO summary(title,release_date,discount,price,final_price) VALUES(%s,%s,%s,%s,%s)",
                                (title, release_date, discount, price, final_price))
                 connection_onj.commit()
 
