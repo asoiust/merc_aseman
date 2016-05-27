@@ -54,8 +54,8 @@ def scrapper(page=1):
         l.join()
         #results.append(l.get_result())
         add_game(l.get_result())
-    return results
-
+    #return results
+    return True
 
 def link_extractor(my_html):
     result = []
