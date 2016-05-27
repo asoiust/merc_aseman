@@ -78,8 +78,8 @@ def go_in_link(url):
     result = dict()
     result.update({'title':get_title(content),'purchase_price': get_purchase_price(content),
                    'details':get_details(content), 'description':get_description(content),
-                   'tags':get_tags(content),'overall':get_overall(content),'date':get_rdate(content),
-                   'discount': get_discount(content), 'before_discount_original': get_before_discount(content),
+                   'user_tags':get_tags(content),'overall':get_overall(content),'release_date':get_rdate(content),
+                   'discount': get_discount(content), 'original_price': get_before_discount(content),
                    'after_discount': get_after_discount(content), 'statistics': get_statistics(content),
                    'url': url})
     try:
