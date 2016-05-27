@@ -158,38 +158,39 @@ def get_all_game():
         return -1
 
 
-def add_summary(input_dict):
-    limit = len(input_dict['title'])
+def add_summary(input_list):
     connection_onj = MySql.connection()
-    with connection_onj:
-        for counter in range(limit):
-            title = input_dict['title'][counter].encode('utf-8')
-            url = input_dict['url'][counter].encode('utf-8')
-            discount = input_dict['discount'][counter].encode('utf-8')
-            if discount:
-                discount = discount.replace("-", "").replace("%", "")           # Remove useless characters from discount
-            price = input_dict['price'][counter]
-            if len(price) == 1:
-                price = price[0].encode('utf-8')
-                final_price = "0"
-                if price == 'Free To Play':
-                    price = "0"
+    for input_dict in input_list:
+        limit = len(input_dict['title'])
+        with connection_onj:
+            for counter in range(limit):
+                title = input_dict['title'][counter].encode('utf-8')
+                url = input_dict['url'][counter].encode('utf-8')
+                discount = input_dict['discount'][counter].encode('utf-8')
+                if discount:
+                    discount = discount.replace("-", "").replace("%", "")           # Remove useless characters from discount
+                price = input_dict['price'][counter]
+                if len(price) == 1:
+                    price = price[0].encode('utf-8')
+                    final_price = "0"
+                    if price == 'Free To Play':
+                        price = "0"
+                    else:
+                        price = price.replace("$", "")
                 else:
-                    price = price.replace("$", "")
-            else:
-                price = price[0].encode('utf-8')
-                final_price = price[1].encode('utf-8')
-            release = input_dict['rdate'][counter]
-            months_name = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-            date_list = release[0].encode("utf-8").split(" ")
-            release_date = date_list[2] + "-" + str(months_name.index(date_list[1]) + 1) + "-" + date_list[0]
+                    price = price[0].encode('utf-8')
+                    final_price = price[1].encode('utf-8')
+                release = input_dict['rdate'][counter]
+                months_name = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+                date_list = release[0].encode("utf-8").split(" ")
+                release_date = date_list[2] + "-" + str(months_name.index(date_list[1]) + 1) + "-" + date_list[0]
 
-            # Send to the database
+                # Send to the database
 
-            cursor = connection_onj.cursor()
-            cursor.execute("INSERT INTO summary(title,release_date,discount,price,final_price)",
-                           (title, release_date, discount, price, final_price))
-            connection_onj.commit()
+                cursor = connection_onj.cursor()
+                cursor.execute("INSERT INTO summary(title,release_date,discount,price,final_price)",
+                               (title, release_date, discount, price, final_price))
+                connection_onj.commit()
 
 
 
