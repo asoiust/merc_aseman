@@ -2,7 +2,7 @@
 import threading
 import requests
 from bs4 import BeautifulSoup
-from database import *
+#from database import *
 
 
 class thread_scrap(threading.Thread):
@@ -11,6 +11,20 @@ class thread_scrap(threading.Thread):
         self.arg = arg
         self.func = func
         self.result = []
+
+    def run(self):
+        self.result = self.func(self.arg)
+
+    def get_result(self):
+        return self.result
+
+
+class second_leyer_thread(threading.Thread):
+    def __init__(self, func, arg):
+        threading.Thread.__init__(self)
+        self.arg = arg
+        self.func = func
+        self.result = None
 
     def run(self):
         self.result = self.func(self.arg)
@@ -38,7 +52,8 @@ def scrapper(page=1):
             t.start()
     for l in second_layer_threads:
         l.join()
-        add_game(l.get_result())
+        results.append(l.get_result())
+        #add_game(l.get_result())
     return results
 
 
@@ -69,18 +84,36 @@ def scrapper_first_layer(page):
     return link_extractor(my_html)
 
 
+def threaded_calculator_one(content):
+    functions = [get_title, get_purchase_price, get_details,
+                 get_description, get_tags, get_overall, get_rdate
+                 , get_discount, get_before_discount, get_after_discount,
+                 get_statistics, system_req]
+    result = []
+    threads = []
+    for item in functions:
+        t = second_leyer_thread(item, content)
+        threads.append(t)
+        t.start()
+    for j in threads:
+        j.join()
+        result.append(j.get_result())
+    return result
+
+
 def go_in_link(url):
     request = requests.get(url)
     content = request.content
+    funcs = threaded_calculator_one(content)
     result = dict()
-    result.update({'title':get_title(content),'purchase_price': get_purchase_price(content),
-                   'details':get_details(content), 'description':get_description(content),
-                   'user_tags':get_tags(content),'overall':get_overall(content),'release_date':get_rdate(content),
-                   'discount': get_discount(content), 'original_price': get_before_discount(content),
-                   'after_discount': get_after_discount(content), 'url': url})
-    result.update(get_statistics(content))
+    result.update({'title':funcs[0],'purchase_price': funcs[1],
+                   'details':funcs[2], 'description':funcs[3],
+                   'user_tags':funcs[4],'overall':funcs[5],'release_date':funcs[6],
+                   'discount': funcs[7], 'original_price': funcs[8],
+                   'after_discount': funcs[9], 'url': url})
+    result.update(funcs[10])
     try:
-        result.update(system_req(content))
+        result.update(funcs[11])
     except TypeError:
         pass
     return result
@@ -276,15 +309,29 @@ def price_lister(pr_list):
             result.append(item)
     return result
 
+def threaded_calculator_two(content):
+    functions = [get_title_first, get_rdate_first, get_price_first, get_discount_first]
+    result = []
+    threads = []
+    for item in functions:
+        t = second_leyer_thread(item, content)
+        threads.append(t)
+        t.start()
+    for j in threads:
+        j.join()
+        result.append(j.get_result())
+    return result
+
 
 def go_in_first_page(page):
     page = str(page)
     url = 'http://store.steampowered.com/search/results?sort_by=_ASC&tags=-1&category1=998&page=%s&snr=1_7_7_230_7' % (page,)
     request = requests.get(url)
     content = request.content
+    funcs =threaded_calculator_two(content)
     result = dict()
-    result.update({'title': get_title_first(content), 'rdate': get_rdate_first(content),
-                   'price': get_price_first(content), 'discount': get_discount_first(content) })
+    result.update({'title': funcs[0], 'rdate': funcs[1],
+                   'price': funcs[2], 'discount': funcs[3]})
     return result
 
 
@@ -322,21 +369,14 @@ def get_discount_first(content):
         return discount_lister(discount)
     except:
         return 'code12'
-# print go_in_first_page(1)
-'''
-game title : span.title
-release date : div.col search_released responsive_secondrow     # First div with this classes
-price : #parent div : div.col search_price_discount_combined responsive_secondrow
-#container div class  : div.col search_price  responsive_secondrow
-release date : div.col search_released responsive_secondrow   #first div
-discount : span child of second div.col search_discount responsive_secondrow
-before discount price: span.style="color: #888888;"
-price : last div.col search_price discounted responsive_secondrow
-'''
-# print go_in_link(scrapper_first_layer('1')[0])
+
+
+
+#print go_in_first_page(1)
+print go_in_link(scrapper_first_layer('1')[2])
 # print go_in_link('http://store.steampowered.com/app/292030/?snr=1_7_7_230_150_1')#  HANDLE SYS REQUIRE
 # print go_in_link(1'http://store.steampowered.com/agecheck/app/359870/?snr=1_7_7_230_150_1') #####  HANDLE ALL DEFS
 #.replace('\t','')
 #span.class : nonresponsive_hidden responsive_reviewdesc
-print scrapper(1)
+#print scrapper(1)
 #print str((repr(u'')))
