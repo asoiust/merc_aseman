@@ -39,9 +39,9 @@ def scrapper(page=1):
     for l in second_layer_threads:
         l.join()
         # results.append(l.get_result())
-        #print l.get_result()
-        #print 'kir'
-        print add_game(l.get_result())
+        print l.get_result()
+        print 'kir'
+        #print add_game(l.get_result())
     return results
 
 
@@ -78,8 +78,8 @@ def go_in_link(url):
     result = dict()
     result.update({'title':get_title(content),'purchase_price': get_purchase_price(content),
                    'details':get_details(content), 'description':get_description(content),
-                   'user_tags':get_tags(content),'overall':get_overall(content),'release_date':get_rdate(content),
-                   'discount': get_discount(content), 'original_price': get_before_discount(content),
+                   'tags':get_tags(content),'overall':get_overall(content),'date':get_rdate(content),
+                   'discount': get_discount(content), 'before_discount_original': get_before_discount(content),
                    'after_discount': get_after_discount(content), 'statistics': get_statistics(content),
                    'url': url})
     try:
@@ -239,10 +239,22 @@ def get_statistics(content):
 def discount_lister(dis_list):
     result = []
     for item in dis_list:
-        if item.text == u'':       #########dorostesh kon
+        if item.text == '':       #########dorostesh kon
             result.append("0%")
         else:
             result.append(string_corrector(item.text))
+    return result
+
+
+def price_lister(pr_list):
+    result = []
+    for item in pr_list:
+        item = str(string_corrector(item.text))
+        splited = item.split('%')
+        if len(splited) == 2:
+            result.append((splited[1].split("$")[1],splited[1].split("$")[2]))
+        else:
+            result.append(item)
     return result
 
 
@@ -279,7 +291,7 @@ def get_price_first(content):
     try:
         soup = BeautifulSoup(content, "lxml")
         price = soup.find_all("div",{"class":"col search_price_discount_combined responsive_secondrow"},True)
-        return make_list(price)
+        return price_lister(price)
     except:
         return 'code11'
 
