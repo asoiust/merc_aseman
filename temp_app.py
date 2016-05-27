@@ -232,16 +232,26 @@ def get_after_discount(content):
 
 
 def get_statistics(content):
-    # try:
-    soup = BeautifulSoup(content, "lxml")
-    statistics = soup.find_all("span",{"class":"nonresponsive_hidden responsive_reviewdesc"},True)
-    print statistics[0]
-    statics_list = string_corrector((statistics[0].text.encode("utf-8"))).split(" ")
-    percent = statics_list[1].replace("%", "")
-    reviews = statics_list[4].replace(",", "")
-    return {"statics": percent, "reviews": reviews}
-    # except:
-    #     return {"statics": 0, "reviews": 0}
+    try:
+        soup = BeautifulSoup(content, "lxml")
+        statistics = soup.find_all("span", {"class": "nonresponsive_hidden responsive_reviewdesc"},True)
+        print statistics
+        statics_list = string_corrector((statistics[0].text.encode("utf-8"))).split(" ")
+        try:
+            percent = statics_list[1].replace("%", "")
+        except IndexError:
+            print "KIR"
+            print statics_list
+            percent = "0"
+        try:
+            reviews = statics_list[4].replace(",", "")
+        except IndexError:
+            print "KIR"
+            print statics_list
+            reviews = "0"
+        return {"statics": percent, "reviews": reviews}
+    except:
+        return {"statics": 0, "reviews": 0}
 
 
 
