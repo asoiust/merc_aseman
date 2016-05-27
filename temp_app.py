@@ -132,7 +132,10 @@ def system_req(content):
     soup = BeautifulSoup(content, "lxml")
     os = soup.find_all("div", {"data-os":"win"},True)
     try:
-        details_string = os[0].text.encode("utf-8").replace("\r", ": ")              # All details in a string
+        if len(os) == 1:
+            details_string = os[0].text.encode("utf-8").replace("\r", ": ")              # All details in a string
+        else:
+            details_string = os[-1].text.encode("utf-8").replace("\r", ": ")  # All details in a string
     except Exception:
         return
     minimum_system_str = details_string.split("\n\n\n\nRecommended")[0]
@@ -372,11 +375,30 @@ def get_discount_first(content):
 
 
 
+
 #print go_in_first_page(1)
 print go_in_link(scrapper_first_layer('1')[2])
+
+# print go_in_first_page(1)
+'''
+game title : span.title
+release date : div.col search_released responsive_secondrow     # First div with this classes
+price : #parent div : div.col search_price_discount_combined responsive_secondrow
+#container div class  : div.col search_price  responsive_secondrow
+release date : div.col search_released responsive_secondrow   #first div
+discount : span child of second div.col search_discount responsive_secondrow
+before discount price: span.style="color: #888888;"
+price : last div.col search_price discounted responsive_secondrow
+'''
+print go_in_link(scrapper_first_layer('1')[1])
+
 # print go_in_link('http://store.steampowered.com/app/292030/?snr=1_7_7_230_150_1')#  HANDLE SYS REQUIRE
 # print go_in_link(1'http://store.steampowered.com/agecheck/app/359870/?snr=1_7_7_230_150_1') #####  HANDLE ALL DEFS
 #.replace('\t','')
 #span.class : nonresponsive_hidden responsive_reviewdesc
+
 #print scrapper(1)
+
+# print scrapper(1)
+
 #print str((repr(u'')))
