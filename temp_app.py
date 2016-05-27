@@ -307,9 +307,9 @@ def price_lister(pr_list):
         item = str(string_corrector(item.text))
         splited = item.split('%')
         if len(splited) == 2:
-            result.append((splited[1].split("$")[1],splited[1].split("$")[2]))
+            result.append((splited[1].split("$")[1], splited[1].split("$")[2]))
         else:
-            result.append(item)
+            result.append((item,))
     return result
 
 def threaded_calculator_two(content):
@@ -377,20 +377,11 @@ def get_discount_first(content):
 
 
 #print go_in_first_page(1)
-print go_in_link(scrapper_first_layer('1')[2])
+#print go_in_link(scrapper_first_layer('1')[2])
 
-# print go_in_first_page(1)
-'''
-game title : span.title
-release date : div.col search_released responsive_secondrow     # First div with this classes
-price : #parent div : div.col search_price_discount_combined responsive_secondrow
-#container div class  : div.col search_price  responsive_secondrow
-release date : div.col search_released responsive_secondrow   #first div
-discount : span child of second div.col search_discount responsive_secondrow
-before discount price: span.style="color: #888888;"
-price : last div.col search_price discounted responsive_secondrow
-'''
-print go_in_link(scrapper_first_layer('1')[1])
+print go_in_first_page(1)
+
+#print go_in_link(scrapper_first_layer('1')[1])
 
 # print go_in_link('http://store.steampowered.com/app/292030/?snr=1_7_7_230_150_1')#  HANDLE SYS REQUIRE
 # print go_in_link(1'http://store.steampowered.com/agecheck/app/359870/?snr=1_7_7_230_150_1') #####  HANDLE ALL DEFS
