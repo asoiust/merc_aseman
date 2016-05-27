@@ -189,11 +189,17 @@ def get_purchase_price(content):
         return 'code2'
 
 
+def genre_exrtreactor(my_string):
+    temp = my_string.split(":")
+    temp2 = temp[3].replace("Developer", "").strip()
+    return temp2
+
+
 def get_details(content):
     try:
         soup = BeautifulSoup(content, "lxml")
         details = soup.find_all("div",{"class":"details_block"},True)
-        return string_corrector(details[0].text.encode("utf-8"))
+        return genre_exrtreactor(str(string_corrector(details[0].text.encode("utf-8"))))
     except:
         return 'code3'
 
@@ -378,8 +384,8 @@ def get_discount_first(content):
 
 
 
-print go_in_first_page(1)
-#print go_in_link(scrapper_first_layer('1')[2])
+#print go_in_first_page(1)
+print go_in_link(scrapper_first_layer('1')[2])
 
 #print go_in_first_page(1)
 
