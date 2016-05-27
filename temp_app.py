@@ -330,7 +330,7 @@ def first_layer_pages_scrapper(page=1):   #maybe u need this
     for j in threads:
         j.join()
         results.append(j.get_result())
-    return extractor(results)   #age khasti extractor ro bardar
+    return results  #age khasti extractor ro bardar
 
 
 def threaded_calculator_two(content):
@@ -357,7 +357,7 @@ def go_in_first_page(page):
     result = dict()
     result.update({'title': funcs[0], 'rdate': funcs[1],
                    'price': funcs[2], 'discount': funcs[3], 'url': urls})
-    return result
+    return [result]
 
 
 def get_title_first(content):
@@ -410,7 +410,7 @@ def extractor(my_list):
         discount += item['discount']
     return [url, discount, title, price, rdate]
 
-print first_layer_pages_scrapper(3)
+#print first_layer_pages_scrapper(3)
 #print go_in_first_page(1)
 #print go_in_link(scrapper_first_layer('1')[2])
 
