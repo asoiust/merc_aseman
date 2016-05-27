@@ -2,7 +2,7 @@
 import threading
 import requests
 from bs4 import BeautifulSoup
-#from database import *
+from database import *
 
 
 class thread_scrap(threading.Thread):
@@ -38,10 +38,7 @@ def scrapper(page=1):
             t.start()
     for l in second_layer_threads:
         l.join()
-        # results.append(l.get_result())
-        print l.get_result()
-        print 'kir'
-        #print add_game(l.get_result())
+        add_game(l.get_result())
     return results
 
 
@@ -78,10 +75,11 @@ def go_in_link(url):
     result = dict()
     result.update({'title':get_title(content),'purchase_price': get_purchase_price(content),
                    'details':get_details(content), 'description':get_description(content),
-                   'tags':get_tags(content),'overall':get_overall(content),'date':get_rdate(content),
-                   'discount': get_discount(content), 'before_discount_original': get_before_discount(content),
-                   'after_discount': get_after_discount(content), 'statistics': get_statistics(content),
-                   'url': url})
+                   'user_tags':get_tags(content),'overall':get_overall(content),'release_date':get_rdate(content),
+                   'discount': get_discount(content), 'original_price': get_before_discount(content),
+                   'after_discount': get_after_discount(content), 'url': url})
+    print get_statistics(content)
+    result.update(get_statistics(content))
     try:
         result.update(system_req(content))
     except TypeError:
@@ -146,7 +144,12 @@ def get_purchase_price(content):
     try:
         soup = BeautifulSoup(content, "lxml")
         price = soup.find_all("div",{"class":"game_purchase_price"},True)
-        return string_corrector(price[0].text.encode("utf-8"))
+        price_string = string_corrector(price[0].text.encode("utf-8"))
+        if price_string == 'Free To Play':
+            return '0'
+        price_string = price_string.split(" ")[0]
+        price_string = price_string.replace("$", "")
+        return price_string
     except:
         return 'code2'
 
@@ -202,34 +205,43 @@ def get_discount(content):
         discount = soup.find_all("div",{"class":"discount_pct"},True)
         return string_corrector(discount[0].text.encode("utf-8"))
     except:
-        return '$none$'
+        return '0'
 
 
 def get_before_discount(content):
     try:
         soup = BeautifulSoup(content, "lxml")
         before = soup.find_all("div",{"class":"discount_original_price"},True)
-        return string_corrector(before[0].text.encode("utf-8"))
+        before_string = string_corrector(before[0].text.encode("utf-8"))
+        before_string = before_string.split(" ")[0]
+        before_string = before_string.replace("$", "")
+        return before_string
     except:
-        return '$none$'
+        return '0'
 
 
 def get_after_discount(content):
     try:
         soup = BeautifulSoup(content, "lxml")
-        after = soup.find_all("div",{"class":"discount_final_price"},True)
+        after = soup.find_all("div", {"class": "discount_final_price"},True)
+        after_string = string_corrector((after[0].text.encode("utf-8"))).split(" ")[0]
+        after_string = after_string.replace("$", "")
         return string_corrector(after[0].text.encode("utf-8"))
-    except:
-        return '$none$'
+    except Exception:
+        return '0'
 
 
 def get_statistics(content):
-    try:
-        soup = BeautifulSoup(content, "lxml")
-        statistics = soup.find_all("span",{"class":"nonresponsive_hidden responsive_reviewdesc"},True)
-        return string_corrector(statistics[0].text.encode("utf-8"))
-    except:
-        return 'code8'
+    # try:
+    soup = BeautifulSoup(content, "lxml")
+    statistics = soup.find_all("span",{"class":"nonresponsive_hidden responsive_reviewdesc"},True)
+    print statistics[0]
+    statics_list = string_corrector((statistics[0].text.encode("utf-8"))).split(" ")
+    percent = statics_list[1].replace("%", "")
+    reviews = statics_list[4].replace(",", "")
+    return {"statics": percent, "reviews": reviews}
+    # except:
+    #     return {"statics": 0, "reviews": 0}
 
 
 
@@ -303,7 +315,7 @@ def get_discount_first(content):
         return discount_lister(discount)
     except:
         return 'code12'
-print go_in_first_page(1)
+# print go_in_first_page(1)
 '''
 game title : span.title
 release date : div.col search_released responsive_secondrow     # First div with this classes
@@ -314,10 +326,10 @@ discount : span child of second div.col search_discount responsive_secondrow
 before discount price: span.style="color: #888888;"
 price : last div.col search_price discounted responsive_secondrow
 '''
-#print go_in_link(scrapper_first_layer('1')[0])
+# print go_in_link(scrapper_first_layer('1')[0])
 #print go_in_link('http://store.steampowered.com/app/292030/?snr=1_7_7_230_150_1')#  HANDLE SYS REQUIRE
 #print go_in_link('http://store.steampowered.com/agecheck/app/359870/?snr=1_7_7_230_150_1') #####  HANDLE ALL DEFS
 #.replace('\t','')
 #span.class : nonresponsive_hidden responsive_reviewdesc
-#print scrapper(1)
+print scrapper(1)
 #print str((repr(u'')))
