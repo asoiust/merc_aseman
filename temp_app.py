@@ -19,6 +19,20 @@ class thread_scrap(threading.Thread):
         return self.result
 
 
+class second_leyer_thread(threading.Thread):
+    def __init__(self, func, arg):
+        threading.Thread.__init__(self)
+        self.arg = arg
+        self.func = func
+        self.result = None
+
+    def run(self):
+        self.result = self.func(self.arg)
+
+    def get_result(self):
+        return self.result
+
+
 def scrapper(page=1):
     link_in_pages = []
     results = []
@@ -38,10 +52,8 @@ def scrapper(page=1):
             t.start()
     for l in second_layer_threads:
         l.join()
-        # results.append(l.get_result())
-        print l.get_result()
-        print 'kir'
-        print add_game(l.get_result())
+        #results.append(l.get_result())
+        add_game(l.get_result())
     return results
 
 
@@ -72,18 +84,36 @@ def scrapper_first_layer(page):
     return link_extractor(my_html)
 
 
+def threaded_calculator_one(content):
+    functions = [get_title, get_purchase_price, get_details,
+                 get_description, get_tags, get_overall, get_rdate
+                 , get_discount, get_before_discount, get_after_discount,
+                 get_statistics, system_req]
+    result = []
+    threads = []
+    for item in functions:
+        t = second_leyer_thread(item, content)
+        threads.append(t)
+        t.start()
+    for j in threads:
+        j.join()
+        result.append(j.get_result())
+    return result
+
+
 def go_in_link(url):
     request = requests.get(url)
     content = request.content
+    funcs = threaded_calculator_one(content)
     result = dict()
-    result.update({'title':get_title(content),'purchase_price': get_purchase_price(content),
-                   'details':get_details(content), 'description':get_description(content),
-                   'tags':get_tags(content),'overall':get_overall(content),'date':get_rdate(content),
-                   'discount': get_discount(content), 'before_discount_original': get_before_discount(content),
-                   'after_discount': get_after_discount(content), 'statistics': get_statistics(content),
-                   'url': url})
+    result.update({'title':funcs[0],'purchase_price': funcs[1],
+                   'details':funcs[2], 'description':funcs[3],
+                   'user_tags':funcs[4],'overall':funcs[5],'release_date':funcs[6],
+                   'discount': funcs[7], 'original_price': funcs[8],
+                   'after_discount': funcs[9], 'url': url})
+    result.update(funcs[10])
     try:
-        result.update(system_req(content))
+        result.update(funcs[11])
     except TypeError:
         pass
     return result
@@ -102,7 +132,10 @@ def system_req(content):
     soup = BeautifulSoup(content, "lxml")
     os = soup.find_all("div", {"data-os":"win"},True)
     try:
-        details_string = os[0].text.encode("utf-8").replace("\r", ": ")              # All details in a string
+        if len(os) == 1:
+            details_string = os[0].text.encode("utf-8").replace("\r", ": ")              # All details in a string
+        else:
+            details_string = os[-1].text.encode("utf-8").replace("\r", ": ")  # All details in a string
     except Exception:
         return
     minimum_system_str = details_string.split("\n\n\n\nRecommended")[0]
@@ -146,7 +179,12 @@ def get_purchase_price(content):
     try:
         soup = BeautifulSoup(content, "lxml")
         price = soup.find_all("div",{"class":"game_purchase_price"},True)
-        return string_corrector(price[0].text.encode("utf-8"))
+        price_string = string_corrector(price[0].text.encode("utf-8"))
+        if price_string == 'Free To Play':
+            return '0'
+        price_string = price_string.split(" ")[0]
+        price_string = price_string.replace("$", "")
+        return price_string
     except:
         return 'code2'
 
@@ -189,9 +227,12 @@ def get_tags(content):
 
 def get_rdate(content):
     try:
+        months_name = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
         soup = BeautifulSoup(content, "lxml")
         rdate = soup.find_all("span",{"class":"date"},True)
-        return string_corrector(rdate[0].text.encode("utf-8"))
+        date_list= string_corrector(rdate[0].text.encode("utf-8")).split(" ")
+        result = date_list[2] + "-" + str(months_name.index(months_name[1]) + 1) + "-" + date_list[0]
+        return result
     except:
         return 'code7'
 
@@ -202,39 +243,155 @@ def get_discount(content):
         discount = soup.find_all("div",{"class":"discount_pct"},True)
         return string_corrector(discount[0].text.encode("utf-8"))
     except:
-        return '$none$'
+        return '0'
 
 
 def get_before_discount(content):
     try:
         soup = BeautifulSoup(content, "lxml")
         before = soup.find_all("div",{"class":"discount_original_price"},True)
-        return string_corrector(before[0].text.encode("utf-8"))
+        before_string = string_corrector(before[0].text.encode("utf-8"))
+        before_string = before_string.split(" ")[0]
+        before_string = before_string.replace("$", "")
+        return before_string
     except:
-        return '$none$'
+        return '0'
 
 
 def get_after_discount(content):
     try:
         soup = BeautifulSoup(content, "lxml")
-        after = soup.find_all("div",{"class":"discount_final_price"},True)
-        return string_corrector(after[0].text.encode("utf-8"))
-    except:
-        return '$none$'
+        after = soup.find_all("div", {"class": "discount_final_price"},True)
+        after_string = string_corrector((after[0].text.encode("utf-8"))).split(" ")[0]
+        after_string = after_string.replace("$", "")
+        return after_string
+    except Exception:
+        return '0'
 
 
 def get_statistics(content):
     try:
         soup = BeautifulSoup(content, "lxml")
-        statistics = soup.find_all("span",{"class":"nonresponsive_hidden responsive_reviewdesc"},True)
-        return string_corrector(statistics[0].text.encode("utf-8"))
+        statistics = soup.find_all("span", {"class": "nonresponsive_hidden responsive_reviewdesc"},True)
+        statics_list = string_corrector((statistics[0].text.encode("utf-8"))).split(" ")
+        try:
+            percent = statics_list[1].replace("%", "")
+        except IndexError:
+            percent = "0"
+        try:
+            reviews = statics_list[4].replace(",", "")
+        except IndexError:
+            reviews = "0"
+        return {"statics": percent, "reviews": reviews}
     except:
-        return 'code8'
+        return {"statics": 0, "reviews": 0}
 
 
-#print go_in_link(scrapper_first_layer('1')[0])
-#print go_in_link('http://store.steampowered.com/app/292030/?snr=1_7_7_230_150_1')#  HANDLE SYS REQUIRE
-#print go_in_link('http://store.steampowered.com/agecheck/app/359870/?snr=1_7_7_230_150_1') #####  HANDLE ALL DEFS
+
+###############################################################################################
+#FIRST LAYER
+
+def discount_lister(dis_list):
+    result = []
+    for item in dis_list:
+        if item.text == '':       #########dorostesh kon
+            result.append("0%")
+        else:
+            result.append(string_corrector(item.text))
+    return result
+
+
+def price_lister(pr_list):
+    result = []
+    for item in pr_list:
+        item = str(string_corrector(item.text))
+        splited = item.split('%')
+        if len(splited) == 2:
+            result.append((splited[1].split("$")[1], splited[1].split("$")[2]))
+        else:
+            result.append((item,))
+    return result
+
+
+def threaded_calculator_two(content):
+    functions = [get_title_first, get_rdate_first, get_price_first, get_discount_first]
+    result = []
+    threads = []
+    for item in functions:
+        t = second_leyer_thread(item, content)
+        threads.append(t)
+        t.start()
+    for j in threads:
+        j.join()
+        result.append(j.get_result())
+    return result
+
+
+def go_in_first_page(page):
+    page = str(page)
+    url = 'http://store.steampowered.com/search/results?sort_by=_ASC&tags=-1&category1=998&page=%s&snr=1_7_7_230_7' % (page,)
+    request = requests.get(url)
+    content = request.content
+    urls = scrapper_first_layer(page)
+    funcs = threaded_calculator_two(content)
+    result = dict()
+    result.update({'title': funcs[0], 'rdate': funcs[1],
+                   'price': funcs[2], 'discount': funcs[3], 'url': urls})
+    return result
+
+
+def get_title_first(content):
+    try:
+        soup = BeautifulSoup(content, "lxml")
+        title = soup.find_all("span",{"class":"title"},True)
+        return make_list(title)
+    except:
+        return 'code9'
+
+
+def get_rdate_first(content):
+    try:
+        soup = BeautifulSoup(content, "lxml")
+        rdate = soup.find_all("div",{"class":"col search_released responsive_secondrow"},True)
+        return make_list(rdate)
+    except:
+        return 'code10'
+
+
+def get_price_first(content):
+    try:
+        soup = BeautifulSoup(content, "lxml")
+        price = soup.find_all("div",{"class":"col search_price_discount_combined responsive_secondrow"},True)
+        return price_lister(price)
+    except:
+        return 'code11'
+
+
+def get_discount_first(content):
+    try:
+        soup = BeautifulSoup(content, "lxml")
+        discount = soup.find_all("div",{"class":"col search_discount responsive_secondrow"},True)
+        return discount_lister(discount)
+    except:
+        return 'code12'
+
+
+
+
+print go_in_first_page(1)
+#print go_in_link(scrapper_first_layer('1')[2])
+
+#print go_in_first_page(1)
+
+#print go_in_link(scrapper_first_layer('1')[1])
+
+# print go_in_link('http://store.steampowered.com/app/292030/?snr=1_7_7_230_150_1')#  HANDLE SYS REQUIRE
+# print go_in_link(1'http://store.steampowered.com/agecheck/app/359870/?snr=1_7_7_230_150_1') #####  HANDLE ALL DEFS
 #.replace('\t','')
 #span.class : nonresponsive_hidden responsive_reviewdesc
-print scrapper(1)
+
+#print scrapper(1)
+
+# print scrapper(1)
+
+#print str((repr(u'')))

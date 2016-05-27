@@ -79,6 +79,8 @@ def system_req(content):
     for attr in list_of_attr:
         try:
             pre_result = [minimum_system_list[minimum_system_list.index(attr) + 1]]
+            if type(pre_result) == list:
+                pre_result = pre_result[0]
         except TypeError:
             pre_result = [None]
         result.update({min_attr_name[loop_counter]: pre_result})                # Add result to the result dict
