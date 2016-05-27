@@ -145,5 +145,88 @@ def get_all_game():
         print(e)
         return -1
 
+
+def check_user(username, password):
+    """
+    | This function gets username and password and returns user id of the user with same username and password in a
+    | tuple. If username or password is empty returns False;
+    :param username:
+    :param password:
+    :return: tuple|int|bool
+    """
+    try:
+        if not username or not password:
+            return False
+        connection_obj = MySql.connection()
+        with connection_obj:
+            cursor = connection_obj.cursor()
+            cursor.execute("SELECT id FROM users WHERE user_name = %s AND password = %s", (username, password))
+            return cursor.fetchone()
+    except Exception as e:
+        print(e)
+        return -1
+
+
+def add_user(username, email, password):
+    """
+    | This void function add new user to users table if username and email didn't use before.
+    :param username:
+    :param email:
+    :param password:
+    :return: void
+    """
+    try:
+        if not username or not password or not email:
+            return False
+        connection_obj = MySql.connection()
+        with connection_obj:
+            cursor = connection_obj.cursor()
+            cursor.execute("INSERT INTO users(user_name,password,email) VALUES(%s,%s,%s) IF user_name != %s AND"
+                           " email != %s", (username, password, email, username, email))
+            connection_obj.commit()
+    except Exception as e:
+        print(e)
+        return -1
+
+
+def check_user_with_email(email):
+    """
+    | This function returns user id with specific email address in a tuple.If email is empty returns False.
+    | If any error occurs, returns -1
+    :param email:
+    :return: bool|int|tuple
+    """
+    try:
+        if not email:
+            return False
+        connection_obj = MySql.connection()
+        with connection_obj:
+            cursor = connection_obj.cursor()
+            cursor.execute("SELECT id FROM users WHERE email = %s", (email,))
+            return cursor.fetchone()
+    except Exception as e:
+        print(e)
+        return -1
+
+
+def check_user_with_username(username):
+    """
+    | This function returns user id with specific username in a tuple.If username is empty returns False.
+    | If any error occurs, returns -1
+    :param email:
+    :return: bool|int|tuple
+    """
+    try:
+        if not username:
+            return False
+        connection_obj = MySql.connection()
+        with connection_obj:
+            cursor = connection_obj.cursor()
+            cursor.execute("SELECT id FROM users WHERE user_name = %s", (username,))
+            return cursor.fetchone()
+    except Exception as e:
+        print(e)
+        return -1
+
 create_game_table()
 create_users_table()
