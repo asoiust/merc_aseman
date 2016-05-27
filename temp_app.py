@@ -57,6 +57,7 @@ def scrapper(page=1):
     #return results
     return True
 
+
 def link_extractor(my_html):
     result = []
     for item in my_html:
@@ -319,6 +320,19 @@ def price_lister(pr_list):
     return result
 
 
+def first_layer_pages_scrapper(page=1):   #maybe u need this
+    results = []
+    threads = []
+    for i in range(1,page+1):
+        t = thread_scrap(go_in_first_page, i)
+        threads.append(t)
+        t.start()
+    for j in threads:
+        j.join()
+        results.append(j.get_result())
+    return extractor(results)   #age khasti extractor ro bardar
+
+
 def threaded_calculator_two(content):
     functions = [get_title_first, get_rdate_first, get_price_first, get_discount_first]
     result = []
@@ -382,10 +396,23 @@ def get_discount_first(content):
         return 'code12'
 
 
+def extractor(my_list):
+    url = []
+    discount = []
+    title = []
+    price = []
+    rdate = []
+    for item in my_list:
+        url += item['url']
+        title += item['title']
+        price += item['price']
+        rdate += item['rdate']
+        discount += item['discount']
+    return [url, discount, title, price, rdate]
 
-
+print first_layer_pages_scrapper(3)
 #print go_in_first_page(1)
-print go_in_link(scrapper_first_layer('1')[2])
+#print go_in_link(scrapper_first_layer('1')[2])
 
 #print go_in_first_page(1)
 
