@@ -38,7 +38,7 @@ def scrapper(page=1):
     results = []
     first_layer_threads = []
     second_layer_threads = []
-    for i in range(1, page+1):
+    for i in range(page, page+1):
         t = thread_scrap(scrapper_first_layer, str(i))
         first_layer_threads.append(t)
         t.start()
@@ -52,10 +52,54 @@ def scrapper(page=1):
             t.start()
     for l in second_layer_threads:
         l.join()
-        #results.append(l.get_result())
-        add_game(l.get_result())
-    #return results
+        results.append(l.get_result())
+        #add_game(l.get_result())
+    return results
+    #return True
+
+
+def final(page=1):
+    temp = []
+    for i in range(1, page+1):
+        temp += scrapper(i)
+    #return temp
+    for item in temp:
+        add_game(temp)
     return True
+
+
+def scrapper_ver2(page=1):
+    link_in_pages = []
+    results = []
+    second_layer_threads = []
+    link_in_pages = scrapper_first_layer(str(page))
+    #print link_in_pages
+    for link in link_in_pages:
+        t = thread_scrap(go_in_link, link)
+        second_layer_threads.append(t)
+        t.start()
+    for l in second_layer_threads:
+        l.join()
+        results.append(l.get_result())
+        #add_game(l.get_result())
+    return results
+    #return True
+
+
+def final_ver2(pages):
+    results = []
+    threads = []
+    for i in range(1, pages+1):
+        t = thread_scrap(scrapper_ver2, str(i))
+        threads.append(t)
+        t.start()
+    for j in threads:
+        j.join()
+        results += j.get_result()
+        #add_game(l.get_result())
+    return results
+    #return True
+
 
 
 def link_extractor(my_html):
@@ -413,7 +457,7 @@ def extractor(my_list):
         discount += item['discount']
     return [url, discount, title, price, rdate]
 
-print first_layer_pages_scrapper(3)
+#print first_layer_pages_scrapper(3)
 #print go_in_first_page(1)
 #print go_in_link(scrapper_first_layer('1')[2])
 
@@ -428,6 +472,10 @@ print first_layer_pages_scrapper(3)
 
 #print scrapper(1)
 
-# print scrapper(1)
-
+#print scrapper(1)
+#print final(2)
 #print str((repr(u'')))
+#print scrapper_ver2(1)
+
+
+print final(2)
