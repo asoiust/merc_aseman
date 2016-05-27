@@ -238,7 +238,7 @@ def get_rdate(content):
         soup = BeautifulSoup(content, "lxml")
         rdate = soup.find_all("span",{"class":"date"},True)
         date_list= string_corrector(rdate[0].text.encode("utf-8")).split(" ")
-        result = date_list[2] + "-" + str(months_name.index(months_name[1]) + 1) + "-" + date_list[0]
+        result = date_list[2] + "-" + str(months_name.index(date_list[1]) + 1) + "-" + date_list[0]
         return result
     except:
         return 'code7'
@@ -356,8 +356,10 @@ def go_in_first_page(page):
     funcs = threaded_calculator_two(content)
     result = dict()
     result.update({'title': funcs[0], 'rdate': funcs[1],
+
                    'price': funcs[2], 'discount': funcs[3], 'url': urls})
     return [result]
+
 
 
 def get_title_first(content):

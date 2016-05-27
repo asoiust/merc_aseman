@@ -52,7 +52,6 @@ def create_game_table():
         print(e)
 
 
-
 def create_users_table():
     """
     | This void function creates game table if it not exists!
@@ -66,6 +65,19 @@ def create_users_table():
                            "user_name VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci,"
                            "password VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci,"
                            "email VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci)")
+            connection_obj.commit()
+    except Exception as e:
+        print(e)
+
+
+def create_summary_table():
+    try:
+        connection_obj = MySql.connection()
+        with connection_obj:
+            cursor = connection_obj.cursor()
+            cursor.execute("CREATE TABLE IF NOT EXISTS summary(id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,"
+                           "title VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci,url VARCHAR(255),"
+                           "release_date DATE,discount FLOAT,price FLOAT,final_price FLOAT)")
             connection_obj.commit()
     except Exception as e:
         print(e)
@@ -144,6 +156,41 @@ def get_all_game():
     except Exception as e:
         print(e)
         return -1
+
+
+def add_summary(input_dict):
+    limit = len(input_dict['title'])
+    connection_onj = MySql.connection()
+    with connection_onj:
+        for counter in range(limit):
+            title = input_dict['title'][counter].encode('utf-8')
+            url = input_dict['url'][counter].encode('utf-8')
+            discount = input_dict['discount'][counter].encode('utf-8')
+            if discount:
+                discount = discount.replace("-", "").replace("%", "")           # Remove useless characters from discount
+            price = input_dict['price'][counter]
+            if len(price) == 1:
+                price = price[0].encode('utf-8')
+                final_price = "0"
+                if price == 'Free To Play':
+                    price = "0"
+                else:
+                    price = price.replace("$", "")
+            else:
+                price = price[0].encode('utf-8')
+                final_price = price[1].encode('utf-8')
+            release = input_dict['rdate'][counter]
+            months_name = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            date_list = release[0].encode("utf-8").split(" ")
+            release_date = date_list[2] + "-" + str(months_name.index(date_list[1]) + 1) + "-" + date_list[0]
+
+            # Send to the database
+
+            cursor = connection_onj.cursor()
+            cursor.execute("INSERT INTO summary(title,release_date,discount,price,final_price)",
+                           (title, release_date, discount, price, final_price))
+            connection_onj.commit()
+
 
 
 def check_user(username, password):
@@ -231,5 +278,9 @@ def check_user_with_username(username):
         print(e)
         return -1
 
+
+
+
 create_game_table()
 create_users_table()
+create_summary_table()
