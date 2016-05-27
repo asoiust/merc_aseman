@@ -26,7 +26,7 @@ $(document).ready(function(){
 
 <style>
 body{
-  background-image:url("bg.jpg");
+  background-image:url("{{ url_for('static',filename='pictures/bg.jpg') }}");
   background-repeat: no-repeat;
   background-attachment: fixed;
   min-height: 500px;
@@ -174,14 +174,14 @@ body{
 					 <div class="row">
 							<div class="col-md-12">
 
-								 <form class="form" role="form" method="post" action="login" accept-charset="UTF-8" id="login-nav">
+								 <form class="form" role="form" method="post" action="/login" accept-charset="UTF-8" id="login-nav">
 										<div class="form-group">
 											 <label class="sr-only" for="exampleInputEmail2">Email address</label>
-											 <input type="text" class="form-control" id="username" placeholder="Username" required>
+											 <input type="text" class="form-control" id="username" placeholder="Username" name="username" pattern="[a-zA-Z0-9_-.]" required>
 										</div>
 										<div class="form-group">
 											 <label class="sr-only" for="exampleInputPassword2" >Password</label>
-											 <input type="password" class="form-control" id="password" placeholder="Password" required>
+											 <input type="password" class="form-control" id="password" placeholder="Password" name="password" pattern="[a-zA-Z0-9_-.]{6,}" required>
                                              <div class="help-block text-right"><a id="forget-pass" href="#" onclick="forgetpass()">Forget the password ?</a></div>
 										</div>
 										<div class="form-group">
@@ -189,7 +189,7 @@ body{
 										</div>
 										<div class="checkbox">
 											 <label>
-											 <input type="checkbox"> keep me logged-in
+											 <input type="checkbox" name="check"> keep me logged-in
 											 </label>
 										</div>
 								 </form>
@@ -207,7 +207,7 @@ body{
   </div><!-- /.container-fluid -->
 </nav>
 <center>
-<img id= "logo" src="site-name.png" alt="site-name" ></img>
+<img id= "logo" src="{{ url_for('static', filename='pictures/site-name.png') }}" alt="site-name" ></img>
 </center>
 <div class="container">
   <br>
@@ -241,23 +241,23 @@ body{
   <!-- Wrapper for slides -->
         <div class="carousel-inner" role="listbox">
           <div class="item active">
-            <img src="Chronicle.jpg" alt="Chania" width="460" height="345">
+            <img src="{{ url_for('static',filename='pictures/Chronicle.jpg') }}" alt="Chania" width="460" height="345">
             <center><p id="discription">Play with the fate of Legends in a battle of wits, strategy and combat, where lives are gambled on the turn of your cards. Leave your minions behind as you fight your own battles, expand and master your deck, and face the challenge of unique card combat. Chronicle is a new kind of card gaming experience.</p></center>
 
           </img>
             </div>
           <div class="item">
-            <img src="Istrolid.jpg" alt="Chania" width="460" height="345"></img>
+            <img src="{{ url_for('static',filename='pictures/Istrolid.jpg') }}" alt="Chania" width="460" height="345"></img>
             <center><p id="discription">In Istrolid you design your own unique spaceships from a large number of parts to fit your strategy and play style. With no set units or factions you are free to create a fleet where each ship has its own balanced strengths and weaknesses, from basic fighters and bombers to hulking battleships and ...</p></center>
           </div>
 
           <div class="item">
-            <img src="wormis.jpg" alt="Flower" width="460" height="345"></img>
+            <img src="{{ url_for('static',filename='pictures/wormis.jpg') }}" alt="Flower" width="460" height="345"></img>
             <center><p id="discription">Smash worms or slither trying! Warning: Incredibly addicting Multiplayer Game!</p></center>
           </div>
 
           <div class="item">
-            <img src="ForgeofGods.jpg" alt="Flower" width="460" height="345"></img>
+            <img src="{{ url_for('static',filename='pictures/ForgeofGods.jpg') }}" alt="Flower" width="460" height="345"></img>
             <center><p id="discription">Join the action in this highly addictive multiplayer card strategy RPG “FORGE OF GODS”! Collect and train as many monsters as you can to assemble the greatest team and burst through hordes of enemies in thrilling, addictive and fast-paced game!</p></center>
           </div>
         </div>
@@ -280,15 +280,16 @@ body{
   <div id= "sign-up-bg" style = "width:auto;background-color:black;padding:20px;opacity:0.95;color:white;">
 <h1>signup form</h1>
 </div>
-<div id= "sign-up-bg" style = "width:auto;background-color:rgb(295,192,0);padding:20px;opacity:0.95;">
+<form action="/signup" method="post"><div id= "sign-up-bg" style = "width:auto;background-color:rgb(295,192,0);padding:20px;opacity:0.95;">
   <h2>Fill The Form Below To Make A New Account : </h2>
-<input type="text" placeholder = "Username" name="Username" pattern="[a-zA-Z0-9_-.]" style="padding:2px;"required><p></p>
-<input type="password" placeholder="Password" name="Password" pattern="[a-zA-Z0-9_-.]{6,}" style="padding:2px;"required><p></p>
-<input type="password" name="Re-password"  placeholder="Re-Enter Password" pattern="[a-zA-Z0-9_-.]{6,}" style="padding:2px;"required><p></p>
-<input type="email" placeholder = "E-Mail Address"name="Email" style="padding:2px;"required><p></p>
+
+<input type="text" placeholder = "Username" name="username" pattern="[a-zA-Z0-9_-.]" style="padding:2px;"required><p></p>
+<input type="password" placeholder="Password" name="password" pattern="[a-zA-Z0-9_-.]{6,}" style="padding:2px;"required><p></p>
+<input type="password" name="re_password"  placeholder="Re-Enter Password" pattern="[a-zA-Z0-9_-.]{6,}" style="padding:2px;"required><p></p>
+<input type="email" placeholder = "E-Mail Address" name="email" style="padding:2px;" required><p></p>
 </left><button
 class="w3-btn w3-black" style="width:85px;height:32px;font-size:15px;">Sign Up</button>
-</div>
+</div></form>
 <br><br><br><br><br><br>
 </center>
 </body>
