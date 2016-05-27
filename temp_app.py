@@ -312,6 +312,7 @@ def price_lister(pr_list):
             result.append((item,))
     return result
 
+
 def threaded_calculator_two(content):
     functions = [get_title_first, get_rdate_first, get_price_first, get_discount_first]
     result = []
@@ -331,10 +332,11 @@ def go_in_first_page(page):
     url = 'http://store.steampowered.com/search/results?sort_by=_ASC&tags=-1&category1=998&page=%s&snr=1_7_7_230_7' % (page,)
     request = requests.get(url)
     content = request.content
-    funcs =threaded_calculator_two(content)
+    urls = scrapper_first_layer(page)
+    funcs = threaded_calculator_two(content)
     result = dict()
     result.update({'title': funcs[0], 'rdate': funcs[1],
-                   'price': funcs[2], 'discount': funcs[3]})
+                   'price': funcs[2], 'discount': funcs[3], 'url': urls})
     return result
 
 
@@ -376,10 +378,10 @@ def get_discount_first(content):
 
 
 
-#print go_in_first_page(1)
+print go_in_first_page(1)
 #print go_in_link(scrapper_first_layer('1')[2])
 
-print go_in_first_page(1)
+#print go_in_first_page(1)
 
 #print go_in_link(scrapper_first_layer('1')[1])
 
