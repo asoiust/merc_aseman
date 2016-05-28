@@ -339,6 +339,7 @@ def search(input_dict):
             possible_search_args += ["min_memory", "max_memory", "min_graphics", "max_graphics", "min_directX"]
             possible_search_args += ["max_directX", "min_reviews", "max_reviews"]
             search_string = ""
+            input_dict["max_statics"] = "80"
             for arg in possible_search_args:
                 if input_dict[arg]:
                     if input_dict[arg].split("_")[0] == "min":
@@ -346,6 +347,8 @@ def search(input_dict):
                     else:
                         search_string += arg + " >= " + input_dict[arg] + " AND "
 
+            if search_string.split(" ")[-2] == "AND":
+                search_string = search_string[:len(search_string) - 5]
             if (input_dict["word"] or input_dict["overall"]) and (input_dict["word"] or input_dict["genre"]) and \
                     (input_dict["overall"] or input_dict["genre"]):
                 for arg in static_possible_search_args:
@@ -355,6 +358,12 @@ def search(input_dict):
                         search_string += "description " + like_string + " OR "
                         search_string += "user_tags " + like_string + " OR "
                         search_string += "details " + like_string + " OR "
+        # search_string.replace("")
+        print "KIR"
+        print search_string
+        print search_string.split(" ")
+        print "KIR KIR"
+        print input_dict
         cursor.execute("SELECT title,url,release_date,details,description FROM games WHERE" + search_string)
         return cursor.fetchall()
 
@@ -362,6 +371,44 @@ def search(input_dict):
         print e
         return -1
 
+
+def get_post(identifier):
+    """
+    | This function get an argument that is game id, game title or game url and returns game info in a tuple.
+    | If identifier is empty or None returns False and if any exception thrown returns -1
+    :param identifier: str
+    :return: bool|tuple|int
+    """
+    try:
+        if not identifier:
+            return False
+        connection_obj = MySql.connection()
+        with connection_obj:
+            cursor = connection_obj.cursor()
+            cursor.execute("SELECT * FROM games WHERE id = %s OR title = %s OR url = %s",
+                           (identifier, identifier, identifier))
+            return cursor.fetchone()
+    except Exception as e:
+        print e
+        return -1
+
+
+def get_summary(page_number):
+    """
+    | This function gets page number and returns 10 games with page_number offset in a tuple of tuples.
+    | If any exception thrown returns -1
+    :param page_number:str
+    :return: tuple|int
+    """
+    try:
+        connection_obj = MySql.connection()
+        with connection_obj:
+            cursor = connection_obj.cursor()
+            cursor.execute("SELECT * FROM summary ORDER BY id DESC LIMIT 10 OFFSET " + page_number)
+            return cursor.fetchall()
+    except Exception as e:
+        print e
+        return -1
 
 create_game_table()
 create_users_table()
