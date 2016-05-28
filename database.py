@@ -324,12 +324,22 @@ def search(input_dict):
         connection_obj = MySql.connection()
         with connection_obj:
             cursor = connection_obj.cursor()
-            possible_search_args = ["word", "min_storage", "max_storage", "overall", "min_price", "max_price"]
-            possible_search_args += ["min_discount", "max_discount", "min_satisfy", "max_satisfy", "min_release_date"]
+            for encoder in input_dict:
+                input_dict[encoder] = input_dict[encoder].encode("utf-8")
+            static_possible_search_args = ["word", "overall", "genre"]
+            possible_search_args = ["min_storage", "max_storage","min_price", "max_price"]
+            possible_search_args += ["min_discount", "max_discount", "min_statics", "max_statics", "min_release_date"]
             possible_search_args += ["max_release_date", "min_os", "max_os", "min_processor", "max_processor"]
             possible_search_args += ["min_memory", "max_memory", "min_graphics", "max_graphics", "min_directX"]
-            possible_search_args += ["max_directX", "genre", "min_reviews", "max_reviews"]
-
+            possible_search_args += ["max_directX", "min_reviews", "max_reviews"]
+            search_string = ""
+            for arg in possible_search_args:
+                if input_dict[arg]:
+                    if input_dict[arg].split("_")[0] == "min":
+                        search_string += arg + " <= " + input_dict[arg]
+                    else:
+                        search_string += arg + " >= " + input_dict[arg]
+            
     except Exception:
         pass
 
