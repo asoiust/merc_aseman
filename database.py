@@ -119,42 +119,51 @@ def add_game(kwargs):
         connection_obj = MySql.connection()
         with connection_obj:
             cursor = connection_obj.cursor()
-            if check_game_exists(kwargs['url']):
-                pass
-            else:
-                cols = ["title", "url", "overall", "description", "user_tags", "statics", "purchase_price",
-                        "release_date"]
-                cols += ["discount", "min_os", "min_processor", "min_memory", "min_graphics", "min_directx",
-                         "min_storage"]
-                cols += ["min_notes", "details", "rec_directx", "rec_storage", "rec_notes", "rec_os", "rec_processor"]
-                cols += ["after_discount", "rec_memory", "rec_graphics", "original_price", "reviews"]
-                kwargs_keys = tuple(kwargs.keys())
-                for col_name in cols:
-                    if col_name not in kwargs_keys:
-                        kwargs.update({col_name: ""})
-                query_tuple = tuple()
-                for col_name in cols:
-                    if col_name not in kwargs_keys:
+            cols = ["title", "url", "overall", "description", "user_tags", "statics", "purchase_price",
+                    "release_date"]
+            cols += ["discount", "min_os", "min_processor", "min_memory", "min_graphics", "min_directx",
+                     "min_storage"]
+            cols += ["min_notes", "details", "rec_directx", "rec_storage", "rec_notes", "rec_os", "rec_processor"]
+            cols += ["after_discount", "rec_memory", "rec_graphics", "original_price", "reviews"]
+            kwargs_keys = tuple(kwargs.keys())
+            for col_name in cols:
+                if col_name not in kwargs_keys:
+                    kwargs.update({col_name: ""})
+            query_tuple = tuple()
+            for col_name in cols:
+                if col_name not in kwargs_keys:
+                    query_tuple += ("",)
+                    continue
+                if type(kwargs[col_name]) == list and len(kwargs[col_name]) == 1:
+                    if kwargs[col_name][0] is None:
                         query_tuple += ("",)
                         continue
-                    if type(kwargs[col_name]) == list and len(kwargs[col_name]) == 1:
-                        if kwargs[col_name][0] is None:
-                            query_tuple += ("",)
-                            continue
-                        try:
-                            query_tuple += (kwargs[col_name][0].encode('utf-8'),)
-                        except UnicodeDecodeError:
-                            query_tuple += (kwargs[col_name][0].decode('unicode_escape').encode('ascii', 'ignore'),)
-                    elif type(kwargs[col_name]) == list:
-                        pr_result = ""
-                        for tag in kwargs[col_name]:
-                            pr_result += tag.encode('utf-8') + "|"
-                        query_tuple += (pr_result,)
-                    elif type(kwargs[col_name]) == unicode:
-                        query_tuple += (kwargs[col_name].encode('utf-8'),)
-                    else:
-                        query_tuple += (kwargs[col_name],)
-                into_string = ""
+                    try:
+                        query_tuple += (kwargs[col_name][0].encode('utf-8'),)
+                    except UnicodeDecodeError:
+                        query_tuple += (kwargs[col_name][0].decode('unicode_escape').encode('ascii', 'ignore'),)
+                elif type(kwargs[col_name]) == list:
+                    pr_result = ""
+                    for tag in kwargs[col_name]:
+                        pr_result += tag.encode('utf-8') + "|"
+                    query_tuple += (pr_result,)
+                elif type(kwargs[col_name]) == unicode:
+                    query_tuple += (kwargs[col_name].encode('utf-8'),)
+                else:
+                    query_tuple += (kwargs[col_name],)
+            into_string = ""
+            if check_game_exists(kwargs['url']):
+                cols.remove("url")
+                for key in cols:
+                    into_string += key + " = %s,"
+                into_string = into_string[:len(into_string) - 1]
+                into_string = into_string.replace("statistics", "statics")
+                url = kwargs["url"].encode("utf-8")
+                query_tuple = tuple([x for x in query_tuple if x != url])
+                del kwargs["url"]
+                cursor.execute("UPDATE games SET " + into_string + " WHERE url = %s", query_tuple + (url,))
+                connection_obj.commit()
+            else:
                 for key in cols:
                     into_string += key + ","
                 into_string = into_string[:len(into_string) - 1]

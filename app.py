@@ -2,7 +2,7 @@
 import threading
 import requests
 from bs4 import BeautifulSoup
-#from database import *
+from database import *
 
 
 class thread_scrap(threading.Thread):
@@ -52,7 +52,7 @@ def scrapper_ver5(page=1):
     for l in second_layer_threads:
         l.join()
         results.append(l.get_result())
-        #add_game(l.get_result())
+        add_game(l.get_result())
     return results
     #return True
 
@@ -96,8 +96,9 @@ def scrapper_ver4(page=1):
         t.start()
     for l in second_layer_threads:
         l.join()
-        results.append(l.get_result())
-        #add_game(l.get_result())
+        pre_result = l.get_result()
+        results.append(pre_result)
+        add_game(pre_result)
     return results
     #return True
 
@@ -123,7 +124,7 @@ def scrapper(page=1):
     for l in second_layer_threads:
         l.join()
         results.append(l.get_result())
-        #add_game(l.get_result())
+        # add_game(l.get_result())
     return results
     #return True
 
@@ -132,10 +133,10 @@ def final(page=1):
     temp = []
     for i in range(1, page+1):
         temp += scrapper(i)
-    return temp
-    #for item in temp:
-    #    add_game(item)
-    #return True
+    # return temp
+    for item in temp:
+       add_game(item)
+    return True
 
 
 def scrapper_ver3(page=1):
@@ -160,7 +161,9 @@ def scrapper_ver3(page=1):
         #add_game(l.get_result())
     print link_in_pages
     for link in link_in_pages:
-        results += go_in_link(link)
+        pre_result = go_in_link(link)
+        results += pre_result
+        add_game(pre_result)
     return results
     #return True
 
@@ -194,7 +197,7 @@ def final_ver2(pages):
     for j in threads:
         j.join()
         results += j.get_result()
-        #add_game(l.get_result())
+        add_game(j.get_result())
     return results
     #return True
 
@@ -579,6 +582,6 @@ def extractor(my_list):
 #print scrapper_ver2(1)
 
 
-#print scrapper_ver3(1)
+print scrapper_ver4(1)
 #print scrapper_ver5(1)
 #print go_in_link('http://store.steampowered.com/app/252950/?snr=1_7_7_230_150_1')
