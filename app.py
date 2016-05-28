@@ -51,8 +51,9 @@ def scrapper_ver5(page=1):
         t.start()
     for l in second_layer_threads:
         l.join()
-        results.append(l.get_result())
-        #add_game(l.get_result())
+        temp = l.get_result()
+        results.append(temp)
+        add_game(temp)
     return results
     #return True
 
@@ -135,8 +136,8 @@ def final(page=1):
     for i in range(1, page+1):
         temp += scrapper(i)
     # return temp
-    #for item in temp:
-        #add_game(item)
+    for item in temp:
+        add_game(item)
     return True
 
 
@@ -164,7 +165,7 @@ def scrapper_ver3(page=1):
     for link in link_in_pages:
         pre_result = go_in_link(link)
         results += pre_result
-        #add_game(pre_result)
+        add_game(pre_result)
     return results
     #return True
 
@@ -197,8 +198,9 @@ def final_ver2(pages):
         t.start()
     for j in threads:
         j.join()
-        results += j.get_result()
-        #add_game(j.get_result())
+        temp = j.get_result()
+        results += temp
+        add_game(temp)
     return results
     #return True
 
@@ -479,7 +481,7 @@ def first_layer_pages_scrapper(page=1):   #maybe u need this
     for j in threads:
         j.join()
         results.append(j.get_result())
-    #add_summary(results)
+    add_summary(results)
     return results  #age khasti extractor ro bardar
 
 
