@@ -38,7 +38,7 @@ def create_game_table():
                            "title VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci,"
                            "url VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci,"
                            "overall VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci,"
-                           "description VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci,"
+                           "description TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci,"
                            "user_tags VARCHAR(255),statics VARCHAR(255),purchase_price FLOAT ,"
                            "release_date DATE,discount FLOAT,min_os VARCHAR(255),"
                            "min_processor VARCHAR(255),"
@@ -111,6 +111,8 @@ def add_game(kwargs):
     :return: bool|int
     """
     try:
+        print "*********************************"
+        print kwargs
         if type(kwargs) == list:
             return
         if kwargs['title'] == "code1":
@@ -125,6 +127,7 @@ def add_game(kwargs):
             cols += ["min_notes", "details", "rec_directx", "rec_storage", "rec_notes", "rec_os", "rec_processor"]
             cols += ["after_discount", "rec_memory", "rec_graphics", "original_price", "reviews"]
             kwargs_keys = tuple(kwargs.keys())
+
             for col_name in cols:
                 if col_name not in kwargs_keys:
                     kwargs.update({col_name: ""})
@@ -167,6 +170,7 @@ def add_game(kwargs):
                     into_string += key + ","
                 into_string = into_string[:len(into_string) - 1]
                 into_string = into_string.replace("statistics", "statics")
+                print kwargs['description']
                 cursor.execute(
                     "INSERT INTO games(" + into_string + ") VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s)",
                     query_tuple)
@@ -209,10 +213,7 @@ def add_summary(input_list):
                 if len(price) == 1:
                     price = price[0].encode('utf-8')
                     final_price = "0"
-                    if price == 'Free To Play':
-                        price = "0"
-                    else:
-                        price = price.replace("$", "")
+                    price.replace("$", "")
                 else:
                     price = price[0].encode('utf-8')
                     final_price = price[1].encode('utf-8')

@@ -329,7 +329,7 @@ def get_purchase_price(content):
         soup = BeautifulSoup(content, "lxml")
         price = soup.find_all("div",{"class":"game_purchase_price"},True)
         price_string = string_corrector(price[0].text.encode("utf-8"))
-        if price_string == 'Free To Play':
+        if type(price_string) == str:
             return '0'
         price_string = price_string.split(" ")[0]
         price_string = price_string.replace("$", "")
@@ -392,7 +392,7 @@ def get_rdate(content):
         result = date_list[2] + "-" + str(months_name.index(date_list[1].replace(",", "")) + 1) + "-" + date_list[0]
         return result
     except:
-        return '0'
+        return '0-0-0'
 
 
 def get_discount(content):
@@ -531,7 +531,7 @@ def get_title_first(content):
         title = soup.find_all("span",{"class":"title"},True)
         return make_list(title)
     except:
-        return '0'
+        return 'code1'
 
 
 def get_rdate_first(content):
