@@ -2,7 +2,7 @@
 import threading
 import requests
 from bs4 import BeautifulSoup
-from database import *
+#from database import *
 
 
 class thread_scrap(threading.Thread):
@@ -52,7 +52,7 @@ def scrapper_ver5(page=1):
     for l in second_layer_threads:
         l.join()
         results.append(l.get_result())
-        add_game(l.get_result())
+        #add_game(l.get_result())
     return results
     #return True
 
@@ -98,7 +98,7 @@ def scrapper_ver4(page=1):
         l.join()
         pre_result = l.get_result()
         results.append(pre_result)
-        add_game(pre_result)
+        #add_game(pre_result)
     return results
     #return True
 
@@ -134,8 +134,8 @@ def final(page=1):
     for i in range(1, page+1):
         temp += scrapper(i)
     # return temp
-    for item in temp:
-       add_game(item)
+    #for item in temp:
+        #add_game(item)
     return True
 
 
@@ -163,7 +163,7 @@ def scrapper_ver3(page=1):
     for link in link_in_pages:
         pre_result = go_in_link(link)
         results += pre_result
-        add_game(pre_result)
+        #add_game(pre_result)
     return results
     #return True
 
@@ -197,7 +197,7 @@ def final_ver2(pages):
     for j in threads:
         j.join()
         results += j.get_result()
-        add_game(j.get_result())
+        #add_game(j.get_result())
     return results
     #return True
 
@@ -483,7 +483,7 @@ def first_layer_pages_scrapper(page=1):   #maybe u need this
 
 
 def threaded_calculator_two(content):
-    functions = [get_title_first, get_rdate_first, get_price_first, get_discount_first]
+    functions = [get_title_first, get_rdate_first, get_price_first, get_discount_first, get_pics_first]
     result = []
     threads = []
     for item in functions:
@@ -506,9 +506,20 @@ def go_in_first_page(page):
     result = dict()
     result.update({'title': funcs[0], 'rdate': funcs[1],
 
-                   'price': funcs[2], 'discount': funcs[3], 'url': urls})
+                   'price': funcs[2], 'discount': funcs[3], 'url': urls, 'pics': funcs[4]})
     return result
 
+
+def get_pics_first(content):
+    try:
+        result = []
+        soup = BeautifulSoup(content, "lxml")
+        pic = soup.find_all("img",{},True)
+        for item in pic:
+            result.append(item.get('src'))
+        return result
+    except:
+        return 'code13'
 
 
 def get_title_first(content):
@@ -582,6 +593,6 @@ def extractor(my_list):
 #print scrapper_ver2(1)
 
 
-print scrapper_ver4(1)
+#print scrapper_ver4(1)
 #print scrapper_ver5(1)
 #print go_in_link('http://store.steampowered.com/app/252950/?snr=1_7_7_230_150_1')
