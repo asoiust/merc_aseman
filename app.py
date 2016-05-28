@@ -575,6 +575,81 @@ def extractor(my_list):
         discount += item['discount']
     return [url, discount, title, price, rdate]
 
+
+
+####################################################################################################
+#SEMAPHORE VERSION
+class semaphore_thread(threading.Thread):
+    def __init__(self, func, arg, semaphore):
+        threading.Thread.__init__(self)
+        self.arg = arg
+        self.func = func
+        self.result = []
+        self.semaphore = semaphore
+
+    def run(self):
+        self.semaphore.acquire()
+        try:
+            self.result = self.func(self.arg)
+
+        finally:
+            self.semaphore.release()
+
+    def get_result(self):
+        return self.result
+
+
+def go_in_link_ver3(url):
+    request = requests.get(url)
+    content = request.content
+    funcs = threaded_calculator_one(content)
+    result = dict()
+    result.update({'title':funcs[0],'purchase_price': funcs[1],
+                   'details':funcs[2], 'description':funcs[3],
+                   'user_tags':funcs[4],'overall':funcs[5],'release_date':funcs[6],
+                   'discount': funcs[7], 'original_price': funcs[8],
+                   'after_discount': funcs[9], 'url': url})
+    result.update(funcs[10])
+    try:
+        result.update(funcs[11])
+    except TypeError:
+        pass
+    return result
+
+
+
+def scrapper_ver6(page=1):
+    link_in_pages = []
+    results = []
+    first_layer_threads = []
+    second_layer_threads = []
+    for i in range(1, page+1):
+        t = thread_scrap(scrapper_first_layer, str(i))
+        first_layer_threads.append(t)
+        t.start()
+    for j in first_layer_threads:
+        j.join()
+        link_in_pages += j.get_result()
+        #print link_in_pages
+    #semaphore = threading.BoundedSemaphore(20)
+    semaphore = threading.Semaphore(15)
+    #counter = 0
+    for link in link_in_pages:
+        t = semaphore_thread(go_in_link_ver3, link, semaphore)
+        second_layer_threads.append(t)
+        t.start()
+        #counter += 1
+        #print counter
+    for l in second_layer_threads:
+        l.join()
+        pre_result = l.get_result()
+        #results.append(pre_result)
+        add_game(pre_result)
+    #return results
+    return True
+
+
+print scrapper_ver6(3)
 #print first_layer_pages_scrapper(3)
 #print go_in_first_page(1)
 #print go_in_link(scrapper_first_layer('1')[2])
