@@ -327,26 +327,35 @@ def search(input_dict):
     :return:tuple|int
     """
     try:
+        for encoder in input_dict:
+            input_dict[encoder] = input_dict[encoder].encode("utf-8")
+        static_possible_search_args = ["word", "overall", "genre"]
+        possible_search_args = ["min_storage", "max_storage", "min_price", "max_price"]
+        possible_search_args += ["min_discount", "max_discount", "min_statics", "max_statics", "min_release_date"]
+        possible_search_args += ["max_release_date", "min_os", "max_os", "min_processor", "max_processor"]
+        possible_search_args += ["min_memory", "max_memory", "min_graphics", "max_graphics", "min_directX"]
+        possible_search_args += ["max_directX", "min_reviews", "max_reviews"]
+        search_string = ""
         connection_obj = MySql.connection()
         with connection_obj:
             cursor = connection_obj.cursor()
-            for encoder in input_dict:
-                input_dict[encoder] = input_dict[encoder].encode("utf-8")
-            static_possible_search_args = ["word", "overall", "genre"]
-            possible_search_args = ["min_storage", "max_storage","min_price", "max_price"]
-            possible_search_args += ["min_discount", "max_discount", "min_statics", "max_statics", "min_release_date"]
-            possible_search_args += ["max_release_date", "min_os", "max_os", "min_processor", "max_processor"]
-            possible_search_args += ["min_memory", "max_memory", "min_graphics", "max_graphics", "min_directX"]
-            possible_search_args += ["max_directX", "min_reviews", "max_reviews"]
-            search_string = ""
             input_dict["max_statics"] = "80"
             for arg in possible_search_args:
                 if input_dict[arg]:
-                    if input_dict[arg].split("_")[0] == "min":
-                        search_string += arg + " <= " + input_dict[arg] + " AND "
-                    else:
-                        search_string += arg + " >= " + input_dict[arg] + " AND "
-
+                    if arg == "min_price":
+                        search_string += "purchase_price <= " + input_dict[arg] + " OR after_discount <= " + \
+                         input_dict[arg] + "IF after_discount > 0 OR "
+                    elif arg == "max_price":
+                        search_string += "purchase_price >= " + input_dict[arg] + " OR after_discount >= " + \
+                                         input_dict[arg] + "IF after_discount > 0 OR "
+                    elif arg == "min_discount":
+                        search_string += "discount >= " + input_dict[arg] + " OR "
+                    elif arg == "max_discount":
+                        search_string += "discount <= " + input_dict[arg] + " OR "
+                    elif arg == "min_statics":
+                        search_string += "statics >= " + input_dict[arg] + " OR "
+                    elif arg == "max_statics":
+                        search_string += "statics <= " + input_dict[arg] + " OR "
             if search_string.split(" ")[-2] == "AND":
                 search_string = search_string[:len(search_string) - 5]
             if (input_dict["word"] or input_dict["overall"]) and (input_dict["word"] or input_dict["genre"]) and \
