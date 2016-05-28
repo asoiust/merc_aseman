@@ -320,6 +320,11 @@ def check_user_with_username(username):
 
 
 def search(input_dict):
+    """
+    | This function gets a dictionary and returns result as a tuple.
+    :param input_dict:dict
+    :return:tuple|int
+    """
     try:
         connection_obj = MySql.connection()
         with connection_obj:
@@ -336,12 +341,25 @@ def search(input_dict):
             for arg in possible_search_args:
                 if input_dict[arg]:
                     if input_dict[arg].split("_")[0] == "min":
-                        search_string += arg + " <= " + input_dict[arg]
+                        search_string += arg + " <= " + input_dict[arg] + " AND "
                     else:
-                        search_string += arg + " >= " + input_dict[arg]
-            
-    except Exception:
-        pass
+                        search_string += arg + " >= " + input_dict[arg] + " AND "
+
+            if (input_dict["word"] or input_dict["overall"]) and (input_dict["word"] or input_dict["genre"]) and \
+                    (input_dict["overall"] or input_dict["genre"]):
+                for arg in static_possible_search_args:
+                    if arg:
+                        like_string = "LIKE %s', (unicode(u'%' " + input_dict[arg] + "u'%')"
+                        search_string += "title " + like_string + " OR "
+                        search_string += "description " + like_string + " OR "
+                        search_string += "user_tags " + like_string + " OR "
+                        search_string += "details " + like_string + " OR "
+        cursor.execute("SELECT title,url,release_date,details,description FROM games WHERE" + search_string)
+        return cursor.fetchall()
+
+    except Exception as e:
+        print e
+        return -1
 
 
 create_game_table()
