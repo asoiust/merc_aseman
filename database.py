@@ -111,7 +111,6 @@ def add_game(kwargs):
     :return: bool|int
     """
     try:
-        print kwargs
         if type(kwargs) == list:
             return
         if kwargs['title'] == "code1":
@@ -318,6 +317,19 @@ def check_user_with_username(username):
         return -1
 
 
+def search(input_dict):
+    try:
+        connection_obj = MySql.connection()
+        with connection_obj:
+            cursor = connection_obj.cursor()
+            possible_search_args = ["word", "min_storage", "max_storage", "overall", "min_price", "max_price"]
+            possible_search_args += ["min_discount", "max_discount", "min_satisfy", "max_satisfy", "min_release_date"]
+            possible_search_args += ["max_release_date", "min_os", "max_os", "min_processor", "max_processor"]
+            possible_search_args += ["min_memory", "max_memory", "min_graphics", "max_graphics", "min_directX"]
+            possible_search_args += ["max_directX", "genre", "min_reviews", "max_reviews"]
+
+    except Exception:
+        pass
 
 
 create_game_table()
