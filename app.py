@@ -399,7 +399,7 @@ def get_discount(content):
     try:
         soup = BeautifulSoup(content, "lxml")
         discount = soup.find_all("div",{"class":"discount_pct"},True)
-        return string_corrector(discount[0].text.encode("utf-8"))
+        return string_corrector(discount[0].text.encode("utf-8")).replace("-","").replace("%","")
     except:
         return '0'
 
@@ -590,6 +590,7 @@ class semaphore_thread(threading.Thread):
     def run(self):
         self.semaphore.acquire()
         try:
+            print 'kir'
             self.result = self.func(self.arg)
 
         finally:
@@ -631,8 +632,8 @@ def scrapper_ver6(page=1):
         j.join()
         link_in_pages += j.get_result()
         #print link_in_pages
-    #semaphore = threading.BoundedSemaphore(20)
-    semaphore = threading.Semaphore(15)
+    #semaphore = threading.BoundedSemaphore(15)
+    semaphore = threading.Semaphore(10)
     #counter = 0
     for link in link_in_pages:
         t = semaphore_thread(go_in_link_ver3, link, semaphore)
@@ -643,13 +644,13 @@ def scrapper_ver6(page=1):
     for l in second_layer_threads:
         l.join()
         pre_result = l.get_result()
-        #results.append(pre_result)
+        results.append(pre_result)
         add_game(pre_result)
-    #return results
-    return True
+    return results
+    #return True
 
 
-print scrapper_ver6(3)
+print scrapper_ver6(1)
 #print first_layer_pages_scrapper(3)
 #print go_in_first_page(1)
 #print go_in_link(scrapper_first_layer('1')[2])
