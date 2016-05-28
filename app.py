@@ -274,7 +274,7 @@ def get_title(content):
         game_title = soup.find_all("div",{"class":"apphub_AppName"},True)
         return string_corrector(game_title[0].text.encode("utf-8").decode('utf-8'))
     except:
-        return 'code1'
+        return '0'
 
 
 def system_req(content):
@@ -335,7 +335,7 @@ def get_purchase_price(content):
         price_string = price_string.replace("$", "")
         return price_string
     except:
-        return 'code2'
+        return '0'
 
 
 def genre_exrtreactor(my_string):
@@ -353,7 +353,7 @@ def get_details(content):
         #print repr(details[0].text)
         return genre_exrtreactor(str(string_corrector(details[0].text.encode("utf-8"))))
     except:
-        return 'code3'
+        return '0'
 
 
 def get_description(content):
@@ -362,7 +362,7 @@ def get_description(content):
         description = soup.find_all("div",{"class":"game_description_snippet"},True)
         return string_corrector(description[0].text.encode("utf-8"))
     except:
-        return 'code4'
+        return '0'
 
 
 def get_overall(content):
@@ -371,7 +371,7 @@ def get_overall(content):
         overall = soup.find_all("span",{"class":"game_review_summary positive"},True)
         return string_corrector(overall[0].text.encode("utf-8"))
     except:
-        return 'code5'
+        return '0'
 
 
 def get_tags(content):
@@ -380,7 +380,7 @@ def get_tags(content):
         tags = soup.find_all("a",{"class":"app_tag"},True)
         return make_list(tags)
     except:
-        return 'code6'
+        return '0'
 
 
 def get_rdate(content):
@@ -392,7 +392,7 @@ def get_rdate(content):
         result = date_list[2] + "-" + str(months_name.index(date_list[1].replace(",", "")) + 1) + "-" + date_list[0]
         return result
     except:
-        return 'code7'
+        return '0'
 
 
 def get_discount(content):
@@ -522,7 +522,7 @@ def get_pics_first(content):
             result.append(item.get('src'))
         return result
     except:
-        return 'code13'
+        return '0'
 
 
 def get_title_first(content):
@@ -531,7 +531,7 @@ def get_title_first(content):
         title = soup.find_all("span",{"class":"title"},True)
         return make_list(title)
     except:
-        return 'code9'
+        return '0'
 
 
 def get_rdate_first(content):
@@ -540,7 +540,7 @@ def get_rdate_first(content):
         rdate = soup.find_all("div",{"class":"col search_released responsive_secondrow"},True)
         return make_list(rdate)
     except:
-        return 'code10'
+        return '0'
 
 
 def get_price_first(content):
@@ -549,7 +549,7 @@ def get_price_first(content):
         price = soup.find_all("div",{"class":"col search_price_discount_combined responsive_secondrow"},True)
         return price_lister(price)
     except:
-        return 'code11'
+        return '0'
 
 
 def get_discount_first(content):
@@ -558,7 +558,7 @@ def get_discount_first(content):
         discount = soup.find_all("div",{"class":"col search_discount responsive_secondrow"},True)
         return discount_lister(discount)
     except:
-        return 'code12'
+        return '0'
 
 
 def extractor(my_list):
