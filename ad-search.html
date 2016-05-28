@@ -157,11 +157,28 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </script>
+     <script type=text/javascript>
+    $(function() {
+      $('#main_search').bind('click', function() {
+        $.getJSON('/search', {
+          os: document.getElementById("os").val(),
+          graphic_card: document.getElementById("graphic_card").val(),
+          proccessor: document.getElementById("proccessor").val(),
+          directx: document.getElementById("directx").val(),
+
+        }, function(data) {
+          $("#result").text(data.result);
+        });
+        return false;
+      });
+    });
+  </script>
+
 
 </head>
 
 <body>
-
+<p id="result"></p>
 <nav class="navbar navbar-default navbar-inverse" role="navigation">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -262,7 +279,7 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
                 <input type="hidden" name="search_param" value="all" id="search_param">
                 <input type="text" class="form-control" name="x" placeholder="Search ...">
                 <span class="input-group-btn">
-                    <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                    <button class="btn btn-default" type="button" id=""main_search"><span class="glyphicon glyphicon-search"></span></button>
                 </span>
             </div>
         </div>
@@ -281,7 +298,7 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
 
 </div> </div> <p style="color:black;">Min Price : <input type="number" id="pref-search"><p style="color:black;">Max Price : <input type="number" id="pref-search"></p></p>
 <p style="color:black;">OS:
-<select>
+<select id ="os">
   <option value="All" selected>All</option>
   <option value="winxp">Win Xp</option>
   <option value="vista">Vista</option>
@@ -293,21 +310,21 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
   <option value="10-64">Win10-64bit</option>
 </select>
 Graphic Card:
-<select>
+<select id="graphic_card">
   <option value="All" selected>All</option>
   <option value="nvdia">Nvdia</option>
   <option value="intel">Intel</option>
   <option value="amd">AMD</option>
 </select>
 Proccesor:
-<select>
+<select id="proccessor">
   <option value="All" selected>All</option>
   <option value=" Intel">Intel</option>
   <option value="AMD">AMD</option>
 
 </select>
 DirectX:
-<select>
+<select id="directx">
   <option value="All" selected>All</option>
   <option value="d-10">DirectX-10</option>
   <option value="d-11">DirectX-11</option>
