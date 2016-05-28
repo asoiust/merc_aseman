@@ -52,8 +52,9 @@ def scrapper(page=1):
             t.start()
     for l in second_layer_threads:
         l.join()
-        results.append(l.get_result())
-        #add_game(l.get_result())
+        pre_result = l.get_result()
+        results.append(pre_result)
+        add_game(pre_result)
     return results
     #return True
 

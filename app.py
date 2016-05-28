@@ -2,7 +2,7 @@
 import threading
 import requests
 from bs4 import BeautifulSoup
-#from database import *
+from database import *
 
 
 class thread_scrap(threading.Thread):
@@ -77,6 +77,7 @@ def go_in_link_ver2(url):
         pass
     return result
 
+
 def scrapper_ver4(page=1):
     link_in_pages = []
     results = []
@@ -98,7 +99,7 @@ def scrapper_ver4(page=1):
         l.join()
         pre_result = l.get_result()
         results.append(pre_result)
-        #add_game(pre_result)
+        add_game(pre_result)
     return results
     #return True
 

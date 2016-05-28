@@ -77,7 +77,7 @@ def create_summary_table():
             cursor = connection_obj.cursor()
             cursor.execute("CREATE TABLE IF NOT EXISTS summary(id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,"
                            "title VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci,url VARCHAR(255),"
-                           "release_date DATE,discount FLOAT,price FLOAT,final_price FLOAT)")
+                           "release_date DATE,discount FLOAT,price FLOAT,final_price FLOAT,image VARCHAR(255))")
             connection_obj.commit()
     except Exception as e:
         print(e)
@@ -216,6 +216,7 @@ def add_summary(input_list):
                 else:
                     price = price[0].encode('utf-8')
                     final_price = price[1].encode('utf-8')
+                image = input_dict["pics"][0].encode("utf-8")
                 release = input_dict['rdate'][counter]
                 months_name = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
                 date_list = release.encode("utf-8").split(" ")
@@ -226,7 +227,8 @@ def add_summary(input_list):
                 # Send to the database
 
                 cursor = connection_onj.cursor()
-                cursor.execute("INSERT INTO summary(title,release_date,discount,price,final_price) VALUES(%s,%s,%s,%s,%s)",
+                cursor.execute("INSERT INTO summary(title,release_date,discount,price,final_price,image) "
+                               "VALUES(%s,%s,%s,%s,%s,%s)",
                                (title, release_date, discount, price, final_price))
                 connection_onj.commit()
 
