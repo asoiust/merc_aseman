@@ -110,57 +110,65 @@ def add_game(kwargs):
     :param args:
     :return: bool|int
     """
-    # try:
-    print kwargs
-    if kwargs['title'] == "code1":
-        return False
-    connection_obj = MySql.connection()
-    with connection_obj:
-        cursor = connection_obj.cursor()
-        cols = ["title", "url", "overall", "description", "user_tags", "statics", "purchase_price", "release_date"]
-        cols += ["discount", "min_os", "min_processor", "min_memory", "min_graphics", "min_directx", "min_storage"]
-        cols += ["min_notes", "details", "rec_directx", "rec_storage", "rec_notes", "rec_os", "rec_processor"]
-        cols += ["after_discount", "rec_memory", "rec_graphics", "original_price", "reviews"]
-        kwargs_keys = tuple(kwargs.keys())
-        for col_name in cols:
-            if col_name not in kwargs_keys:
-                kwargs.update({col_name: ""})
-        query_tuple = tuple()
-        for col_name in cols:
-            if col_name not in kwargs_keys:
-                query_tuple += ("",)
-                continue
-            if type(kwargs[col_name]) == list and len(kwargs[col_name]) == 1:
-                if kwargs[col_name][0] is None:
-                    query_tuple += ("",)
-                    continue
-                try:
-                    query_tuple += (kwargs[col_name][0].encode('utf-8'),)
-                except UnicodeDecodeError:
-                    query_tuple += (kwargs[col_name][0].decode('unicode_escape').encode('ascii', 'ignore'),)
-            elif type(kwargs[col_name]) == list:
-                pr_result = ""
-                for tag in kwargs[col_name]:
-                    pr_result += tag.encode('utf-8') + "|"
-                query_tuple += (pr_result,)
-            elif type(kwargs[col_name]) == unicode:
-                query_tuple += (kwargs[col_name].encode('utf-8'),)
+    try:
+        print kwargs
+        if type(kwargs) == list:
+            return
+        if kwargs['title'] == "code1":
+            return False
+        connection_obj = MySql.connection()
+        with connection_obj:
+            cursor = connection_obj.cursor()
+            if check_game_exists(kwargs['url']):
+                pass
             else:
-                query_tuple += (kwargs[col_name],)
-        into_string = ""
-        for key in cols:
-            into_string += key + ","
-        into_string = into_string[:len(into_string) - 1]
-        into_string = into_string.replace("statistics", "statics")
-        cursor.execute(
-            "INSERT INTO games(" + into_string + ") VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s)", query_tuple)
-        connection_obj.commit()
-        return True
-    # except Exception as e:
-    #     print(e)
-    #     print kwargs
-    #     print "_____________________"
-    #     return -1
+                cols = ["title", "url", "overall", "description", "user_tags", "statics", "purchase_price",
+                        "release_date"]
+                cols += ["discount", "min_os", "min_processor", "min_memory", "min_graphics", "min_directx",
+                         "min_storage"]
+                cols += ["min_notes", "details", "rec_directx", "rec_storage", "rec_notes", "rec_os", "rec_processor"]
+                cols += ["after_discount", "rec_memory", "rec_graphics", "original_price", "reviews"]
+                kwargs_keys = tuple(kwargs.keys())
+                for col_name in cols:
+                    if col_name not in kwargs_keys:
+                        kwargs.update({col_name: ""})
+                query_tuple = tuple()
+                for col_name in cols:
+                    if col_name not in kwargs_keys:
+                        query_tuple += ("",)
+                        continue
+                    if type(kwargs[col_name]) == list and len(kwargs[col_name]) == 1:
+                        if kwargs[col_name][0] is None:
+                            query_tuple += ("",)
+                            continue
+                        try:
+                            query_tuple += (kwargs[col_name][0].encode('utf-8'),)
+                        except UnicodeDecodeError:
+                            query_tuple += (kwargs[col_name][0].decode('unicode_escape').encode('ascii', 'ignore'),)
+                    elif type(kwargs[col_name]) == list:
+                        pr_result = ""
+                        for tag in kwargs[col_name]:
+                            pr_result += tag.encode('utf-8') + "|"
+                        query_tuple += (pr_result,)
+                    elif type(kwargs[col_name]) == unicode:
+                        query_tuple += (kwargs[col_name].encode('utf-8'),)
+                    else:
+                        query_tuple += (kwargs[col_name],)
+                into_string = ""
+                for key in cols:
+                    into_string += key + ","
+                into_string = into_string[:len(into_string) - 1]
+                into_string = into_string.replace("statistics", "statics")
+                cursor.execute(
+                    "INSERT INTO games(" + into_string + ") VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s)",
+                    query_tuple)
+                connection_obj.commit()
+                return True
+    except Exception as e:
+        print(e)
+        print kwargs
+        print "_____________________"
+        return -1
 
 
 def get_all_game():

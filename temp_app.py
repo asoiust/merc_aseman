@@ -64,7 +64,8 @@ def final(page=1):
         temp += scrapper(i)
     #return temp
     for item in temp:
-        add_game(temp)
+        print item
+        add_game(item)
     return True
 
 
@@ -277,15 +278,17 @@ def get_tags(content):
 
 
 def get_rdate(content):
-    try:
-        months_name = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-        soup = BeautifulSoup(content, "lxml")
-        rdate = soup.find_all("span",{"class":"date"},True)
-        date_list= string_corrector(rdate[0].text.encode("utf-8")).split(" ")
-        result = date_list[2] + "-" + str(months_name.index(date_list[1].replace(",", "")) + 1) + "-" + date_list[0]
-        return result
-    except:
-        return 'code7'
+    # try:
+    months_name = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    soup = BeautifulSoup(content, "lxml")
+    print content
+    rdate = soup.find_all("span",{"class":"date"},True)
+    print rdate
+    date_list= string_corrector(rdate[0].text.encode("utf-8")).split(" ")
+    result = date_list[2] + "-" + str(months_name.index(date_list[1].replace(",", "")) + 1) + "-" + date_list[0]
+    return result
+    # except:
+    #     return 'code7'
 
 
 def get_discount(content):
@@ -474,7 +477,7 @@ def extractor(my_list):
 #.replace('\t','')
 #span.class : nonresponsive_hidden responsive_reviewdesc
 
-print scrapper(10)
+# print scrapper(2)
 
 #print scrapper(1)
 #print final(2)
@@ -482,4 +485,4 @@ print scrapper(10)
 #print scrapper_ver2(1)
 
 
-print final(2)
+print final(1)
