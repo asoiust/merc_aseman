@@ -126,19 +126,6 @@ def f_game():
     return redirect(url_for("f_home"))
 
 
-@app.route('/game')
-def f_game():
-    if session.get("user"):
-        inf = request.args.get("inf", "", type=str)
-        print "123"
-        if get_post(inf):
-            stup = list(get_post(inf))
-            stup[2] = str(stup[2])
-            return json.dumps(stup)
-        return "0"
-    return redirect(url_for("f_home"))
-
-
 @app.route("/statistics", methods=['POST'])
 def f_stat():
     if session.get("user"):
