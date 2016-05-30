@@ -578,6 +578,8 @@ def extractor(my_list):
 
 ####################################################################################################
 #SEMAPHORE VERSION
+
+
 class semaphore_thread(threading.Thread):
     def __init__(self, func, arg, semaphore):
         threading.Thread.__init__(self)
@@ -608,7 +610,7 @@ def go_in_link_ver3(url):
                    'details':funcs[2], 'description':funcs[3],
                    'user_tags':funcs[4],'overall':funcs[5],'release_date':funcs[6],
                    'discount': funcs[7], 'original_price': funcs[8],
-                   'after_discount': funcs[9], 'url': url.split("?")[0]})
+                   'after_discount': funcs[9], 'url': url})
     result.update(funcs[10])
     try:
         result.update(funcs[11])
@@ -649,7 +651,27 @@ def scrapper_ver6(page=1):
     #return True
 
 
-print scrapper_ver6(1)
+
+
+###############################################################
+#SEMAPHPORE FIRST LAYER
+
+def first_layer_pages_scrapper_with_sema(page=1):   #maybe u need this
+    results = []
+    threads = []
+    for i in range(1,page+1):
+        semaphore = threading.BoundedSemaphore(5)
+        t = semaphore_thread(go_in_first_page, i, semaphore)
+        threads.append(t)
+        t.start()
+    for j in threads:
+        j.join()
+        results.append(j.get_result())
+    add_summary(results)
+    return results  #age khasti extractor ro bardar
+
+
+#print scrapper_ver6(1)
 #print first_layer_pages_scrapper(1)
 #print go_in_first_page(1)
 #print go_in_link(scrapper_first_layer('1')[2])
@@ -674,3 +696,4 @@ print scrapper_ver6(1)
 #print scrapper_ver4(1)
 #print scrapper_ver5(1)
 #print go_in_link('http://store.steampowered.com/app/252950/?snr=1_7_7_230_150_1')
+
