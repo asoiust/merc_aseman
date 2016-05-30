@@ -355,6 +355,10 @@ def search(input_dict):
                         search_string += "statics >= " + input_dict[arg] + " AND "
                     elif arg == "max_statics":
                         search_string += "statics <= " + input_dict[arg] + " AND "
+                    elif arg == "min_reviews":
+                        search_string += "reviews >= " + input_dict[arg] + " AND "
+                    elif arg == "max_reviews":
+                        search_string += "reviews <= " + input_dict[arg] + " AND "
                     elif arg.split("_")[0] == "min":
                         search_string += arg + " <= " + input_dict[arg] + " AND "
                     elif arg.split("_")[0] == "max":
