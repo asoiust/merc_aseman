@@ -5,7 +5,14 @@ from flask import Flask, render_template, session, request, json, redirect, url_
 from database import check_user, add_user, search, get_summary, get_post
 
 app = Flask(__name__)
-app.secret_key = 'amir'
+app.secret_key = '\xa2\x1a\xb2B\x7f\x06\x95q\x00&\xe2\x0e\x89C\xbe\x84\xbb\xbf\xb1\x917\x96T\xbb'
+
+
+@app.before_first_request
+def init_db():
+    create_game_table()
+    create_users_table()
+    create_summary_table()
 
 
 @app.route("/")
