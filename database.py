@@ -339,7 +339,6 @@ def search(input_dict):
         connection_obj = MySql.connection()
         with connection_obj:
             cursor = connection_obj.cursor()
-            input_dict["max_statics"] = "80"
             for arg in possible_search_args:
                 if input_dict[arg]:
                     if arg == "min_price":
