@@ -99,7 +99,7 @@ def f_search():
 @app.route('/summary')
 def f_summary():
     if session.get("user"):
-        page_number = request.args.get("page_number", "", type=str)
+        page_number = request.args.get("page_number", "0", type=str)
         print "123"
         if get_summary(page_number):
             stup = list(get_summary(page_number))
