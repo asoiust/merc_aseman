@@ -2,7 +2,7 @@
 __author__ = 'sargdsra'
 
 from flask import Flask, render_template, session, request, json
-from database import check_user, add_user, search, get_summary
+from database import check_user, add_user, search, get_summary, get_post
 
 app = Flask(__name__)
 app.secret_key = 'amir'
@@ -79,22 +79,38 @@ def f_search():
     search_dict["min_reviews"] = "1100"
     search_dict["max_reviews"] = ""
     print "123"
-    stup = list(search(search_dict))
-    slis = [list(i) for i in stup]
-    for item in slis:
-        item[2] = str(item[2])
-    return json.dumps(slis)
+    if search(search_dict):
+        stup = list(search(search_dict))
+        slis = [list(i) for i in stup]
+        for item in slis:
+            item[2] = str(item[2])
+        return json.dumps(slis)
+    return "0"
 
 
 @app.route('/summary')
-def f_search():
+def f_summary():
     page_number = request.args.get("page_number", "", type=str)
     print "123"
-    stup = list(get_summary(page_number))
-    slis = [list(i) for i in stup]
-    for item in slis:
-        item[2] = str(item[2])
-    return json.dumps(slis)
+    if get_summary(page_number):
+        stup = list(get_summary(page_number))
+        slis = [list(i) for i in stup]
+        for item in slis:
+            item[2] = str(item[2])
+        return json.dumps(slis)
+    return "0"
+
+
+@app.route('/game')
+def f_game():
+    inf = request.args.get("inf", "", type=str)
+    print "123"
+    if get_post(inf):    
+        stup = list(get_post(inf))
+        stup[2] = str(stup[2])
+        return json.dumps(stup)
+    return "0"
+
 
 
 @app.route("/p_search", methods=['POST'])

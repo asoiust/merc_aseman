@@ -252,7 +252,7 @@ def check_user(username, password):
             return cursor.fetchone()
     except Exception as e:
         print(e)
-        return -1
+        return 0
 
 
 def add_user(username, email, password):
@@ -277,7 +277,7 @@ def add_user(username, email, password):
             return True
     except Exception as e:
         print(e)
-        return -1
+        return 0
 
 
 def check_user_with_email(email):
@@ -363,15 +363,15 @@ def search(input_dict):
                         search_string += arg + " = " + input_dict[arg] + " AND "
             if search_string.split(" ")[-2] == "AND":
                 search_string = search_string[:len(search_string) - 5]
-            # if (input_dict["word"] or input_dict["overall"]) and (input_dict["word"] or input_dict["genre"]) and \
-            #         (input_dict["overall"] or input_dict["genre"]):
-            #     for arg in static_possible_search_args:
-            #         if arg:
-            #             like_string = "LIKE %s', (unicode(u'%' " + input_dict[arg] + "u'%')"
-            #             search_string += "title " + like_string + " OR "
-            #             search_string += "description " + like_string + " OR "
-            #             search_string += "user_tags " + like_string + " OR "
-            #             search_string += "details " + like_string + " OR "
+            if (input_dict["word"] or input_dict["overall"]) and (input_dict["word"] or input_dict["genre"]) and \
+                    (input_dict["overall"] or input_dict["genre"]):
+                for arg in static_possible_search_args:
+                    if arg:
+                        like_string = "LIKE %s', (unicode(u'%' " + input_dict[arg] + "u'%')"
+                        search_string += "title " + like_string + " OR "
+                        search_string += "description " + like_string + " OR "
+                        search_string += "user_tags " + like_string + " OR "
+                        search_string += "details " + like_string + " OR "
             if search_string.split(" ")[-2] == "Or":
                 search_string = search_string[:len(search_string) - 5]
         cursor.execute("SELECT title,url,release_date,details,description FROM games WHERE " + search_string)
@@ -381,7 +381,7 @@ def search(input_dict):
 
     except Exception as e:
         print e
-        return -1
+        return 0
 
 
 def get_post(identifier):
@@ -402,7 +402,7 @@ def get_post(identifier):
             return cursor.fetchone()
     except Exception as e:
         print e
-        return -1
+        return 0
 
 
 def get_summary(page_number):
@@ -420,7 +420,7 @@ def get_summary(page_number):
             return cursor.fetchall()
     except Exception as e:
         print e
-        return -1
+        return 0
 
 create_game_table()
 create_users_table()
