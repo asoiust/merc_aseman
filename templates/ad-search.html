@@ -290,18 +290,20 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
 	</div>
 </div>
 
+<!--RANGE-->
 
 <center>
 <div class="container"> <div class="row"> <div id="filter-panel" class="collapse filter-panel"> <div class="panel panel-default"> <div class="panel-body" > <form class="form-inline" role="form">
-
+    <div class="col-md-12">
+    <input type="text" id="example_id" name="example_name" value="" />
+    </div>sta
+    <div class="clearfix"></div>
+    <!--End of RANGE-->
    <div class="form-group"> <label class="filter-col" style="margin-right:0;" for="pref-perpage">Rows per page:</label>
 </div> <!-- form group [rows] --> <div class="form-group"> <label class="filter-col" style="margin-right:0;" for="pref-search">Search:</label> <p style="color:black;">Date(From) : <input type="date" class="form-control input-sm" id="pref-search"></p>
 </div><!-- form group [search] --> <div class="form-group">
 
-    <!--RANGE-->
-    <input type="text" id="example_id" name="example_name" value="" />
-    <div class="clearfix"></div>
-    <!--End of RANGE-->
+
 
 <label class="filter-col" style="margin-right:0;" for="pref-orderby">Order by:</label>  </div> <!-- form group [order by] --> <div class="form-group"> <div class="checkbox" style="margin-left:10px; margin-right:10px;">
 <div class="form-group"> <label class="filter-col" style="margin-right:0;" for="pref-search">Search:</label> <p style="color:black;">Date(To): <input type="date" class="form-control input-sm" id="pref-search"></p> </div>
@@ -436,9 +438,16 @@ DirectX:
 
 	</section>
 </div>
-<script src="../statics/js/ion.rangeSlider.min.js"></script>
+<script src="../statics/js/ion.rangeSlider.js"></script>
 <script type="text/javascript">
-    $("#example_id").ionRangeSlider();
+//    $("#example_id").ionRangeSlider();
+    $("#example_id").ionRangeSlider({
+    type: "double",
+    min: 1000000,
+    max: 2000000,
+    grid: true,
+    force_edges: true
+});
 </script>
 </body>
 <html>

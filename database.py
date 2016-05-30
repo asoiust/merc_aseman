@@ -365,13 +365,13 @@ def search(input_dict):
                 search_string = search_string[:len(search_string) - 5]
             if (input_dict["word"] or input_dict["overall"]) and (input_dict["word"] or input_dict["genre"]) and \
                     (input_dict["overall"] or input_dict["genre"]):
-                # for arg in static_possible_search_args:
-                #     if arg:
-                #         like_string = "LIKE %s', (unicode(u'%' " + input_dict[arg] + "u'%')"
-                #         search_string += "title " + like_string + " OR "
-                #         search_string += "description " + like_string + " OR "
-                #         search_string += "user_tags " + like_string + " OR "
-                #         search_string += "details " + like_string + " OR "
+                for arg in static_possible_search_args:
+                    if arg:
+                        like_string = "LIKE %s', (unicode(u'%' " + input_dict[arg] + "u'%')"
+                        search_string += "title " + like_string + " OR "
+                        search_string += "description " + like_string + " OR "
+                        search_string += "user_tags " + like_string + " OR "
+                        search_string += "details " + like_string + " OR "
             if search_string.split(" ")[-2] == "Or":
                 search_string = search_string[:len(search_string) - 5]
         cursor.execute("SELECT title,url,release_date,details,description FROM games WHERE " + search_string)
