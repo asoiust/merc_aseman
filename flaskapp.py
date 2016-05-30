@@ -76,10 +76,15 @@ def f_search():
     search_dict["max_memory"] = ""
     search_dict["max_graphics"] = ""
     search_dict["max_directX"] = ""
-    search_dict["min_reviews"] = ""
+    search_dict["min_reviews"] = "1100"
     search_dict["max_reviews"] = ""
     print "123"
-    return json.dumps(search(search_dict))
+    stup = list(search(search_dict))
+    slis = [list(i) for i in stup]
+    for item in slis:
+        item[2] = str(item[2])
+    return json.dumps(slis)
+
 
 
 @app.route("/p_search", methods=['POST'])
