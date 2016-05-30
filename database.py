@@ -249,13 +249,17 @@ def check_user(username, password):
         with connection_obj:
             cursor = connection_obj.cursor()
             cursor.execute("SELECT id FROM users WHERE user_name = %s AND password = %s", (username, password))
-            return cursor.fetchone()
+            res = cursor.fetchone()
+            if res == None:
+                return False
+            else:
+                return res
     except Exception as e:
         print(e)
         return 0
 
 
-def add_user(username, email, password):
+def add_user(username, password, email):
     """
     | This void function add new user to users table if username and email didn't use before.
     :param username:
@@ -294,10 +298,14 @@ def check_user_with_email(email):
         with connection_obj:
             cursor = connection_obj.cursor()
             cursor.execute("SELECT id FROM users WHERE email = %s", (email,))
-            return cursor.fetchone()
+            res = cursor.fetchone()
+            if res == None:
+                return False
+            else:
+                return res
     except Exception as e:
         print(e)
-        return -1
+        return 0
 
 
 def check_user_with_username(username):
@@ -314,10 +322,14 @@ def check_user_with_username(username):
         with connection_obj:
             cursor = connection_obj.cursor()
             cursor.execute("SELECT id FROM users WHERE user_name = %s", (username,))
-            return cursor.fetchone()
+            res = cursor.fetchone()
+            if res == None:
+                return False
+            else:
+                return res
     except Exception as e:
         print(e)
-        return -1
+        return 0
 
 
 def search(input_dict):
