@@ -424,6 +424,22 @@ def get_post(identifier):
         return 0
 
 
+def send_query(query, Tuple=None):
+    try:
+        connection_obj = MySql.connection()
+        cursor = connection_obj.cursor()
+        if Tuple is None:
+            cursor.execute(query)
+        else:
+            cursor.execute(query, Tuple)
+        if query.split(' ')[0] in ['SELECT', 'COUNT']:
+            return cursor.fetchall()
+        connection_obj.commit()
+    except m.Error as e:
+        print e
+        return False
+
+
 def get_summary(page_number):
     """
     | This function gets page number and returns 10 games with page_number offset in a tuple of tuples.
