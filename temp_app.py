@@ -279,17 +279,17 @@ def get_tags(content):
 
 
 def get_rdate(content):
-    # try:
-    months_name = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-    soup = BeautifulSoup(content, "lxml")
-    print content
-    rdate = soup.find_all("span",{"class":"date"},True)
-    print rdate
-    date_list= string_corrector(rdate[0].text.encode("utf-8")).split(" ")
-    result = date_list[2] + "-" + str(months_name.index(date_list[1].replace(",", "")) + 1) + "-" + date_list[0]
-    return result
-    # except:
-    #     return 'code7'
+    try:
+        months_name = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        soup = BeautifulSoup(content, "lxml")
+        print content
+        rdate = soup.find_all("span",{"class":"date"},True)
+        print rdate
+        date_list= string_corrector(rdate[0].text.encode("utf-8")).split(" ")
+        result = date_list[2] + "-" + str(months_name.index(date_list[1].replace(",", "")) + 1) + "-" + date_list[0]
+        return result
+    except:
+        return '0'
 
 
 def get_discount(content):
@@ -352,7 +352,7 @@ def discount_lister(dis_list):
         if item.text == '':       #########dorostesh kon
             result.append("0%")
         else:
-            result.append(string_corrector(item.text))
+            result.append(string_corrector(item.text.encode("utf-8").replace("-", "").replace("%", "")))
     return result
 
 
@@ -362,7 +362,7 @@ def price_lister(pr_list):
         item = str(string_corrector(item.text))
         splited = item.split('%')
         if len(splited) == 2:
-            result.append((splited[1].split("$")[1], splited[1].split("$")[2]))
+            result.append((splited[1].split("$")[1].encode("utf-8"), splited[1].split("$")[2].encode("utf-8")))
         else:
             result.append((item,))
     return result
@@ -378,6 +378,8 @@ def first_layer_pages_scrapper(page=1):   #maybe u need this
     for j in threads:
         j.join()
         results.append(j.get_result())
+    print "kir"
+    print results
     add_summary(results)
     return results  #age khasti extractor ro bardar
 
@@ -422,29 +424,32 @@ def get_title_first(content):
 
 def get_rdate_first(content):
     try:
+        months_name = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
         soup = BeautifulSoup(content, "lxml")
-        rdate = soup.find_all("div",{"class":"col search_released responsive_secondrow"},True)
-        return make_list(rdate)
-    except:
-        return 'code10'
+        rdate = soup.find_all("div", {"class": "col search_released responsive_secondrow"}, True)
+        date_list = string_corrector(rdate[0].text.encode("utf-8")).split(" ")
+        result = date_list[2] + "-" + str(months_name.index(date_list[1].replace(",", "")) + 1) + "-" + date_list[0]
+        return make_list(result)
+    except Exception:
+        return '0-0-0'
 
 
 def get_price_first(content):
     try:
         soup = BeautifulSoup(content, "lxml")
         price = soup.find_all("div",{"class":"col search_price_discount_combined responsive_secondrow"},True)
-        return price_lister(price)
-    except:
-        return 'code11'
+        return price_lister(price[0].encode("utf-8").replace("$", ""))
+    except Exception:
+        return '0'
 
 
 def get_discount_first(content):
     try:
         soup = BeautifulSoup(content, "lxml")
         discount = soup.find_all("div",{"class":"col search_discount responsive_secondrow"},True)
-        return discount_lister(discount)
-    except:
-        return 'code12'
+        return discount_lister(discount[0].encode("utf-8").replace("%", "").replace("-", ""))
+    except Exception:
+        return '0'
 
 
 def extractor(my_list):
@@ -462,7 +467,7 @@ def extractor(my_list):
     return [url, discount, title, price, rdate]
 
 
-#print first_layer_pages_scrapper(3)
+print first_layer_pages_scrapper(3)
 
 # print first_layer_pages_scrapper(3)
 
@@ -486,4 +491,4 @@ def extractor(my_list):
 #print scrapper_ver2(1)
 
 
-print final(1)
+# print final(1)

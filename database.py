@@ -218,6 +218,7 @@ def add_summary(input_list):
                     price = price[0].encode('utf-8')
                     final_price = price[1].encode('utf-8')
                 image = input_dict["pics"][0].encode("utf-8")
+                url = input_dict['url'][0].encode("utf-8")
                 release = input_dict['rdate'][counter]
                 months_name = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
                 date_list = release.encode("utf-8").split(" ")
@@ -228,9 +229,9 @@ def add_summary(input_list):
                 # Send to the database
 
                 cursor = connection_onj.cursor()
-                cursor.execute("INSERT INTO summary(title,release_date,discount,price,final_price,image) "
-                               "VALUES(%s,%s,%s,%s,%s,%s)",
-                               (title, release_date, discount, price, final_price))
+                cursor.execute("INSERT INTO summary(title,url,release_date,discount,price,final_price, image) "
+                               "VALUES(%s,%s,%s,%s,%s,%s,%s)",
+                               (title, url, release_date, discount, price, final_price, image))
                 connection_onj.commit()
 
 
