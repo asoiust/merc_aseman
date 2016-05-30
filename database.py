@@ -209,22 +209,28 @@ def add_summary(input_list):
                 discount = input_dict['discount'][counter].encode('utf-8')
                 if discount:
                     discount = discount.replace("-", "").replace("%", "")           # Remove useless characters from discount
-                price = input_dict['price'][counter]
-                if len(price) == 1:
-                    price = price[0].encode('utf-8')
+                price_tuple = input_dict['price'][counter]
+                print ")))))))))))))))))))))0"
+                print price_tuple
+                print type(price_tuple)
+                if len(price_tuple) == 1:
+                    price = price_tuple[0].encode('utf-8').replace("$", "")
                     final_price = "0"
-                    price.replace("$", "")
+                    print "KiR KiR KiR KiR"
+                    print price
+
                 else:
-                    price = price[0].encode('utf-8')
-                    final_price = price[1].encode('utf-8')
+                    # price = price_tuple[0].encode('utf-8')
+                    price = price_tuple[1].encode('utf-8').replace("$", "")
+                    final_price = price_tuple[1].encode('utf-8')
                 image = input_dict["pics"][0].encode("utf-8")
                 url = input_dict['url'][0].encode("utf-8")
                 release = input_dict['rdate'][counter]
                 months_name = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
                 date_list = release.encode("utf-8").split(" ")
-                print "KKKK"
-                print date_list
                 release_date = date_list[2] + "-" + str(months_name.index(date_list[1].replace(',', "")) + 1) + "-" + date_list[0]
+                print "KKKK"
+                print (title, url, release_date, discount, price, final_price, image)
 
                 # Send to the database
 

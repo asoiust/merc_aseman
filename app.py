@@ -651,7 +651,7 @@ def scrapper_ver6(page=1):
 
 
 # print scrapper_ver6(1)
-print first_layer_pages_scrapper(3)
+print first_layer_pages_scrapper(1)
 #print go_in_first_page(1)
 #print go_in_link(scrapper_first_layer('1')[2])
 
