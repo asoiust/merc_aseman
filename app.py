@@ -205,11 +205,10 @@ def final_ver2(pages):
     #return True
 
 
-
 def link_extractor(my_html):
     result = []
     for item in my_html:
-        result.append(str(item.get('href')))
+        result.append(str(item.get('href')).split("?")[0])
     return result
 
 
@@ -609,7 +608,7 @@ def go_in_link_ver3(url):
                    'details':funcs[2], 'description':funcs[3],
                    'user_tags':funcs[4],'overall':funcs[5],'release_date':funcs[6],
                    'discount': funcs[7], 'original_price': funcs[8],
-                   'after_discount': funcs[9], 'url': url})
+                   'after_discount': funcs[9], 'url': url.split("?")[0]})
     result.update(funcs[10])
     try:
         result.update(funcs[11])
