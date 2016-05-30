@@ -223,8 +223,8 @@ def add_summary(input_list):
                     # price = price_tuple[0].encode('utf-8')
                     price = price_tuple[1].encode('utf-8').replace("$", "")
                     final_price = price_tuple[1].encode('utf-8')
-                image = input_dict["pics"][counter].encode("utf-8")
-                # url = input_dict['url'][0].encode("utf-8")
+                image = input_dict["pics"][0].encode("utf-8")
+                url = input_dict['url'][0].encode("utf-8")
                 release = input_dict['rdate'][counter]
                 months_name = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
                 date_list = release.encode("utf-8").split(" ")
@@ -438,6 +438,13 @@ def send_query(query, Tuple=None):
     except m.Error as e:
         print e
         return False
+
+
+def get_res(query, Tuple=None):
+    res = send_query(query, Tuple)
+    if res:
+        return res
+    return tuple()
 
 
 def get_summary(page_number):
