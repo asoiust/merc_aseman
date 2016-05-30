@@ -373,14 +373,8 @@ def search(input_dict):
                         search_string += "description " + like_string + " OR "
                         search_string += "user_tags " + like_string + " OR "
                         search_string += "details " + like_string + " OR "
-        # search_string.replace("")
-        print "KIR"
-        print search_string
-        print search_string.split(" ")
-        print "KIR KIR"
-        print input_dict
-        print "======="
-        print "SELECT title,url,release_date,details,description FROM games WHERE" + search_string
+            if search_string.split(" ")[-2] == "Or":
+                search_string = search_string[:len(search_string) - 5]
         cursor.execute("SELECT title,url,release_date,details,description FROM games WHERE " + search_string)
         result = cursor.fetchall()
         print result
