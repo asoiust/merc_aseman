@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'sargdsra'
 
-from flask import Flask, render_template, session, request, jsonify
+from flask import Flask, render_template, session, request, json
 from database import check_user, add_user, search
 
 app = Flask(__name__)
@@ -79,7 +79,7 @@ def f_search():
     search_dict["min_reviews"] = ""
     search_dict["max_reviews"] = ""
     print "123"
-    return jsonify(search(search_dict))
+    return json.dumps(search(search_dict))
 
 
 @app.route("/p_search", methods=['POST'])

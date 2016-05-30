@@ -349,13 +349,19 @@ def search(input_dict):
                         search_string += "purchase_price >= " + input_dict[arg] + " OR after_discount >= " + \
                                          input_dict[arg] + "IF after_discount > 0 OR "
                     elif arg == "min_discount":
-                        search_string += "discount >= " + input_dict[arg] + " OR "
+                        search_string += "discount >= " + input_dict[arg] + " AND "
                     elif arg == "max_discount":
-                        search_string += "discount <= " + input_dict[arg] + " OR "
+                        search_string += "discount <= " + input_dict[arg] + " AND "
                     elif arg == "min_statics":
-                        search_string += "statics >= " + input_dict[arg] + " OR "
+                        search_string += "statics >= " + input_dict[arg] + " AND "
                     elif arg == "max_statics":
-                        search_string += "statics <= " + input_dict[arg] + " OR "
+                        search_string += "statics <= " + input_dict[arg] + " AND "
+                    elif arg.split("_")[0] == "min":
+                        search_string += arg + " <= " + input_dict[arg] + " AND "
+                    elif arg.split("_")[0] == "max":
+                        search_string += arg + " >= " + input_dict[arg] + " AND "
+                    else:
+                        search_string += arg + " = " + input_dict[arg] + " AND "
             if search_string.split(" ")[-2] == "AND":
                 search_string = search_string[:len(search_string) - 5]
             if (input_dict["word"] or input_dict["overall"]) and (input_dict["word"] or input_dict["genre"]) and \
@@ -373,8 +379,12 @@ def search(input_dict):
         print search_string.split(" ")
         print "KIR KIR"
         print input_dict
-        cursor.execute("SELECT title,url,release_date,details,description FROM games WHERE" + search_string)
-        return cursor.fetchall()
+        print "======="
+        print "SELECT title,url,release_date,details,description FROM games WHERE" + search_string
+        cursor.execute("SELECT title,url,release_date,details,description FROM games WHERE " + search_string)
+        result = cursor.fetchall()
+        print result
+        return result
 
     except Exception as e:
         print e
