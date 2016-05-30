@@ -2,7 +2,7 @@
 __author__ = 'sargdsra'
 
 from flask import Flask, render_template, session, request, json
-from database import check_user, add_user, search
+from database import check_user, add_user, search, get_summary
 
 app = Flask(__name__)
 app.secret_key = 'amir'
@@ -85,6 +85,16 @@ def f_search():
         item[2] = str(item[2])
     return json.dumps(slis)
 
+
+@app.route('/summary')
+def f_search():
+    page_number = request.args.get("page_number", "", type=str)
+    print "123"
+    stup = list(get_summary(page_number))
+    slis = [list(i) for i in stup]
+    for item in slis:
+        item[2] = str(item[2])
+    return json.dumps(slis)
 
 
 @app.route("/p_search", methods=['POST'])
