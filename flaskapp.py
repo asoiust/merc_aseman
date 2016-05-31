@@ -168,11 +168,11 @@ def f_stat():
     return redirect(url_for("f_home"))
 
 
-@app.route("/p_search", methods=['POST'])
+@app.route("/p_search", methods=['POST','GET'])
 def f_go_search():
-    if request.method == 'POST' and session.get("user"):
-        return render_template("ad-search.html")
-    return render_template("main.html")
+    # if request.method == 'POST' and session.get("user"):
+    return render_template("ad-search.html")
+    # return render_template("main.html")
 
 
 if __name__ == '__main__':

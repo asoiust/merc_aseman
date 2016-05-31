@@ -46,7 +46,8 @@ def create_game_table():
                            "min_storage VARCHAR(255),min_notes VARCHAR(255),details VARCHAR(255)"
                            ",rec_directx VARCHAR(255),rec_storage VARCHAR(255),rec_notes VARCHAR(255),"
                            "rec_os VARCHAR(255),rec_processor VARCHAR(255),after_discount INT,"
-                           "rec_memory VARCHAR(255),rec_graphics VARCHAR(255), original_price FLOAT,reviews INT)")
+                           "rec_memory VARCHAR(255),rec_graphics VARCHAR(255), original_price FLOAT,reviews INT,"
+                           "summary_id INT, FOREIGN KEY(summary_id) REFERENCES summary(id))")
             connection_obj.commit()
     except Exception as e:
         print(e)
@@ -393,7 +394,8 @@ def search(input_dict):
                         search_string += "details " + like_string + " OR "
             if search_string.split(" ")[-2] == "Or":
                 search_string = search_string[:len(search_string) - 5]
-        cursor.execute("SELECT title,url,release_date,details,description,id FROM games WHERE " + search_string)
+        cursor.execute("SELECT games.title,games.url,games.release_date,games.details,games.description,games.id,"
+                       "summary.image FROM games WHERE " + search_string + "INNER JOIN summary ON summary.id = games.summary_id")
         result = cursor.fetchall()
         print result
         return result
