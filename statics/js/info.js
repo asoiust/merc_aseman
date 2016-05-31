@@ -75,8 +75,8 @@ $(function () {
                     borderWidth: 0
                 }
             , { // Track for Stand
-            outerRadius: '62%',
-            innerRadius: '38%',
+            outerRadius: '42%',
+            innerRadius: '18%',
             backgroundColor: Highcharts.Color(Highcharts.getOptions().colors[2]).setOpacity(0.3).get(),
             borderWidth: 0
         }]
@@ -169,6 +169,18 @@ $(function () {
 
             // Stand icon
             this.renderer.path(['M', 0, 8, 'L', 0, -8, 'M', -8, 0, 'L', 0, -8, 8, 0])
+                .attr({
+                    'stroke': '#303030',
+                    'stroke-linecap': 'round',
+                    'stroke-linejoin': 'round',
+                    'stroke-width': 2,
+                    'zIndex': 10
+                })
+                .translate(190, 96)
+                .add(this.series[2].group);
+
+            // Stand icon
+            this.renderer.path(['M', 0, -8, 'L', 0, -8, 'M', -8, 0, 'L', 0, -8, 8, 0])
                 .attr({
                     'stroke': '#303030',
                     'stroke-linecap': 'round',
