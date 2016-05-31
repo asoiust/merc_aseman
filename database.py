@@ -368,9 +368,9 @@ def search(input_dict):
         static_possible_search_args = ["word", "overall", "genre"]
         possible_search_args = ["min_storage", "max_storage", "min_price", "max_price"]
         possible_search_args += ["min_discount", "max_discount", "min_statics", "max_statics", "min_release_date"]
-        possible_search_args += ["max_release_date", "min_os", "max_os", "min_processor", "max_processor"]
-        possible_search_args += ["min_memory", "max_memory", "min_graphics", "max_graphics", "min_directX"]
-        possible_search_args += ["max_directX", "min_reviews", "max_reviews"]
+        possible_search_args += ["max_release_date", "min_os", "rec_os", "min_processor", "rec_processor"]
+        possible_search_args += ["min_memory", "rec_memory", "min_graphics", "rec_graphics", "min_directX"]
+        possible_search_args += ["rec_directX", "min_reviews", "max_reviews"]
         search_string = ""
         connection_obj = MySql.connection()
         with connection_obj:
@@ -388,12 +388,20 @@ def search(input_dict):
                     elif arg == "max_discount":
                         search_string += "discount <= " + input_dict[arg] + " AND "
                     elif arg == "min_statics":
-                        search_string += "static >= " + input_dict[arg] + " AND "
+                        search_string += "statics >= " + input_dict[arg] + " AND "
                     elif arg == "max_statics":
-                        search_string += "static <= " + input_dict[arg] + " AND "
+                        search_string += "statics <= " + input_dict[arg] + " AND "
+                    elif arg == "min_release_date":
+                        search_string += "release_date >= " + input_dict[arg] + " AND "
+                    elif arg == "max_release_date":
+                        search_string += "release_date <= " + input_dict[arg] + " AND "
+                    elif arg == "min_reviews":
+                        search_string += "reviews >= " + input_dict[arg] + " AND "
+                    elif arg == "max_reviews":
+                        search_string += "reviews <= " + input_dict[arg] + " AND "
                     elif arg.split("_")[0] == "min":
                         search_string += arg + " <= " + input_dict[arg] + " AND "
-                    elif arg.split("_")[0] == "max":
+                    elif arg.split("_")[0] == "rec":
                         search_string += arg + " >= " + input_dict[arg] + " AND "
                     else:
                         search_string += arg + " = " + input_dict[arg] + " AND "
