@@ -26,7 +26,7 @@ $(document).ready(function(){
 
 <style>
 body{
-  background-image:url("bg.jpg");
+  background-image:url("static/pictures/bg.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed;
   min-height: 500px;
@@ -153,20 +153,57 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <link rel="stylesheet" href="rangeslider.css" type="text/css">
+  <link rel="stylesheet" href="../static/styles/ion.rangeslider.css" type="text/css">
+  <link rel="stylesheet" href="../static/styles/ion.rangeSlider.skinFlat.css" type="text/css">
+
+  <link rel="stylesheet" href="../static/styles/ion.rangeSlider.skinModern.css" type="text/css">
+
+  <link rel="stylesheet" href="../static/styles/normalize.css" type="text/css">
+
+
+
+
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </script>
      <script type=text/javascript>
     $(function() {
-      $('#main_search').bind('click', function() {
+      $('#main_search').click(function() {
+        console.log("kir");
         $.getJSON('/search', {
           os: $('#os').val(),
           graphic_card: $('#graphic_card').val(),
           proccessor: $('#proccessor').val(),
 
         }, function(data) {
-          $("#result").text(data.result);
+          document.getElementById("result").innerHTML=""// $("#result").text(data);
+          // for (i = 1; i < data.length; i++) {
+              // document.getElementById("result").innerHTML+=data[i]+"<br><br><br><br><br><br><br>";
+              // document.getElementById("result").appendChild(data[i]);
+    //  }
+    Object.keys(data).forEach(function(key){
+      // document.getElementById("result").innerHTML+=data[key]+"<br><br><br><br><br><br>";
+      console.log(data[key][]);
+
+      document.getElementById("result").innerHTML+=+"<article class='search-result row' id = 'result'>"+
+  			"<div class='col-xs-12 col-sm-12 col-md-3'>"+
+  				"<a href='#' title='Chronicle' class='thumbnail'><img src='"+data[key][5]+"' alt='1' style='border=0px;'/></a></div>"+
+  			"<div class='col-xs-12 col-sm-12 col-md-2'>"+
+  				"<ul class='meta-search'>"+
+  					"<li style = 'word-wrap: break-word;'><i class='glyphicon glyphicon-calendar'></i> <span style = 'word-wrap: break-word;'>"+data[key][2]+"</span></li>"+
+  					"<li style = 'word-wrap: break-word;'><i class='glyphicon glyphicon-tags'></i> <span style = 'word-wrap: break-word;'>"+data[key][3]+"</span></li>"+
+  				"</ul></div>"+
+  			"<div class='col-xs-12 col-sm-12 col-md-7 excerpet' style = 'word-wrap: break-word;'>"+
+  				"<h3><a href='#' title='12'>"+data[key][0]+"</a></h3>"+
+          "<p>"+data[key][4]+"</p></center>"+
+            "<span><a href='"+data[key][1]+"'>+More...</a></span><hr><br>"+
+  			"</div>"+
+  			"<span ></span>"+
+        "</article>";
+
+
+    });
         });
         return false;
       });
@@ -176,9 +213,8 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
 
 </head>
 
-<body>
-<p><a href="javascript:void();" id="main_search"><input type = "button" onclick="javascript:void();" value="search"></a>
-<p id="result"></p>
+<body id ="body">
+<p type="hidden" hidden><a href="javascript:void();"><input type = "button" value="search"></a>
 <nav class="navbar navbar-default navbar-inverse" role="navigation">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -279,7 +315,7 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
                 <input type="hidden" name="search_param" value="all" id="search_param">
                 <input type="text" class="form-control" name="x" placeholder="Search ...">
                 <span class="input-group-btn">
-                    <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                    <button class="btn btn-default" id="main_search" type="button"><span class="glyphicon glyphicon-search"></span></button>
                 </span>
             </div>
         </div>
@@ -289,14 +325,20 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
 
 <center>
 <div class="container"> <div class="row"> <div id="filter-panel" class="collapse filter-panel"> <div class="panel panel-default"> <div class="panel-body" > <form class="form-inline" role="form">
+<h3 style = 'color:black;'>Price Range</h3>
 
-   <div class="form-group"> <label class="filter-col" style="margin-right:0;" for="pref-perpage">Rows per page:</label>
-</div> <!-- form group [rows] --> <div class="form-group"> <label class="filter-col" style="margin-right:0;" for="pref-search">Search:</label> <p style="color:black;">Date(From) : <input type="date" class="form-control input-sm" id="pref-search"></p> </div><!-- form group [search] --> <div class="form-group">
-<label class="filter-col" style="margin-right:0;" for="pref-orderby">Order by:</label>  </div> <!-- form group [order by] --> <div class="form-group"> <div class="checkbox" style="margin-left:10px; margin-right:10px;">
-<div class="form-group"> <label class="filter-col" style="margin-right:0;" for="pref-search">Search:</label> <p style="color:black;">Date(To): <input type="date" class="form-control input-sm" id="pref-search"></p> </div>
-</div>
+    <div class="col-md-12">
+    <input type="text" id="price-range" name="price-range" value="" />
+    </div>sta
+    <div class="clearfix"></div>
 
-</div> </div> <p style="color:black;">Min Price : <input type="number" id="pref-search"><p style="color:black;">Max Price : <input type="number" id="pref-search"></p></p>
+
+    <h3 style = 'color:black;'>Release Date Range</h3>
+    <div class="col-md-12">
+    <input type="text" id="date-range" name="date-range" value="" />
+    </div>sta
+    <div class="clearfix"></div>
+
 <p style="color:black;">OS:
 <select id ="os">
   <option value="All" selected>All</option>
@@ -352,79 +394,44 @@ DirectX:
 <h3 align="center">Results</h3>
 </div>
 </center>
-<div class="container"  style = "z-index=-1;width:auto;background-color:black;padding:20px;opacity:0.95;color:white;margin-top:0px;">
+<div class="container"  style = "z-index=-1;width:auto;background-color:black;padding:20px;opacity:0.80;color:white;margin-top:0px;">
 
     <hgroup class="mb20">
-		<h1>Search Results</h1>
-		<h2 class="lead"><strong class="text-danger">3</strong> results were found for the search for <b>Game</b></h2>
+		<h1 style = "color=white">Search Results</h1>
+		<h2 class="lead" style = "color=white;" >results were found for the search for games</h2>
 	</hgroup>
 
-    <section class="col-xs-12 col-sm-6 col-md-12">
-		<article class="search-result row">
-			<div class="col-xs-12 col-sm-12 col-md-3">
-				<a href="#" title="Chronicle" class="thumbnail"><img src="Chronicle.jpg" alt="1" style="border=0px;"/></a>
-			</div>
-			<div class="col-xs-12 col-sm-12 col-md-2">
-				<ul class="meta-search">
-					<li><i class="glyphicon glyphicon-calendar"></i> <span>02/15/2016</span></li>
-					<li><i class="glyphicon glyphicon-time"></i> <span>4:28 pm</span></li>
-					<li><i class="glyphicon glyphicon-tags"></i> <span>Action</span></li>
-				</ul>
-			</div>
-			<div class="col-xs-12 col-sm-12 col-md-7 excerpet">
-				<h3><a href="#" title="">Chronicle</a></h3>
-        <p>Play with the fate of Legends in a battle of wits, strategy and combat, where lives are gambled on the turn of your cards. Leave your minions behind as you fight your own battles, expand and master your deck, and face the challenge of unique card combat. Chronicle is a new kind of card gaming experience.</p></center>
-          <span><a href="#">+More...</a></span>
-			</div>
-			<span class="clearfix borda"></span>
-		</article>
+    <section class="col-xs-12 col-sm-6 col-md-12" >
+		<article class="search-result row" id = "result">
 
-        <article class="search-result row">
-			<div class="col-xs-12 col-sm-12 col-md-3">
-				<a href="#" title="Istrolid" class="thumbnail"><img src="Istrolid.jpg" alt="" /></a>
-			</div>
-			<div class="col-xs-12 col-sm-12 col-md-2">
-				<ul class="meta-search">
-					<li><i class="glyphicon glyphicon-calendar"></i> <span>02/13/2016</span></li>
-					<li><i class="glyphicon glyphicon-time"></i> <span>8:32 pm</span></li>
-					<li><i class="glyphicon glyphicon-tags"></i> <span>Adventure</span></li>
-				</ul>
-			</div>
-
-
-
-
-
-
-			<div class="col-xs-12 col-sm-12 col-md-7">
-				<h3><a href="#" title="">Istrolid</a></h3>
-        <p>In Istrolid you design your own unique spaceships from a large number of parts to fit your strategy and play style. With no set units or factions you are free to create a fleet where each ship has its own balanced strengths and weaknesses, from basic fighters and bombers to hulking battleships and ...</p></center>
-      <span><a href="#">+More...</a></span>
-			</div>
-			<span class="clearfix borda"></span>
-		</article>
-
-		<article class="search-result row">
-			<div class="col-xs-12 col-sm-12 col-md-3">
-				<a type = "hidden"href="#" title="wormis" class="thumbnail"><img src="wormis.jpg" alt="Lorem ipsum"/></a>
-			</div>
-			<div class="col-xs-12 col-sm-12 col-md-2">
-				<ul class="meta-search">
-					<li><i class="glyphicon glyphicon-calendar"></i> <span>01/11/2016</span></li>
-					<li><i class="glyphicon glyphicon-time"></i> <span>10:13 am</span></li>
-					<li><i class="glyphicon glyphicon-tags"></i> <span>Actions</span></li>
-				</ul>
-			</div>
-			<div class="col-xs-12 col-sm-12 col-md-7">
-				<h3><a href="#" title="">Wormis</a></h3>
-        <p>Smash worms or slither trying! Warning: Incredibly addicting Multiplayer Game!</p>
-        <span><a href="#">+More...</a></span>
-			</div>
-			<span class="clearfix border"></span>
 		</article>
 
 	</section>
 </div>
+<script src="../static/js/moment.js"></script>
+<script src="../static/js/ion.rangeSlider.js"></script>
+
+
+<script type="text/javascript">
+$("#price-range").ionRangeSlider({
+  type: "double",
+  grid: true,
+  min: 0,
+  max: 1000,
+  from: 200,
+  to: 800,
+  prefix: "$"
+});
+$("#date-range").ionRangeSlider({
+  type:"double",
+    min: +moment().subtract(12, "years").format("X"),
+    max: +moment().format("X"),
+    from: +moment().subtract(12, "months").format("X"),
+    prettify: function (num) {
+        return moment(num, "X").format("LL");
+    }
+});
+</script>
 
 
 </body>
