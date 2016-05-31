@@ -660,7 +660,8 @@ def first_layer_pages_scrapper_with_sema(page=1):   #maybe u need this
     results = []
     threads = []
     for i in range(1,page+1):
-        semaphore = threading.BoundedSemaphore(5)
+        #semaphore = threading.BoundedSemaphore(5)
+        semaphore = threading.Semaphore(5)
         t = semaphore_thread(go_in_first_page, i, semaphore)
         threads.append(t)
         t.start()
@@ -671,6 +672,49 @@ def first_layer_pages_scrapper_with_sema(page=1):   #maybe u need this
     return results  #age khasti extractor ro bardar
 
 
+
+
+##################################################################
+#LAB
+
+def lab_gpu():
+    url = 'http://www.futuremark.com/hardware/gpu'
+    request = requests.get(url)
+    content = request.content
+    print content
+    soup = BeautifulSoup(content, "lxml")
+    my_html = soup.find_all("a",{"class":"productnameBold"},True)
+    results = []
+    for item in my_html:
+        results.append(item.text)
+    return results
+
+def lab_gpu2():
+    url = 'http://www.surlix.com/us/pc/11-full-ranking-gpus.php'
+    request = requests.get(url)
+    content = request.content
+    #print content
+    soup = BeautifulSoup(content, "lxml")
+    my_html = soup.find_all("a",{},True)
+    results = []
+    for item in my_html:
+        results.append(str(item.text.encode('utf-8')))
+    return results[18:-3]
+
+
+def lab_cpu2():
+    url = 'http://www.surlix.com/us/pc/5-full-ranking-processors.php'
+    request = requests.get(url)
+    content = request.content
+    #print content
+    soup = BeautifulSoup(content, "lxml")
+    my_html = soup.find_all("a",{},True)
+    results = []
+    for item in my_html:
+        results.append(str(item.text.encode('utf-8')))
+    return results[18:-3]
+
+print first_layer_pages_scrapper_with_sema(50)
 #print scrapper_ver6(1)
 #print first_layer_pages_scrapper(1)
 #print go_in_first_page(1)
