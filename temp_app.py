@@ -337,9 +337,9 @@ def get_statistics(content):
             reviews = statics_list[4].replace(",", "")
         except IndexError:
             reviews = "0"
-        return {"statics": percent, "reviews": reviews}
+        return {"static": percent, "reviews": reviews}
     except:
-        return {"statics": 0, "reviews": 0}
+        return {"static": 0, "reviews": 0}
 
 
 

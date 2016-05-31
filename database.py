@@ -39,15 +39,14 @@ def create_game_table():
                            "url VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci,"
                            "overall VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci,"
                            "description TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci,"
-                           "user_tags VARCHAR(255),statics VARCHAR(255),purchase_price FLOAT ,"
+                           "user_tags VARCHAR(255),static VARCHAR(255),purchase_price FLOAT ,"
                            "release_date DATE,discount FLOAT,min_os VARCHAR(255),"
                            "min_processor VARCHAR(255),"
                            "min_memory VARCHAR(255),min_graphics VARCHAR(255),min_directx VARCHAR(255),"
                            "min_storage VARCHAR(255),min_notes VARCHAR(255),details VARCHAR(255)"
                            ",rec_directx VARCHAR(255),rec_storage VARCHAR(255),rec_notes VARCHAR(255),"
                            "rec_os VARCHAR(255),rec_processor VARCHAR(255),after_discount INT,"
-                           "rec_memory VARCHAR(255),rec_graphics VARCHAR(255), original_price FLOAT,reviews INT,"
-                           "summary_id INT, FOREIGN KEY(summary_id) REFERENCES summary(id))")
+                           "rec_memory VARCHAR(255),rec_graphics VARCHAR(255), original_price FLOAT,reviews INT)")
             connection_obj.commit()
     except Exception as e:
         print(e)
@@ -78,7 +77,8 @@ def create_summary_table():
             cursor = connection_obj.cursor()
             cursor.execute("CREATE TABLE IF NOT EXISTS summary(id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,"
                            "title VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci,url VARCHAR(255),"
-                           "release_date DATE,discount FLOAT,price FLOAT,final_price FLOAT,image VARCHAR(255))")
+                           "release_date DATE,discount FLOAT,price FLOAT,final_price FLOAT,image VARCHAR(255),"
+                           "game_id INT, FOREIGN KEY(game_id) REFERENCES games(id))")
             connection_obj.commit()
     except Exception as e:
         print(e)
@@ -101,7 +101,7 @@ def create_cpu_table():
         connection_obj = MySql.connection()
         with connection_obj:
             cursor = connection_obj.cursor()
-            cursor.execute("CREATE TABLE IF NOT EXISTS cpu(id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,"
+            cursor.execute("CREATE TABLE IF NOT EXISTS gpu(id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,"
                            "title VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci)")
             connection_obj.commit()
     except Exception as e:
@@ -145,7 +145,7 @@ def add_game(kwargs):
         connection_obj = MySql.connection()
         with connection_obj:
             cursor = connection_obj.cursor()
-            cols = ["title", "url", "overall", "description", "user_tags", "statics", "purchase_price",
+            cols = ["title", "url", "overall", "description", "user_tags", "static", "purchase_price",
                     "release_date"]
             cols += ["discount", "min_os", "min_processor", "min_memory", "min_graphics", "min_directx",
                      "min_storage"]
@@ -184,7 +184,7 @@ def add_game(kwargs):
                 for key in cols:
                     into_string += key + " = %s,"
                 into_string = into_string[:len(into_string) - 1]
-                into_string = into_string.replace("statistics", "statics")
+                into_string = into_string.replace("statistics", "static")
                 url = kwargs["url"].encode("utf-8")
                 query_tuple = tuple([x for x in query_tuple if x != url])
                 del kwargs["url"]
@@ -194,7 +194,7 @@ def add_game(kwargs):
                 for key in cols:
                     into_string += key + ","
                 into_string = into_string[:len(into_string) - 1]
-                into_string = into_string.replace("statistics", "statics")
+                into_string = into_string.replace("statistics", "static")
                 print kwargs['description']
                 cursor.execute(
                     "INSERT INTO games(" + into_string + ") VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s)",
@@ -235,34 +235,30 @@ def add_summary(input_list):
                 if discount:
                     discount = discount.replace("-", "").replace("%", "")           # Remove useless characters from discount
                 price_tuple = input_dict['price'][counter]
-                print ")))))))))))))))))))))0"
-                print price_tuple
-                print type(price_tuple)
                 if len(price_tuple) == 1:
                     price = price_tuple[0].encode('utf-8').replace("$", "")
                     final_price = "0"
-                    print "KiR KiR KiR KiR"
-                    print price
-
                 else:
                     # price = price_tuple[0].encode('utf-8')
                     price = price_tuple[1].encode('utf-8').replace("$", "")
                     final_price = price_tuple[1].encode('utf-8')
                 image = input_dict["pics"][0].encode("utf-8")
-                url = input_dict['url'][0].encode("utf-8")
                 release = input_dict['rdate'][counter]
                 months_name = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
                 date_list = release.encode("utf-8").split(" ")
                 release_date = date_list[2] + "-" + str(months_name.index(date_list[1].replace(',', "")) + 1) + "-" + date_list[0]
-                print "KKKK"
-                print (title, url, release_date, discount, price, final_price, image)
-
                 # Send to the database
 
                 cursor = connection_onj.cursor()
-                cursor.execute("INSERT INTO summary(title,url,release_date,discount,price,final_price, image) "
-                               "VALUES(%s,%s,%s,%s,%s,%s,%s)",
-                               (title, url, release_date, discount, price, final_price, image))
+                cursor.execute("SELECT id FROM games WHERE url = %s", (url,))
+                try:
+                    game_id = cursor.fetchone()[0]
+                except IndexError:
+                    game_id = "-1"
+                print (title, url, release_date, discount, price, final_price, image, str(game_id))
+                cursor.execute("INSERT INTO summary(title,url,release_date,discount,price,final_price,image,game_id) "
+                               "VALUES(%s,%s,%s,%s,%s,%s,%s,%s)",
+                               (title, url, release_date, discount, price, final_price, image, str(game_id)))
                 connection_onj.commit()
 
 
@@ -305,10 +301,9 @@ def add_user(username, password, email):
         connection_obj = MySql.connection()
         with connection_obj:
             cursor = connection_obj.cursor()
-            if not check_user_with_email(email) and not check_user_with_username(username):
-                return False
-            cursor.execute("INSERT INTO users(user_name,password,email) VALUES(%s,%s,%s) IF user_name != %s AND"
-                           " email != %s", (username, password, email, username, email))
+            # if not check_user_with_email(email) and not check_user_with_username(username):
+            #     return False
+            cursor.execute("INSERT INTO users(user_name,password,email) VALUES(%s,%s,%s)", (username, password, email))
             connection_obj.commit()
             return True
     except Exception as e:
@@ -396,9 +391,9 @@ def search(input_dict):
                     elif arg == "max_discount":
                         search_string += "discount <= " + input_dict[arg] + " AND "
                     elif arg == "min_statics":
-                        search_string += "statics >= " + input_dict[arg] + " AND "
+                        search_string += "static >= " + input_dict[arg] + " AND "
                     elif arg == "max_statics":
-                        search_string += "statics <= " + input_dict[arg] + " AND "
+                        search_string += "static <= " + input_dict[arg] + " AND "
                     elif arg.split("_")[0] == "min":
                         search_string += arg + " <= " + input_dict[arg] + " AND "
                     elif arg.split("_")[0] == "max":
@@ -510,7 +505,6 @@ def add_cpu(title_list):
         print e
         return 0
 
-
 def add_gpu(title_list):
     """
     | This function adds cpu title to the table if not exists
@@ -565,11 +559,3 @@ def get_gpu(title):
     except Exception as e:
         print e
         return 0
-
-
-def create_s():
-    create_game_table()
-    create_users_table()
-    create_summary_table()
-    create_cpu_table()
-    create_gpu_table()

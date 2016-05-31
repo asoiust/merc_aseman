@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Information</title>
-    <script src="../statics/js/jquery-2.2.4.min.js"></script>
-    <script src="../statics/js/highcharts.js"></script>
-    <script src="../statics/js/highcharts-more.js"></script>
-    <script src="../statics/js/modules/solid-gauge.js"></script>
+    <script src="{{url_for('static', filename='js/jquery-2.2.4.min.js')}}"></script>
+    <script src="{{url_for('static', filename='js/highcharts.js')}}"></script>
+    <script src="{{url_for('static', filename='js/highcharts-3d.js')}}">   </script>
+    <script src="{{url_for('static', filename='js/highcharts-more.js')}}"></script>
+    <script src="{{url_for('static', filename='js/modules/solid-gauge.js')}}"></script>
 </head>
 <body>
 <div id="overall" style="width: 600px; height: 600px; margin: 0 auto"></div>
-<script src="../statics/js/info.js"></script>
+<script src="{{url_for('static', filename='js/info.js')}}"></script>
 </body>
 </html>
