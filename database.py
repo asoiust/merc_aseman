@@ -84,6 +84,30 @@ def create_summary_table():
         print(e)
 
 
+def create_gpu_table():
+    try:
+        connection_obj = MySql.connection()
+        with connection_obj:
+            cursor = connection_obj.cursor()
+            cursor.execute("CREATE TABLE IF NOT EXISTS gpu(id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,"
+                           "title VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci)")
+            connection_obj.commit()
+    except Exception as e:
+        print(e)
+
+
+def create_cpu_table():
+    try:
+        connection_obj = MySql.connection()
+        with connection_obj:
+            cursor = connection_obj.cursor()
+            cursor.execute("CREATE TABLE IF NOT EXISTS gpu(id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,"
+                           "title VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci)")
+            connection_obj.commit()
+    except Exception as e:
+        print(e)
+
+
 def check_game_exists(url):
     """
     | This function gets url and if a game with same url exists return that's id number in a tuple.
@@ -467,3 +491,77 @@ def get_summary(page_number):
         return 0
 
 
+def add_cpu(title_list):
+    """
+    | This function adds cpu title to the table if not exists
+    :param title_list:list
+    :return:bool|int
+    """
+    try:
+        if type(title_list) == list:
+            for title in title_list:
+                connection_obj = MySql.connection()
+                with connection_obj:
+                    cursor = connection_obj.cursor()
+                    cursor.execute("INSERT INTO cpu(title) VALUES(%s)" + title)
+                    connection_obj.commit()
+            return True
+    except Exception as e:
+        print e
+        return 0
+
+def add_gpu(title_list):
+    """
+    | This function adds cpu title to the table if not exists
+    :param title_list: list
+    :return: bool
+    """
+    try:
+        if type(title_list) == list:
+            for title in title_list:
+                connection_obj = MySql.connection()
+                with connection_obj:
+                    cursor = connection_obj.cursor()
+                    cursor.execute("INSERT INTO gpu(title) VALUES(%s)" + title)
+                    connection_obj.commit()
+            return True
+    except Exception as e:
+        print e
+        return 0
+
+
+def get_cpu(title):
+    """
+    | This function returns all cpus with title included title param as a tuple of tuples
+    :param title: str
+    :return: tuple
+    """
+    try:
+        connection_obj = MySql.connection()
+        with connection_obj:
+            cursor = connection_obj.cursor()
+            cursor.execute("SELECT * FROM cpu WHERE title LIKE CONVERT(%s USING utf8) ",
+                           (unicode(u'%' + title + u'%'),))
+            return cursor.fetchall()
+    except Exception as e:
+        print e
+        return 0
+
+
+def get_gpu(title):
+    """
+    | This function returns all gpus with title included title param as a tuple of tuples
+    :param title: str
+    :return: tuple
+    """
+    try:
+        connection_obj = MySql.connection()
+        with connection_obj:
+            cursor = connection_obj.cursor()
+            cursor.execute("SELECT * FROM gpu WHERE title LIKE CONVERT(%s USING utf8) ",
+                           (unicode(u'%' + title + u'%'),))
+            return cursor.fetchall()
+    except Exception as e:
+        print e
+        return 0
+    
