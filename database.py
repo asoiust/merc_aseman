@@ -393,7 +393,7 @@ def search(input_dict):
                         search_string += "details " + like_string + " OR "
             if search_string.split(" ")[-2] == "Or":
                 search_string = search_string[:len(search_string) - 5]
-        cursor.execute("SELECT title,url,release_date,details,description FROM games WHERE " + search_string)
+        cursor.execute("SELECT title,url,release_date,details,description,id FROM games WHERE " + search_string)
         result = cursor.fetchall()
         print result
         return result
