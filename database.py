@@ -101,7 +101,7 @@ def create_cpu_table():
         connection_obj = MySql.connection()
         with connection_obj:
             cursor = connection_obj.cursor()
-            cursor.execute("CREATE TABLE IF NOT EXISTS gpu(id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,"
+            cursor.execute("CREATE TABLE IF NOT EXISTS cpu(id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,"
                            "title VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci)")
             connection_obj.commit()
     except Exception as e:
@@ -510,6 +510,7 @@ def add_cpu(title_list):
         print e
         return 0
 
+
 def add_gpu(title_list):
     """
     | This function adds cpu title to the table if not exists
@@ -564,4 +565,11 @@ def get_gpu(title):
     except Exception as e:
         print e
         return 0
-    
+
+
+def create_s():
+    create_game_table()
+    create_users_table()
+    create_summary_table()
+    create_cpu_table()
+    create_gpu_table()

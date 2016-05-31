@@ -2,8 +2,7 @@
 __author__ = 'sargdsra'
 
 from flask import Flask, render_template, session, request, json, redirect, url_for
-from database import check_user, add_user, search, get_summary, get_post, create_game_table, create_users_table, \
-    create_summary_table, get_res
+from database import check_user, add_user, search, get_summary, get_post, create_s, get_res
 
 app = Flask(__name__)
 app.secret_key = '\xa2\x1a\xb2B\x7f\x06\x95q\x00&\xe2\x0e\x89C\xbe\x84\xbb\xbf\xb1\x917\x96T\xbb'
@@ -11,9 +10,7 @@ app.secret_key = '\xa2\x1a\xb2B\x7f\x06\x95q\x00&\xe2\x0e\x89C\xbe\x84\xbb\xbf\x
 
 @app.before_first_request
 def init_db():
-    create_game_table()
-    create_users_table()
-    create_summary_table()
+    create_s()
 
 
 @app.route("/")
@@ -168,11 +165,11 @@ def f_stat():
     return redirect(url_for("f_home"))
 
 
-@app.route("/p_search", methods=['POST','GET'])
+@app.route("/p_search", methods=['POST'])
 def f_go_search():
-    # if request.method == 'POST' and session.get("user"):
-    return render_template("ad-search.html")
-    # return render_template("main.html")
+    if request.method == 'POST' and session.get("user"):
+        return render_template("ad-search.html")
+    return render_template("main.html")
 
 
 if __name__ == '__main__':
