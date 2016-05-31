@@ -22,7 +22,7 @@ $(document).ready(function(){
 
 <style>
 body{
-  background-image:url("static/pictures/bg.jpg");
+  background-image:url("../static/pictures/bg.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed;
   min-height: 500px;
@@ -37,8 +37,9 @@ body{
   background-color:rgba(255,255,255,.8);
 }
 #login-dp .help-block{
+    font-size:12px
 }
-  font-size:12px
+
 #login-dp .bottom{
   background-color:rgba(255,255,255,.8);
   border-top:1px solid #ddd;
@@ -130,7 +131,7 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../static/styles/ion.rangeslider.css" type="text/css">
+  <link rel="stylesheet" href="../static/styles/ion.rangeSlider.css" type="text/css">
   <link rel="stylesheet" href="../static/styles/ion.rangeSlider.skinFlat.css" type="text/css">
 
   <link rel="stylesheet" href="../static/styles/ion.rangeSlider.skinModern.css" type="text/css">
@@ -151,7 +152,7 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
         $.getJSON('/search', {
           os: $('#os').val(),
           graphic_card: $('#graphic_card').val(),
-          proccessor: $('#proccessor').val(),
+          proccessor: $('#proccessor').val()
         }, function(data) {
           document.getElementById("result").innerHTML=""// $("#result").text(data);
           // for (i = 1; i < data.length; i++) {
@@ -160,7 +161,7 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
     //  }
     Object.keys(data).forEach(function(key){
       // document.getElementById("result").innerHTML+=data[key]+"<br><br><br><br><br><br>";
-      console.log(data[key][]);
+      console.log(data[key]);
       document.getElementById("result").innerHTML+=+"<article class='search-result row' id = 'result'>"+
   			"<div class='col-xs-12 col-sm-12 col-md-3'>"+
   				"<a href='#' title='Chronicle' class='thumbnail'><img src='"+data[key][5]+"' alt='1' style='border=0px;'/></a></div>"+
