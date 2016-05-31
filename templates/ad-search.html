@@ -1,18 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <title>GamesYouWant</title>
-  <meta
-  name="viewport" content="width=device-width, initial-scale=1"><link
-  rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <link rel="stylesheet" href="rangeslider.css" type="text/css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
@@ -30,15 +18,11 @@ $(document).ready(function(){
     }
   });
 });
-
-
-
-
 </script>
 
 <style>
 body{
-  background-image:url("../bg.jpg");
+  background-image:url("static/pictures/bg.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed;
   min-height: 500px;
@@ -46,16 +30,15 @@ body{
   background-size: cover;
   padding:0px;
 }
-
 #login-dp{
   min-width: 250px;
   padding: 14px 14px 0;
   overflow:hidden;
   background-color:rgba(255,255,255,.8);
 }
-#login-dp .help-block{font-size:12px;
+#login-dp .help-block{
 }
-
+  font-size:12px
 #login-dp .bottom{
   background-color:rgba(255,255,255,.8);
   border-top:1px solid #ddd;
@@ -97,44 +80,30 @@ body{
       border-top:0 none;
   }
 }
-
 #discription{
-
-
     background-color: #f2f2f2;
     width:798px;
     margin-bottom:1.5cm;
     opacity: 0.7;
     filter: alpha(opacity=80); @Lyo=@ For IE8 and earlier @Ki8=@
-
 }
 .carousel-inner > .item > img,
   .carousel-inner > .item > a > img {
       width: 70%;
       margin: auto;
   }
-
-
 #logo{
   opacity: 0.8;
   margin-top: -1cm;
   margin-left:0cm;
   width: inherit;
 }
-
-
-
-
-
 @import "http://fonts.googleapis.com/css?family=Roboto:300,400,500,700";
-
 .container { margin-top: 20px; }
 .mb20 { margin-bottom: 20px; }
-
 hgroup { padding-left: 15px; border-bottom: 1px solid #ccc; }
 hgroup h1 { font: 500 normal 1.625em "Roboto",Arial,Verdana,sans-serif; color: #2a3644; margin-top: 0; line-height: 1.15; }
 hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; color: #2a3644; margin: 0; padding-bottom: 10px; }
-
 .search-result .thumbnail { border-radius: 0 !important; }
 .search-result:first-child { margin-top: 0 !important; }
 .search-result { margin-top: 20px; }
@@ -151,38 +120,74 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
 .search-result span.plus a:hover { background-color: #414141; }
 .search-result span.plus a i { color: #fff !important; }
 .search-result span.border { display: block; width: 97%; margin: 0 15px; border-bottom: 1px dotted #ccc; }
-
-
-
-
 </style>
 
+<head>
+  <title>GamesYouWant</title>
+  <meta
+  name="viewport" content="width=device-width, initial-scale=1"><link
+  rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../static/styles/ion.rangeslider.css" type="text/css">
+  <link rel="stylesheet" href="../static/styles/ion.rangeSlider.skinFlat.css" type="text/css">
+
+  <link rel="stylesheet" href="../static/styles/ion.rangeSlider.skinModern.css" type="text/css">
+
+  <link rel="stylesheet" href="../static/styles/normalize.css" type="text/css">
+
+
+
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</script>
      <script type=text/javascript>
     $(function() {
-      $('#main_search').bind('click', function() {
+      $('#main_search').click(function() {
+        console.log("kir");
         $.getJSON('/search', {
-          os: document.getElementById("os").val(),
-          graphic_card: document.getElementById("graphic_card").val(),
-          proccessor: document.getElementById("proccessor").val(),
-          directx: document.getElementById("directx").val(),
-
+          os: $('#os').val(),
+          graphic_card: $('#graphic_card').val(),
+          proccessor: $('#proccessor').val(),
         }, function(data) {
-          $("#result").text(data.result);
+          document.getElementById("result").innerHTML=""// $("#result").text(data);
+          // for (i = 1; i < data.length; i++) {
+              // document.getElementById("result").innerHTML+=data[i]+"<br><br><br><br><br><br><br>";
+              // document.getElementById("result").appendChild(data[i]);
+    //  }
+    Object.keys(data).forEach(function(key){
+      // document.getElementById("result").innerHTML+=data[key]+"<br><br><br><br><br><br>";
+      console.log(data[key][]);
+      document.getElementById("result").innerHTML+=+"<article class='search-result row' id = 'result'>"+
+  			"<div class='col-xs-12 col-sm-12 col-md-3'>"+
+  				"<a href='#' title='Chronicle' class='thumbnail'><img src='"+data[key][5]+"' alt='1' style='border=0px;'/></a></div>"+
+  			"<div class='col-xs-12 col-sm-12 col-md-2'>"+
+  				"<ul class='meta-search'>"+
+  					"<li style = 'word-wrap: break-word;'><i class='glyphicon glyphicon-calendar'></i> <span style = 'word-wrap: break-word;'>"+data[key][2]+"</span></li>"+
+  					"<li style = 'word-wrap: break-word;'><i class='glyphicon glyphicon-tags'></i> <span style = 'word-wrap: break-word;'>"+data[key][3]+"</span></li>"+
+  				"</ul></div>"+
+  			"<div class='col-xs-12 col-sm-12 col-md-7 excerpet' style = 'word-wrap: break-word;'>"+
+  				"<h3><a href='#' title='12'>"+data[key][0]+"</a></h3>"+
+          "<p>"+data[key][4]+"</p></center>"+
+            "<span><a href='"+data[key][1]+"'>+More...</a></span><hr><br>"+
+  			"</div>"+
+  			"<span ></span>"+
+        "</article>";
+    });
         });
         return false;
       });
     });
   </script>
-<link rel="stylesheet" type="text/css" href="../static/styles/ion.rangeSlider.css">
-<link rel="stylesheet" type="text/css" href="../static/styles/ion.rangeSlider.skinFlat.css">
-<link rel="stylesheet" type="text/css" href="../static/styles/ion.rangeSlider.skinHTML5.css">
-<link rel="stylesheet" type="text/css" href="../static/styles/ion.rangeSlider.skinModern.css">
-<link rel="stylesheet" type="text/css" href="../static/styles/ion.rangeSlider.skinNice.css">
-<link rel="stylesheet" type="text/css" href="../static/styles/ion.rangeSlider.skinSimple.css">
+
+
 </head>
 
-<body>
-<p id="result"></p>
+<body id ="body">
+<p type="hidden" hidden><a href="javascript:void();"><input type = "button" value="search"></a>
 <nav class="navbar navbar-default navbar-inverse" role="navigation">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
@@ -283,33 +288,30 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
                 <input type="hidden" name="search_param" value="all" id="search_param">
                 <input type="text" class="form-control" name="x" placeholder="Search ...">
                 <span class="input-group-btn">
-                    <button class="btn btn-default" type="button" id=""main_search"><span class="glyphicon glyphicon-search"></span></button>
+                    <button class="btn btn-default" id="main_search" type="button"><span class="glyphicon glyphicon-search"></span></button>
                 </span>
             </div>
         </div>
 	</div>
 </div>
 
-<!--RANGE-->
 
 <center>
 <div class="container"> <div class="row"> <div id="filter-panel" class="collapse filter-panel"> <div class="panel panel-default"> <div class="panel-body" > <form class="form-inline" role="form">
+<h3 style = 'color:black;'>Price Range</h3>
+
     <div class="col-md-12">
-    <input type="text" id="example_id" name="example_name" value="" />
+    <input type="text" id="price-range" name="price-range" value="" />
     </div>sta
     <div class="clearfix"></div>
-    <!--End of RANGE-->
-   <div class="form-group"> <label class="filter-col" style="margin-right:0;" for="pref-perpage">Rows per page:</label>
-</div> <!-- form group [rows] --> <div class="form-group"> <label class="filter-col" style="margin-right:0;" for="pref-search">Search:</label> <p style="color:black;">Date(From) : <input type="date" class="form-control input-sm" id="pref-search"></p>
-</div><!-- form group [search] --> <div class="form-group">
 
 
+    <h3 style = 'color:black;'>Release Date Range</h3>
+    <div class="col-md-12">
+    <input type="text" id="date-range" name="date-range" value="" />
+    </div>sta
+    <div class="clearfix"></div>
 
-<label class="filter-col" style="margin-right:0;" for="pref-orderby">Order by:</label>  </div> <!-- form group [order by] --> <div class="form-group"> <div class="checkbox" style="margin-left:10px; margin-right:10px;">
-<div class="form-group"> <label class="filter-col" style="margin-right:0;" for="pref-search">Search:</label> <p style="color:black;">Date(To): <input type="date" class="form-control input-sm" id="pref-search"></p> </div>
-</div>
-
-</div> </div> <p style="color:black;">Min Price : <input type="number" id="pref-search"><p style="color:black;">Max Price : <input type="number" id="pref-search"></p></p>
 <p style="color:black;">OS:
 <select id ="os">
   <option value="All" selected>All</option>
@@ -365,89 +367,45 @@ DirectX:
 <h3 align="center">Results</h3>
 </div>
 </center>
-<div class="container"  style = "z-index=-1;width:auto;background-color:black;padding:20px;opacity:0.95;color:white;margin-top:0px;">
+<div class="container"  style = "z-index=-1;width:auto;background-color:black;padding:20px;opacity:0.80;color:white;margin-top:0px;">
 
     <hgroup class="mb20">
-		<h1>Search Results</h1>
-		<h2 class="lead"><strong class="text-danger">3</strong> results were found for the search for <b>Game</b></h2>
+		<h1 style = "color=white">Search Results</h1>
+		<h2 class="lead" style = "color=white;" >results were found for the search for games</h2>
 	</hgroup>
 
-    <section class="col-xs-12 col-sm-6 col-md-12">
-		<article class="search-result row">
-			<div class="col-xs-12 col-sm-12 col-md-3">
-				<a href="#" title="Chronicle" class="thumbnail"><img src="Chronicle.jpg" alt="1" style="border=0px;"/></a>
-			</div>
-			<div class="col-xs-12 col-sm-12 col-md-2">
-				<ul class="meta-search">
-					<li><i class="glyphicon glyphicon-calendar"></i> <span>02/15/2016</span></li>
-					<li><i class="glyphicon glyphicon-time"></i> <span>4:28 pm</span></li>
-					<li><i class="glyphicon glyphicon-tags"></i> <span>Action</span></li>
-				</ul>
-			</div>
-			<div class="col-xs-12 col-sm-12 col-md-7 excerpet">
-				<h3><a href="#" title="">Chronicle</a></h3>
-        <p>Play with the fate of Legends in a battle of wits, strategy and combat, where lives are gambled on the turn of your cards. Leave your minions behind as you fight your own battles, expand and master your deck, and face the challenge of unique card combat. Chronicle is a new kind of card gaming experience.</p></center>
-          <span><a href="#">+More...</a></span>
-			</div>
-			<span class="clearfix borda"></span>
-		</article>
+    <section class="col-xs-12 col-sm-6 col-md-12" >
+		<article class="search-result row" id = "result">
 
-        <article class="search-result row">
-			<div class="col-xs-12 col-sm-12 col-md-3">
-				<a href="#" title="Istrolid" class="thumbnail"><img src="Istrolid.jpg" alt="" /></a>
-			</div>
-			<div class="col-xs-12 col-sm-12 col-md-2">
-				<ul class="meta-search">
-					<li><i class="glyphicon glyphicon-calendar"></i> <span>02/13/2016</span></li>
-					<li><i class="glyphicon glyphicon-time"></i> <span>8:32 pm</span></li>
-					<li><i class="glyphicon glyphicon-tags"></i> <span>Adventure</span></li>
-				</ul>
-			</div>
-
-
-
-
-
-
-			<div class="col-xs-12 col-sm-12 col-md-7">
-				<h3><a href="#" title="">Istrolid</a></h3>
-        <p>In Istrolid you design your own unique spaceships from a large number of parts to fit your strategy and play style. With no set units or factions you are free to create a fleet where each ship has its own balanced strengths and weaknesses, from basic fighters and bombers to hulking battleships and ...</p></center>
-      <span><a href="#">+More...</a></span>
-			</div>
-			<span class="clearfix borda"></span>
-		</article>
-
-		<article class="search-result row">
-			<div class="col-xs-12 col-sm-12 col-md-3">
-				<a type = "hidden"href="#" title="wormis" class="thumbnail"><img src="wormis.jpg" alt="Lorem ipsum"/></a>
-			</div>
-			<div class="col-xs-12 col-sm-12 col-md-2">
-				<ul class="meta-search">
-					<li><i class="glyphicon glyphicon-calendar"></i> <span>01/11/2016</span></li>
-					<li><i class="glyphicon glyphicon-time"></i> <span>10:13 am</span></li>
-					<li><i class="glyphicon glyphicon-tags"></i> <span>Actions</span></li>
-				</ul>
-			</div>
-			<div class="col-xs-12 col-sm-12 col-md-7">
-				<h3><a href="#" title="">Wormis</a></h3>
-        <p>Smash worms or slither trying! Warning: Incredibly addicting Multiplayer Game!</p>
-        <span><a href="#">+More...</a></span>
-			</div>
-			<span class="clearfix border"></span>
 		</article>
 
 	</section>
 </div>
+<script src="../static/js/moment.js"></script>
 <script src="../static/js/ion.rangeSlider.js"></script>
+
+
 <script type="text/javascript">
-//    $("#example_id").ionRangeSlider();
-/*    $("#example_id").ionRangeSlider({
-    type: "double",
-    min: 1000000,
-    max: 2000000,
-    grid: true,
-    force_edges: true
-})*/
+$("#price-range").ionRangeSlider({
+  type: "double",
+  grid: true,
+  min: 0,
+  max: 1000,
+  from: 200,
+  to: 800,
+  prefix: "$"
+});
+$("#date-range").ionRangeSlider({
+  type:"double",
+    min: +moment().subtract(12, "years").format("X"),
+    max: +moment().format("X"),
+    from: +moment().subtract(12, "months").format("X"),
+    prettify: function (num) {
+        return moment(num, "X").format("LL");
+    }
+});
 </script>
+
+
 </body>
 <html>

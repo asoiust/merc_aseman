@@ -145,7 +145,7 @@ def add_game(kwargs):
         connection_obj = MySql.connection()
         with connection_obj:
             cursor = connection_obj.cursor()
-            cols = ["title", "url", "overall", "description", "user_tags", "static", "purchase_price",
+            cols = ["title", "url", "overall", "description", "user_tags", "statics", "purchase_price",
                     "release_date"]
             cols += ["discount", "min_os", "min_processor", "min_memory", "min_graphics", "min_directx",
                      "min_storage"]
@@ -184,7 +184,7 @@ def add_game(kwargs):
                 for key in cols:
                     into_string += key + " = %s,"
                 into_string = into_string[:len(into_string) - 1]
-                into_string = into_string.replace("statistics", "static")
+                into_string = into_string.replace("statistics", "statics")
                 url = kwargs["url"].encode("utf-8")
                 query_tuple = tuple([x for x in query_tuple if x != url])
                 del kwargs["url"]
@@ -194,8 +194,8 @@ def add_game(kwargs):
                 for key in cols:
                     into_string += key + ","
                 into_string = into_string[:len(into_string) - 1]
-                into_string = into_string.replace("statistics", "static")
-                print kwargs['description']
+                into_string = into_string.replace("statistics", "statics")
+
                 cursor.execute(
                     "INSERT INTO games(" + into_string + ") VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s)",
                     query_tuple)
@@ -223,9 +223,7 @@ def get_all_game():
 
 def add_summary(input_list):
     connection_onj = MySql.connection()
-    print input_list
     for input_dict in input_list:
-        print input_dict
         limit = len(input_dict['title'])
         with connection_onj:
             for counter in range(limit):
@@ -255,7 +253,6 @@ def add_summary(input_list):
                     game_id = cursor.fetchone()[0]
                 except IndexError:
                     game_id = "-1"
-                print (title, url, release_date, discount, price, final_price, image, str(game_id))
                 cursor.execute("INSERT INTO summary(title,url,release_date,discount,price,final_price,image,game_id) "
                                "VALUES(%s,%s,%s,%s,%s,%s,%s,%s)",
                                (title, url, release_date, discount, price, final_price, image, str(game_id)))

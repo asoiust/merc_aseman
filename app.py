@@ -325,16 +325,19 @@ def system_req(content):
 
 def get_purchase_price(content):
     try:
+        # print content
         soup = BeautifulSoup(content, "lxml")
-        price = soup.find_all("div",{"class":"game_purchase_price"},True)
+        price = soup.find_all("div",{"class":"game_purchase_price price"},True)
+        #print "kir"
+        #print price
         price_string = string_corrector(price[0].text.encode("utf-8"))
-        if type(price_string) == str:
-            return '0'
+        # if type(price_string) == str:
+        #     return '0'
         price_string = price_string.split(" ")[0]
         price_string = price_string.replace("$", "")
         return price_string
     except:
-        return '0'
+         return '0'
 
 
 def genre_exrtreactor(my_string):
@@ -591,7 +594,6 @@ class semaphore_thread(threading.Thread):
     def run(self):
         self.semaphore.acquire()
         try:
-            print 'kir'
             self.result = self.func(self.arg)
 
         finally:
@@ -681,7 +683,6 @@ def lab_gpu():
     url = 'http://www.futuremark.com/hardware/gpu'
     request = requests.get(url)
     content = request.content
-    print content
     soup = BeautifulSoup(content, "lxml")
     my_html = soup.find_all("a",{"class":"productnameBold"},True)
     results = []
@@ -715,7 +716,8 @@ def lab_cpu2():
     return results[18:-3]
 
 # print first_layer_pages_scrapper_with_sema(50)
-print scrapper_ver6(1)
+#print scrapper_ver6(1)
+print go_in_link_ver3('http://store.steampowered.com/app/730/')
 #print first_layer_pages_scrapper(1)
 #print go_in_first_page(1)
 #print go_in_link(scrapper_first_layer('1')[2])
