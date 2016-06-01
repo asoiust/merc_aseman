@@ -42,11 +42,11 @@ def create_game_table():
                            "user_tags VARCHAR(255),static VARCHAR(255),purchase_price FLOAT ,"
                            "release_date DATE,discount FLOAT,min_os VARCHAR(255),"
                            "min_processor VARCHAR(255),"
-                           "min_memory VARCHAR(255),min_graphics VARCHAR(255),min_directx VARCHAR(255),"
-                           "min_storage VARCHAR(255),min_notes VARCHAR(255),details VARCHAR(255)"
-                           ",rec_directx VARCHAR(255),rec_storage VARCHAR(255),rec_notes VARCHAR(255),"
+                           "min_memory VARCHAR(255),min_graphics TEXT,min_directx VARCHAR(255),"
+                           "min_storage VARCHAR(255),min_notes TEXT,details VARCHAR(255)"
+                           ",rec_directx VARCHAR(255),rec_storage VARCHAR(255),rec_notes TEXT,"
                            "rec_os VARCHAR(255),rec_processor VARCHAR(255),after_discount INT,"
-                           "rec_memory VARCHAR(255),rec_graphics VARCHAR(255), original_price FLOAT,reviews INT)")
+                           "rec_memory VARCHAR(255),rec_graphics TEXT, original_price FLOAT,reviews INT)")
             connection_obj.commit()
     except Exception as e:
         print(e)
