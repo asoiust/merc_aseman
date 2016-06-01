@@ -724,12 +724,66 @@ def lab_cpu2():
     add_cpu(results[18:-3])
     return results[18:-3]
 
+
+
+
+##########################################################################################
+#realese date
+
+
+def scrapper_first_layer_release_date(page):
+    url = 'http://store.steampowered.com/search/results?sort_by=Released_DESC&tags=-1&category1=998&page=%s' % (page,)
+    request = requests.get(url)
+    content = request.content
+    soup = BeautifulSoup(content, "lxml")
+    my_html = soup.find_all("a",{"class":"search_result_row ds_collapse_flag"},True)
+    return link_extractor(my_html)
+
+
+def scrapper_ver7(page=1):
+    link_in_pages = []
+    results = []
+    first_layer_threads = []
+    second_layer_threads = []
+    for i in range(1, page+1):
+        t = thread_scrap(scrapper_first_layer_release_date, str(i))
+        first_layer_threads.append(t)
+        t.start()
+    for j in first_layer_threads:
+        j.join()
+        link_in_pages += j.get_result()
+        #print link_in_pages
+    #semaphore = threading.BoundedSemaphore(15)
+    semaphore = threading.Semaphore(10)
+    #counter = 0
+    for link in link_in_pages:
+        t = semaphore_thread(go_in_link_ver3, link, semaphore)
+        second_layer_threads.append(t)
+        t.start()
+        #counter += 1
+        #print counter
+    for l in second_layer_threads:
+        l.join()
+        pre_result = l.get_result()
+        results.append(pre_result)
+        add_game(pre_result)
+    return results
+    #return True
+
+
+
+
+
+#print scrapper_first_layer_release_date('1')
+
+
+
+print scrapper_ver7(1)
+#print first_layer_pages_scrapper_with_sema(10)
 #print lab_cpu2()
 #print lab_gpu2()
 # print first_layer_pages_scrapper_with_sema(50)
-
-print scrapper_ver6(50)
-
+#print scrapper_ver6(10)
 #print go_in_link_ver3('http://store.steampowered.com/app/364360/')
 #print go_in_link_ver3('http://store.steampowered.com/app/369990/')
 #print first_layer_pages_scrapper(1)
