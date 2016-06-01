@@ -731,13 +731,30 @@ def lab_cpu2():
 #realese date
 
 
+
 def scrapper_first_layer_release_date(page):
     url = 'http://store.steampowered.com/search/results?sort_by=Released_DESC&tags=-1&category1=998&page=%s' % (page,)
     request = requests.get(url)
     content = request.content
     soup = BeautifulSoup(content, "lxml")
     my_html = soup.find_all("a",{"class":"search_result_row ds_collapse_flag"},True)
-    return link_extractor(my_html)
+    return link_extractor(my_html)[:3]
+
+
+
+def go_in_first_page_release_date(page):
+    page = str(page)
+    url = 'http://store.steampowered.com/search/results?sort_by=Released_DESC&tags=-1&category1=998&page=%s' % (page,)
+    request = requests.get(url)
+    content = request.content
+    urls = scrapper_first_layer_release_date(page)
+    funcs = threaded_calculator_two(content)
+    result = dict()
+    result.update({'title': funcs[0][:3], 'rdate': funcs[1][:3],
+
+                   'price': funcs[2][:3], 'discount': funcs[3][:3], 'url': urls, 'pics': funcs[4][:3]})
+    return result
+
 
 
 def scrapper_ver7(page=1):
@@ -756,7 +773,7 @@ def scrapper_ver7(page=1):
     #semaphore = threading.BoundedSemaphore(15)
     semaphore = threading.Semaphore(10)
     #counter = 0
-    for link in link_in_pages:
+    for link in link_in_pages[:3]:
         t = semaphore_thread(go_in_link_ver3, link, semaphore)
         second_layer_threads.append(t)
         t.start()
@@ -771,14 +788,33 @@ def scrapper_ver7(page=1):
     #return True
 
 
+def first_layer_pages_scrapper_with_sema_release_date(page=1):   #maybe u need this
+    results = []
+    threads = []
+    for i in range(1,page+1):
+        #semaphore = threading.BoundedSemaphore(5)
+        semaphore = threading.Semaphore(5)
+        t = semaphore_thread(go_in_first_page_release_date, i, semaphore)
+        threads.append(t)
+        t.start()
+    for j in threads:
+        j.join()
+        results.append(j.get_result())
+    add_summary(results)
+    return results  #age khasti extractor ro bardar
 
+def updater():
+    scrapper_ver7()
+    first_layer_pages_scrapper_with_sema_release_date()
+    return True
+#print go_in_first_page_release_date(1)
 
-
+print updater()
 #print scrapper_first_layer_release_date('1')
 
 
 
-print scrapper_ver7(1)
+#print scrapper_ver7(1)
 #print first_layer_pages_scrapper_with_sema(10)
 #print lab_cpu2()
 #print lab_gpu2()
