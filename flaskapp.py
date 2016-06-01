@@ -58,9 +58,10 @@ def f_search():
 		possible_search_args += ["max_release_date", "min_os", "max_os", "min_processor", "max_processor"]
 		possible_search_args += ["min_memory", "max_memory", "min_graphics", "max_graphics", "min_directX"]
 		possible_search_args += ["max_directX", "min_reviews", "max_reviews"]"""
-        search_dict["min_os"] = request.args.get("os", "", type=str)
-        search_dict["min_graphics"] = request.args.get("graphic_card", "", type=str)
-        search_dict["min_processor"] = request.args.get("proccessor", "", type=str)
+        # search_dict["min_os"] = request.args.get("os", "", type=str)
+        search_dict["min_os"] = ""
+        search_dict["min_graphics"] = ""
+        search_dict["min_processor"] = ""
         search_dict["min_directX"] = ""
         search_dict["word"] = ""
         search_dict["overall"] = ""
@@ -127,7 +128,8 @@ def f_stat():
     if session.get("user"):
         if request.method == 'POST':
             json_request = request.get_json(silent=True)
-            if json_request['requestType'] == "overall":
+            # if json_request['requestType'] == "overall":
+            if request.form['requestType'] == "overall":
                 very_positive = get_res("SELECT COUNT(overall) FROM games WHERE overall='Very Positive';")
                 positive = get_res("SELECT COUNT(overall) FROM games WHERE overall='Positive';")
                 overwhelmingly_positive = get_res("SELECT COUNT(overall) FROM games WHERE overall='Overwhelmingly Positive';")
@@ -168,6 +170,13 @@ def f_stat():
 def f_go_search():
     if request.method == 'POST' and session.get("user"):
         return render_template("ad-search.html")
+    return render_template("main.html")
+
+
+@app.route("/p_inf")
+def f_go_info():
+    if session.get("user"):
+        return render_template("info.html")
     return render_template("main.html")
 
 
