@@ -426,7 +426,8 @@ def search(input_dict):
                 search_string = search_string[:len(search_string) - 5]
         # cursor.execute("SELECT games.title,games.url,games.release_date,games.details,games.description,games.id,"
         # "summary.image FROM games WHERE " + search_string + "INNER JOIN summary ON summary.id = games.summary_id")
-        cursor.execute("SELECT games.title,games.url,games.release_date,games.details,games.description,games.id FROM games WHERE " + search_string )
+        cursor.execute("SELECT games.title,games.url,games.release_date,games.details,games.description,games.id FROM"
+                       " games WHERE " + search_string)
         result = cursor.fetchall()
         print result
         return result
