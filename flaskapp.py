@@ -2,8 +2,7 @@
 __author__ = 'sargdsra'
 
 from flask import Flask, render_template, session, request, json, redirect, url_for
-from database import check_user, add_user, search, get_summary, get_post, create_game_table, create_users_table, \
-    create_summary_table, get_res
+from database import check_user, add_user, search, get_summary, get_post, create_s, get_res
 
 app = Flask(__name__)
 app.secret_key = '\xa2\x1a\xb2B\x7f\x06\x95q\x00&\xe2\x0e\x89C\xbe\x84\xbb\xbf\xb1\x917\x96T\xbb'
@@ -11,17 +10,14 @@ app.secret_key = '\xa2\x1a\xb2B\x7f\x06\x95q\x00&\xe2\x0e\x89C\xbe\x84\xbb\xbf\x
 
 @app.before_first_request
 def init_db():
-    create_game_table()
-    create_users_table()
-    create_summary_table()
+    create_s()
 
 
 @app.route("/")
 def f_home():
     if session.get("user"):
         user = session["user"]
-        session.clear()
-        return render_template("main.html", Username=user)
+        return render_template("ad-search.html", Username=user)
     return render_template("main.html")
 
 
@@ -34,7 +30,7 @@ def f_login():
         if check_user(user, passw):
             if check:
                 session['user'] = user
-            return render_template("main.html", Username=user)
+            return render_template("ad-search.html", Username=user)
     return render_template("main.html")
 
 
@@ -48,7 +44,7 @@ def f_sign_up():
         if passw == repassw:
             if add_user(user, passw, email):
                 session['user'] = user
-                return render_template("main.html", Username=user)
+                return render_template("ad-search.html", Username=user)
     return render_template("main.html")
 
 
@@ -126,45 +122,40 @@ def f_game():
     return redirect(url_for("f_home"))
 
 
-@app.route("/statistics", methods=["GET", 'POST'])
+@app.route("/statistics", methods=['POST'])
 def f_stat():
-    print "KIR"
-    if True:
-        if True:
-            print request.form['requestType']
-            if request.form['requestType'] == "overall":
+    if session.get("user"):
+        if request.method == 'POST':
+            json_request = request.get_json(silent=True)
+            if json_request['requestType'] == "overall":
                 very_positive = get_res("SELECT COUNT(overall) FROM games WHERE overall='Very Positive';")
                 positive = get_res("SELECT COUNT(overall) FROM games WHERE overall='Positive';")
                 overwhelmingly_positive = get_res("SELECT COUNT(overall) FROM games WHERE overall='Overwhelmingly Positive';")
                 mostly_positive = get_res("SELECT COUNT(overall) FROM games WHERE overall='Mostly Positive';")
-                res = [very_positive, positive, overwhelmingly_positive, mostly_positive]
-                res = [int(x[0][0]) for x in res]
-                print res
-                print res[0]
-                print json.dumps(res)
-                return json.dumps(tuple(res))
-            if request.form['requestType'] == "topstatics":
-                inf = get_res("SELECT TOP 10 * FROM games ORDER BY static;")
+                res = [very_positive[0][0], positive[0][0], overwhelmingly_positive[0][0], mostly_positive[0][0]]
+                return json.dumps(res)
+            if json_request['requestType'] == "topstatics":
+                inf = get_res("SELECT * FROM games ORDER BY statics DESC LIMIT 10;")
                 inf = list(inf)
                 res = [list(i) for i in inf]
                 for item in res:
                     item[8] = str(item[8])
                 return json.dumps(res)
-            if request.form['requestType'] == "aveofall":
-                ave_of_no_discount = float(get_res("SELECT AVE(purchase_price) FROM games WHERE discount='0';"))
-                ave_of_have_discount = float(get_res("SELECT AVE(original_price) FROM games WHERE discount<>'0';"))
+            if json_request['requestType'] == "aveofall":
+                ave_of_no_discount = float(get_res("SELECT AVG(purchase_price) FROM games WHERE discount='0';")[0][0])
+                ave_of_have_discount = float(get_res("SELECT AVG(original_price) FROM games WHERE discount<>'0';")[0][0])
                 # if error occurs change <> into !=
                 ave = "{0:.2f}".format((ave_of_no_discount + ave_of_have_discount) / 2)
                 return json.dumps(ave)
-            if request.form['requestType'] == "newgames":
-                inf = get_res("SELECT TOP 10 * FROM games ORDER BY release_date;")
+            if json_request['requestType'] == "newgames":
+                inf = get_res("SELECT * FROM games ORDER BY release_date DESC LIMIT 10;")
                 inf = list(inf)
                 res = [list(i) for i in inf]
                 for item in res:
                     item[8] = str(item[8])
                 return json.dumps(res)
-            if request.form['requestType'] == "topreviews":
-                inf = get_res("SELECT TOP 10 * FROM games ORDER BY reviews;")
+            if json_request['requestType'] == "topreviews":
+                inf = get_res("SELECT * FROM games ORDER BY reviews DESC LIMIT 10;")
                 inf = list(inf)
                 res = [list(i) for i in inf]
                 for item in res:
@@ -173,16 +164,12 @@ def f_stat():
     return redirect(url_for("f_home"))
 
 
-@app.route("/p_search", methods=['POST','GET'])
+@app.route("/p_search", methods=['POST'])
 def f_go_search():
-    # if request.method == 'POST' and session.get("user"):
-    return render_template("ad-search.html")
-    # return render_template("main.html")
+    if request.method == 'POST' and session.get("user"):
+        return render_template("ad-search.html")
+    return render_template("main.html")
 
-
-@app.route("/info")
-def info():
-    return render_template("info.html")
 
 if __name__ == '__main__':
     app.run(debug=True, port=4958)
