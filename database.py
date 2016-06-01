@@ -514,7 +514,7 @@ def add_cpu(title_list):
                 connection_obj = MySql.connection()
                 with connection_obj:
                     cursor = connection_obj.cursor()
-                    cursor.execute("INSERT INTO cpu(title) VALUES(%s)" + title)
+                    cursor.execute("INSERT INTO cpu(title) VALUES(%s)" ,( title,))
                     connection_obj.commit()
             return True
     except Exception as e:
@@ -534,7 +534,7 @@ def add_gpu(title_list):
                 connection_obj = MySql.connection()
                 with connection_obj:
                     cursor = connection_obj.cursor()
-                    cursor.execute("INSERT INTO gpu(title) VALUES(%s)" + title)
+                    cursor.execute("INSERT INTO gpu(title) VALUES(%s)" ,( title,))
                     connection_obj.commit()
             return True
     except Exception as e:

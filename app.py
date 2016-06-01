@@ -707,6 +707,7 @@ def lab_gpu2():
     results = []
     for item in my_html:
         results.append(str(item.text.encode('utf-8')))
+    add_gpu(results[18:-3])
     return results[18:-3]
 
 
@@ -720,10 +721,13 @@ def lab_cpu2():
     results = []
     for item in my_html:
         results.append(str(item.text.encode('utf-8')))
+    add_cpu(results[18:-3])
     return results[18:-3]
 
+#print lab_cpu2()
+#print lab_gpu2()
 # print first_layer_pages_scrapper_with_sema(50)
-print scrapper_ver6(1)
+#print scrapper_ver6(10)
 #print go_in_link_ver3('http://store.steampowered.com/app/364360/')
 #print go_in_link_ver3('http://store.steampowered.com/app/369990/')
 #print first_layer_pages_scrapper(1)
