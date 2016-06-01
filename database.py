@@ -35,18 +35,18 @@ def create_game_table():
         with connection_obj:
             cursor = connection_obj.cursor()
             cursor.execute("CREATE TABLE IF NOT EXISTS games(id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,"
-                           "title VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci,"
-                           "url VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci,"
-                           "overall VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci,"
-                           "description TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci,"
-                           "user_tags VARCHAR(255),static VARCHAR(255),purchase_price FLOAT ,"
-                           "release_date DATE,discount FLOAT,min_os VARCHAR(255),"
-                           "min_processor VARCHAR(255),"
-                           "min_memory VARCHAR(255),min_graphics VARCHAR(255),min_directx VARCHAR(255),"
-                           "min_storage VARCHAR(255),min_notes VARCHAR(255),details VARCHAR(255)"
-                           ",rec_directx VARCHAR(255),rec_storage VARCHAR(255),rec_notes VARCHAR(255),"
-                           "rec_os VARCHAR(255),rec_processor VARCHAR(255),after_discount INT,"
-                           "rec_memory VARCHAR(255),rec_graphics VARCHAR(255), original_price FLOAT,reviews INT)")
+                           "title TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci,"
+                           "url TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci,"
+                           "overall TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci,"
+                           "description LONGTEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci,"
+                           "user_tags TEXT,static FLOAT,purchase_price FLOAT ,"
+                           "release_date DATE,discount FLOAT,min_os TEXT,"
+                           "min_processor TEXT,"
+                           "min_memory TEXT,min_graphics TEXT,min_directx TEXT,"
+                           "min_storage TEXT,min_notes LONGTEXT,details TEXT"
+                           ",rec_directx TEXT,rec_storage TEXT,rec_notes LONGTEXT,"
+                           "rec_os TEXT,rec_processor TEXT,after_discount FLOAT,"
+                           "rec_memory TEXT,rec_graphics TEXT, original_price FLOAT,reviews INT)")
             connection_obj.commit()
     except Exception as e:
         print(e)
@@ -76,7 +76,7 @@ def create_summary_table():
         with connection_obj:
             cursor = connection_obj.cursor()
             cursor.execute("CREATE TABLE IF NOT EXISTS summary(id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,"
-                           "title VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci,url VARCHAR(255),"
+                           "title TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci,url VARCHAR(255),"
                            "release_date DATE,discount FLOAT,price FLOAT,final_price FLOAT,image VARCHAR(255),"
                            "game_id INT, FOREIGN KEY(game_id) REFERENCES games(id))")
             connection_obj.commit()
@@ -149,12 +149,17 @@ def add_game(kwargs):
                  "min_storage"]
         cols += ["min_notes", "details", "rec_directx", "rec_storage", "rec_notes", "rec_os", "rec_processor"]
         cols += ["after_discount", "rec_memory", "rec_graphics", "original_price", "reviews"]
-        kwargs_keys = tuple(kwargs.keys())
-        if kwargs['purchase_price'] == "Free To Play" or kwargs['purchase_price'] == "Free":
+        # kwargs['purchase_price'] == "Free To Play" or kwargs['purchase_price'] == "Free" or
+        if "Free" in kwargs['purchase_price']:
             kwargs['purchase_price'] = "0"
+        kwargs_keys = tuple(kwargs.keys())
+        kwargs['discount'].replace("Save up to 31", "")
         for col_name in cols:
             if col_name not in kwargs_keys:
+                print "****", col_name
                 kwargs.update({col_name: ""})
+        print "/////////////////"
+        print kwargs
         query_tuple = tuple()
         for col_name in cols:
             if col_name not in kwargs_keys:
@@ -178,8 +183,6 @@ def add_game(kwargs):
             else:
                 query_tuple += (kwargs[col_name],)
         into_string = ""
-        connection_obj = MySql.connection()
-        cursor = connection_obj.cursor()
         if check_game_exists(kwargs['url']):
             cols.remove("url")
             for key in cols:
@@ -189,7 +192,9 @@ def add_game(kwargs):
             url = kwargs["url"].encode("utf-8")
             query_tuple = tuple([x for x in query_tuple if x != url])
             del kwargs["url"]
+            connection_obj = MySql.connection()
             with connection_obj:
+                cursor = connection_obj.cursor()
                 cursor.execute("UPDATE games SET " + into_string + " WHERE url = %s", query_tuple + (url,))
                 connection_obj.commit()
         else:
@@ -197,14 +202,17 @@ def add_game(kwargs):
                 into_string += key + ","
             into_string = into_string[:len(into_string) - 1]
             into_string = into_string.replace("statistics", "static")
+            connection_obj = MySql.connection()
             with connection_obj:
+                cursor = connection_obj.cursor()
                 cursor.execute(
-                    "INSERT INTO games(" + into_string + ") VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s)",
+                    "INSERT INTO games(" + into_string + ") VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
                     query_tuple)
                 connection_obj.commit()
                 return True
     except Exception as e:
         print(e)
+        print into_string
         print kwargs
         print "_____________________"
         return -1
