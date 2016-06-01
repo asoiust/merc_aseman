@@ -618,6 +618,7 @@ def go_in_link_ver3(url):
         result.update(funcs[11])
     except TypeError:
         pass
+    add_game(result)
     return result
 
 
@@ -716,8 +717,8 @@ def lab_cpu2():
     return results[18:-3]
 
 # print first_layer_pages_scrapper_with_sema(50)
-print scrapper_ver6(1)
-# print go_in_link_ver3('http://store.steampowered.com/app/730/')
+#print scrapper_ver6(10)
+print go_in_link_ver3('http://store.steampowered.com/app/364360/')
 #print first_layer_pages_scrapper(1)
 #print go_in_first_page(1)
 #print go_in_link(scrapper_first_layer('1')[2])
