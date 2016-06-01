@@ -727,7 +727,9 @@ def lab_cpu2():
 #print lab_cpu2()
 #print lab_gpu2()
 # print first_layer_pages_scrapper_with_sema(50)
-#print scrapper_ver6(10)
+
+print scrapper_ver6(50)
+
 #print go_in_link_ver3('http://store.steampowered.com/app/364360/')
 #print go_in_link_ver3('http://store.steampowered.com/app/369990/')
 #print first_layer_pages_scrapper(1)

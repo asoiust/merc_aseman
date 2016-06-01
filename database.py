@@ -148,8 +148,13 @@ def add_game(kwargs):
                  "min_storage"]
         cols += ["min_notes", "details", "rec_directx", "rec_storage", "rec_notes", "rec_os", "rec_processor"]
         cols += ["after_discount", "rec_memory", "rec_graphics", "original_price", "reviews"]
-        if kwargs['purchase_price'] == "Free To Play" or kwargs['purchase_price'] == "Free":
+        if "Free" in kwargs['purchase_price'] or "Play" in kwargs['purchase_price']:
             kwargs['purchase_price'] = "0"
+        try:
+            int(kwargs['purchase_price'])
+        except ValueError:
+            kwargs['purchase_price'] = "0"
+        kwargs["discount"].replace("Save up to ", "")
         for col_name in cols:
             if col_name not in kwargs.keys():
                 kwargs.update({col_name: " "})
@@ -252,7 +257,15 @@ def add_summary(input_list):
                 date_list = release.encode("utf-8").split(" ")
                 release_date = date_list[2] + "-" + str(months_name.index(date_list[1].replace(',', "")) + 1) + "-" + date_list[0]
                 # Send to the database
-
+                try:
+                    int(price)
+                except ValueError:
+                    price = "0"
+                try:
+                    int(final_price)
+                except ValueError:
+                    final_price = "0"
+                discount.replace("Save up to ", "")
                 cursor = connection_onj.cursor()
                 cursor.execute("SELECT id FROM games WHERE url = %s", (url,))
                 try:
