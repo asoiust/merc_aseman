@@ -136,66 +136,67 @@ def add_game(kwargs):
     :return: bool|int
     """
     try:
-        print "*********************************"
-        print kwargs
         if type(kwargs) == list:
             return
-        if kwargs['title'] == "code1":
+        if kwargs['title'] == "0":
+            print "KIR KIR"
+            print kwargs
             return False
-        connection_obj = MySql.connection()
-        with connection_obj:
-            cursor = connection_obj.cursor()
-            cols = ["title", "url", "overall", "description", "user_tags", "statics", "purchase_price",
-                    "release_date"]
-            cols += ["discount", "min_os", "min_processor", "min_memory", "min_graphics", "min_directx",
-                     "min_storage"]
-            cols += ["min_notes", "details", "rec_directx", "rec_storage", "rec_notes", "rec_os", "rec_processor"]
-            cols += ["after_discount", "rec_memory", "rec_graphics", "original_price", "reviews"]
-            kwargs_keys = tuple(kwargs.keys())
-
-            for col_name in cols:
-                if col_name not in kwargs_keys:
-                    kwargs.update({col_name: ""})
-            query_tuple = tuple()
-            for col_name in cols:
-                if col_name not in kwargs_keys:
+        cols = ["title", "url", "overall", "description", "user_tags", "static", "purchase_price",
+                "release_date"]
+        cols += ["discount", "min_os", "min_processor", "min_memory", "min_graphics", "min_directx",
+                 "min_storage"]
+        cols += ["min_notes", "details", "rec_directx", "rec_storage", "rec_notes", "rec_os", "rec_processor"]
+        cols += ["after_discount", "rec_memory", "rec_graphics", "original_price", "reviews"]
+        kwargs_keys = tuple(kwargs.keys())
+        if kwargs['purchase_price'] == "Free To Play" or kwargs['purchase_price'] == "Free":
+            kwargs['purchase_price'] = "0"
+        for col_name in cols:
+            if col_name not in kwargs_keys:
+                kwargs.update({col_name: ""})
+        query_tuple = tuple()
+        for col_name in cols:
+            if col_name not in kwargs_keys:
+                query_tuple += ("",)
+                continue
+            if type(kwargs[col_name]) == list and len(kwargs[col_name]) == 1:
+                if kwargs[col_name][0] is None:
                     query_tuple += ("",)
                     continue
-                if type(kwargs[col_name]) == list and len(kwargs[col_name]) == 1:
-                    if kwargs[col_name][0] is None:
-                        query_tuple += ("",)
-                        continue
-                    try:
-                        query_tuple += (kwargs[col_name][0].encode('utf-8'),)
-                    except UnicodeDecodeError:
-                        query_tuple += (kwargs[col_name][0].decode('unicode_escape').encode('ascii', 'ignore'),)
-                elif type(kwargs[col_name]) == list:
-                    pr_result = ""
-                    for tag in kwargs[col_name]:
-                        pr_result += tag.encode('utf-8') + "|"
-                    query_tuple += (pr_result,)
-                elif type(kwargs[col_name]) == unicode:
-                    query_tuple += (kwargs[col_name].encode('utf-8'),)
-                else:
-                    query_tuple += (kwargs[col_name],)
-            into_string = ""
-            if check_game_exists(kwargs['url']):
-                cols.remove("url")
-                for key in cols:
-                    into_string += key + " = %s,"
-                into_string = into_string[:len(into_string) - 1]
-                into_string = into_string.replace("statistics", "statics")
-                url = kwargs["url"].encode("utf-8")
-                query_tuple = tuple([x for x in query_tuple if x != url])
-                del kwargs["url"]
+                try:
+                    query_tuple += (kwargs[col_name][0].encode('utf-8'),)
+                except UnicodeDecodeError:
+                    query_tuple += (kwargs[col_name][0].decode('unicode_escape').encode('ascii', 'ignore'),)
+            elif type(kwargs[col_name]) == list:
+                pr_result = ""
+                for tag in kwargs[col_name]:
+                    pr_result += tag.encode('utf-8') + "|"
+                query_tuple += (pr_result,)
+            elif type(kwargs[col_name]) == unicode:
+                query_tuple += (kwargs[col_name].encode('utf-8'),)
+            else:
+                query_tuple += (kwargs[col_name],)
+        into_string = ""
+        connection_obj = MySql.connection()
+        cursor = connection_obj.cursor()
+        if check_game_exists(kwargs['url']):
+            cols.remove("url")
+            for key in cols:
+                into_string += key + " = %s,"
+            into_string = into_string[:len(into_string) - 1]
+            into_string = into_string.replace("statistics", "static")
+            url = kwargs["url"].encode("utf-8")
+            query_tuple = tuple([x for x in query_tuple if x != url])
+            del kwargs["url"]
+            with connection_obj:
                 cursor.execute("UPDATE games SET " + into_string + " WHERE url = %s", query_tuple + (url,))
                 connection_obj.commit()
-            else:
-                for key in cols:
-                    into_string += key + ","
-                into_string = into_string[:len(into_string) - 1]
-                into_string = into_string.replace("statistics", "statics")
-
+        else:
+            for key in cols:
+                into_string += key + ","
+            into_string = into_string[:len(into_string) - 1]
+            into_string = into_string.replace("statistics", "static")
+            with connection_obj:
                 cursor.execute(
                     "INSERT INTO games(" + into_string + ") VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s)",
                     query_tuple)
@@ -252,7 +253,7 @@ def add_summary(input_list):
                 try:
                     game_id = cursor.fetchone()[0]
                 except IndexError:
-                    game_id = "-1"
+                    return 
                 cursor.execute("INSERT INTO summary(title,url,release_date,discount,price,final_price,image,game_id) "
                                "VALUES(%s,%s,%s,%s,%s,%s,%s,%s)",
                                (title, url, release_date, discount, price, final_price, image, str(game_id)))
@@ -391,9 +392,9 @@ def search(input_dict):
                     elif arg == "max_discount":
                         search_string += "discount <= " + input_dict[arg] + " AND "
                     elif arg == "min_statics":
-                        search_string += "statics >= " + input_dict[arg] + " AND "
+                        search_string += "static >= " + input_dict[arg] + " AND "
                     elif arg == "max_statics":
-                        search_string += "statics <= " + input_dict[arg] + " AND "
+                        search_string += "static <= " + input_dict[arg] + " AND "
                     elif arg == "min_release_date":
                         search_string += "release_date >= " + input_dict[arg] + " AND "
                     elif arg == "max_release_date":
