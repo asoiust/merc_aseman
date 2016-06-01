@@ -135,12 +135,11 @@ def add_game(kwargs):
     :param args:
     :return: bool|int
     """
+    print kwargs
     try:
         if type(kwargs) == list:
             return
         if kwargs['title'] == "0":
-            print "KIR KIR"
-            print kwargs
             return False
         if kwargs["discount"] == "0":
             kwargs["after_discount"] = "0"

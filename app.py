@@ -302,7 +302,10 @@ def system_req(content):
     loop_counter = 0
     for attr in list_of_attr:
         try:
-            pre_result = [minimum_system_list[minimum_system_list.index(attr) + 1]]
+            if attr in minimum_system_list:
+                pre_result = [minimum_system_list[minimum_system_list.index(attr) + 1]]
+            else:
+                pre_result = [""]
         except ValueError:
             pre_result = [None]
         result.update({min_attr_name[loop_counter]: pre_result})                # Add result to the result dict
@@ -314,7 +317,10 @@ def system_req(content):
         rec_attr_name = ["rec_os", "rec_processor", "rec_memory", "rec_graphics", "rec_directx", "rec_storage", "rec_notes"]
         for attr in list_of_attr:
             try:
-                pre_result = recommended_system_list[recommended_system_list.index("Processor") + 1]
+                if attr in recommended_system_list:
+                    pre_result = recommended_system_list[recommended_system_list.index(attr) + 1]
+                else:
+                    pre_result = [""]
             except ValueError:
                 pre_result = None
             # Add to the result
