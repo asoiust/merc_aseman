@@ -142,6 +142,8 @@ def add_game(kwargs):
             print "KIR KIR"
             print kwargs
             return False
+        if kwargs["discount"] == "0":
+            kwargs["after_discount"] = "0"
         cols = ["title", "url", "overall", "description", "user_tags", "static", "purchase_price",
                 "release_date"]
         cols += ["discount", "min_os", "min_processor", "min_memory", "min_graphics", "min_directx",
