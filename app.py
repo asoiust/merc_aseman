@@ -339,7 +339,7 @@ def get_purchase_price(content):
         price_string = string_corrector(price[0].text.encode("utf-8"))
         # if type(price_string) == str:
         #     return '0'
-        print price_string
+        #print price_string
         price_string = price_string.split(" ")[0]
         price_string = price_string.replace("$", "")
         return price_string
@@ -626,6 +626,7 @@ def go_in_link_ver3(url):
     except TypeError:
         pass
     #add_game(result)
+    #print result
     return result
 
 
@@ -656,9 +657,10 @@ def scrapper_ver6(page=1):
         l.join()
         pre_result = l.get_result()
         results.append(pre_result)
+        print pre_result
         add_game(pre_result)
-    return results
-    #return True
+    #return results
+    return True
 
 
 
@@ -840,7 +842,7 @@ def go_in_link_ver4(url):
 
 print scrapper_ver6(1)
 #print scrapper_ver7(1)
-#print first_layer_pages_scrapper_with_sema(10)
+#print first_layer_pages_scrapper_with_sema(2)
 #print lab_cpu2()
 #print lab_gpu2()
 # print first_layer_pages_scrapper_with_sema(50)
