@@ -334,8 +334,8 @@ def get_purchase_price(content):
         # print content
         soup = BeautifulSoup(content, "lxml")
         price = soup.find_all("div",{"class":"game_purchase_price price"},True)
-        #print "kir"
-        #print price
+        print "kir"
+        print price
         price_string = string_corrector(price[0].text.encode("utf-8"))
         # if type(price_string) == str:
         #     return '0'
@@ -473,6 +473,7 @@ def price_lister(pr_list):
     for item in pr_list:
         item = str(string_corrector(item.text))
         splited = item.split('%')
+        # print splited
         if len(splited) == 2:
             result.append((splited[1].split("$")[1], splited[1].split("$")[2]))
         else:
@@ -556,6 +557,8 @@ def get_price_first(content):
     try:
         soup = BeautifulSoup(content, "lxml")
         price = soup.find_all("div",{"class":"col search_price_discount_combined responsive_secondrow"},True)
+        # print "kir"
+        # print price
         return price_lister(price)
     except:
         return '0'
@@ -845,8 +848,15 @@ print scrapper_ver6(1)
 #print first_layer_pages_scrapper_with_sema(2)
 #print lab_cpu2()
 #print lab_gpu2()
+
 # print first_layer_pages_scrapper_with_sema(50)
 #print scrapper_ver6(10)
+
+# print first_layer_pages_scrapper_with_sema(10)
+
+# print scrapper_ver6(350)
+
+
 #print go_in_link_ver3('http://store.steampowered.com/app/364360/')
 #print go_in_link_ver3('http://store.steampowered.com/app/369990/')
 #print first_layer_pages_scrapper(1)

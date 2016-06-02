@@ -150,10 +150,6 @@ def add_game(kwargs):
         cols += ["after_discount", "rec_memory", "rec_graphics", "original_price", "reviews"]
         if "Free" in kwargs['purchase_price'] or "Play" in kwargs['purchase_price']:
             kwargs['purchase_price'] = "0"
-        try:
-            int(kwargs['purchase_price'])
-        except ValueError:
-            kwargs['purchase_price'] = "0"
         kwargs["discount"].replace("Save up to ", "")
         for col_name in cols:
             if col_name not in kwargs.keys():
@@ -225,8 +221,26 @@ def get_all_game():
         with connection_obj:
             cursor = connection_obj.cursor()
             cursor.execute("SELECT * FROM games")
-            result = cursor.fetchall()
-            return result
+            return cursor.fetchall()
+    except Exception as e:
+        print(e)
+        return -1
+
+
+def check_summary_exist(title, url):
+    """
+    | This function gets title and url of a game and if that game exists, returns the id of that in a tuple.
+    | If any error happened in mysql, returns -1
+    :param title:
+    :param url:
+    :return: tuple|int
+    """
+    try:
+        connection_obj = MySql.connection()
+        with connection_obj:
+            cursor = connection_obj.cursor()
+            cursor.execute("SELECT id FROM summary WHERE title = %s and url = %s", (title, url))
+            return cursor.fetchone()
     except Exception as e:
         print(e)
         return -1
@@ -244,6 +258,7 @@ def add_summary(input_list):
                 if discount:
                     discount = discount.replace("-", "").replace("%", "")           # Remove useless characters from discount
                 price_tuple = input_dict['price'][counter]
+                print price_tuple
                 if len(price_tuple) == 1:
                     price = price_tuple[0].encode('utf-8').replace("$", "")
                     final_price = "0"
@@ -251,30 +266,39 @@ def add_summary(input_list):
                     # price = price_tuple[0].encode('utf-8')
                     price = price_tuple[1].encode('utf-8').replace("$", "")
                     final_price = price_tuple[1].encode('utf-8')
+                if "Free" in price:
+                    price = "0"
+                if "Free" in final_price:
+                    final_price = "0"
                 image = input_dict["pics"][0].encode("utf-8")
                 release = input_dict['rdate'][counter]
                 months_name = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
                 date_list = release.encode("utf-8").split(" ")
                 release_date = date_list[2] + "-" + str(months_name.index(date_list[1].replace(',', "")) + 1) + "-" + date_list[0]
                 # Send to the database
-                try:
-                    int(price)
-                except ValueError:
-                    price = "0"
-                try:
-                    int(final_price)
-                except ValueError:
-                    final_price = "0"
                 discount.replace("Save up to ", "")
                 cursor = connection_onj.cursor()
+                print url
+                print discount
                 cursor.execute("SELECT id FROM games WHERE url = %s", (url,))
                 try:
                     game_id = cursor.fetchone()[0]
                 except IndexError:
                     return
-                cursor.execute("INSERT INTO summary(title,url,release_date,discount,price,final_price,image,game_id) "
-                               "VALUES(%s,%s,%s,%s,%s,%s,%s,%s)",
-                               (title, url, release_date, discount, price, final_price, image, str(game_id)))
+                except TypeError:
+                    return
+                print "DISCOUNT = " + discount
+                if not discount:
+                    discount = "0"
+                if check_summary_exist(title, url):
+                    cursor.execute(
+                        "UPDATE summary SET title = %s, url = %s,release_date = %s,discount = %s,price = %s,"
+                        "final_price = %s,image = %s,game_id = %s WHERE url = %s",(title, url, release_date, discount, price,
+                                                                                   final_price, image, game_id, url))
+                else:
+                    cursor.execute("INSERT INTO summary(title,url,release_date,discount,price,final_price,image,game_id) "
+                                   "VALUES(%s,%s,%s,%s,%s,%s,%s,%s)",
+                                   (title, url, release_date, discount, price, final_price, image, str(game_id)))
                 connection_onj.commit()
 
 
