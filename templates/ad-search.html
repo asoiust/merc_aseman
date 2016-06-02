@@ -18,11 +18,15 @@ $(document).ready(function(){
     }
   });
 });
+
+
+
+
 </script>
 
 <style>
 body{
-  background-image:url("../static/pictures/bg.jpg");
+  background-image:url("static/pictures/bg.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed;
   min-height: 500px;
@@ -30,6 +34,7 @@ body{
   background-size: cover;
   padding:0px;
 }
+
 #login-dp{
   min-width: 250px;
   padding: 14px 14px 0;
@@ -37,9 +42,8 @@ body{
   background-color:rgba(255,255,255,.8);
 }
 #login-dp .help-block{
-    font-size:12px
 }
-
+  font-size:12px
 #login-dp .bottom{
   background-color:rgba(255,255,255,.8);
   border-top:1px solid #ddd;
@@ -81,30 +85,44 @@ body{
       border-top:0 none;
   }
 }
+
 #discription{
+
+
     background-color: #f2f2f2;
     width:798px;
     margin-bottom:1.5cm;
     opacity: 0.7;
     filter: alpha(opacity=80); @Lyo=@ For IE8 and earlier @Ki8=@
+
 }
 .carousel-inner > .item > img,
   .carousel-inner > .item > a > img {
       width: 70%;
       margin: auto;
   }
+
+
 #logo{
   opacity: 0.8;
   margin-top: -1cm;
   margin-left:0cm;
   width: inherit;
 }
+
+
+
+
+
 @import "http://fonts.googleapis.com/css?family=Roboto:300,400,500,700";
+
 .container { margin-top: 20px; }
 .mb20 { margin-bottom: 20px; }
+
 hgroup { padding-left: 15px; border-bottom: 1px solid #ccc; }
 hgroup h1 { font: 500 normal 1.625em "Roboto",Arial,Verdana,sans-serif; color: #2a3644; margin-top: 0; line-height: 1.15; }
 hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; color: #2a3644; margin: 0; padding-bottom: 10px; }
+
 .search-result .thumbnail { border-radius: 0 !important; }
 .search-result:first-child { margin-top: 0 !important; }
 .search-result { margin-top: 20px; }
@@ -121,6 +139,10 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
 .search-result span.plus a:hover { background-color: #414141; }
 .search-result span.plus a i { color: #fff !important; }
 .search-result span.border { display: block; width: 97%; margin: 0 15px; border-bottom: 1px dotted #ccc; }
+
+
+
+
 </style>
 
 <head>
@@ -131,7 +153,7 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../static/styles/ion.rangeSlider.css" type="text/css">
+  <link rel="stylesheet" href="../static/styles/ion.rangeslider.css" type="text/css">
   <link rel="stylesheet" href="../static/styles/ion.rangeSlider.skinFlat.css" type="text/css">
 
   <link rel="stylesheet" href="../static/styles/ion.rangeSlider.skinModern.css" type="text/css">
@@ -147,12 +169,13 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
 </script>
      <script type=text/javascript>
     $(function() {
-      $('#main_search').click(function() {
+      $('#main_search').bind('click',function() {
         console.log("kir");
         $.getJSON('/search', {
           os: $('#os').val(),
           graphic_card: $('#graphic_card').val(),
-          proccessor: $('#proccessor').val()
+          proccessor: $('#proccessor').val(),
+
         }, function(data) {
           document.getElementById("result").innerHTML=""// $("#result").text(data);
           // for (i = 1; i < data.length; i++) {
@@ -161,7 +184,8 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
     //  }
     Object.keys(data).forEach(function(key){
       // document.getElementById("result").innerHTML+=data[key]+"<br><br><br><br><br><br>";
-      console.log(data[key]);
+
+
       document.getElementById("result").innerHTML+=+"<article class='search-result row' id = 'result'>"+
   			"<div class='col-xs-12 col-sm-12 col-md-3'>"+
   				"<a href='#' title='Chronicle' class='thumbnail'><img src='"+data[key][5]+"' alt='1' style='border=0px;'/></a></div>"+
@@ -177,6 +201,8 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
   			"</div>"+
   			"<span ></span>"+
         "</article>";
+
+
     });
         });
         return false;
@@ -289,7 +315,7 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
                 <input type="hidden" name="search_param" value="all" id="search_param">
                 <input type="text" class="form-control" name="x" placeholder="Search ...">
                 <span class="input-group-btn">
-                    <button class="btn btn-default" id="main_search" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                    <button class="btn btn-default" id="main_search" onclick="javascript:void();" type="button"><span onclick="javascript:void();" class="glyphicon glyphicon-search"></span></button>
                 </span>
             </div>
         </div>
