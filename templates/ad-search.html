@@ -171,10 +171,45 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
     $(function() {
       $('#main_search').bind('click',function() {
         console.log("kir");
+        var storage = $("#storage-range").prop("value").split(";");
+        var ram = $("#ram-range").prop("value").split(";");
+        var price = $("#price-range").prop("value").split(";");
+        var discount = $('#discount-range').prop("value").split(";");
+        var review = $('#review').prop("value").split(";");
+        var staitcs = $('#statics').prop("value").split(";");
+        var overall = $('#overall').prop("value").split(";");
+        var date = $('#date-range')prop("value").split(";");
+
         $.getJSON('/search', {
-          os: $('#os').val(),
-          graphic_card: $('#graphic_card').val(),
-          proccessor: $('#proccessor').val(),
+          min_storage : storage[0],
+          max_storage : storage[1],
+          min_memory : ram[0],
+          max_memory : ram[1],
+          min_os: $('#min_os').val(),
+          rec_os: $('#rec_os').val(),
+          min_graphics: $('#min_graphics').val(),
+          rec_graphics: $('#rec_graphics').val(),
+          min_directX: $('#min_directx').val(),
+          rec_directX: $('#rec_directx').val(),
+          min_processor: $('#min_processor').val(),
+          rec_processor: $('#rec_processor').val(),
+          min_price: price[0],
+          max_price: price[1],
+          min_discount: discount[0],
+          max_discount: discount[1],
+          min_reviews: review[0],
+          max_reviews: review[1],
+          min_statics: staitcs[0],
+          max_statics: staitcs[1],
+          min_overall: overall[0],
+          max_overall: overall[1]
+          genre: $('#details').val(),
+          word: $('#search-text').val(),
+          min_release_date:date[0],
+          max_release_date:date[1],
+
+
+
 
         }, function(data) {
           document.getElementById("result").innerHTML=""// $("#result").text(data);
@@ -290,11 +325,11 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav><center>
-<div id= "ad-search" style = "width:250px;background-color:rgb(255,192,0);border-radius:20px 20px 0px 0px;padding:20px;opacity:0.95;color:black;height:100px;">
+<div id= "ad-search" style = "width:250px;background-color:rgb(255,192,0);border-radius:20px 20px 0px 0px;padding:20px;opacity:0.80;color:black;height:100px;">
 <h3 align="center">Advanced Search</h3><br>
 </div>
 </center>
-<div id= "ad-search" style = "width:auto;background-color:black;padding:20px;opacity:0.95;color:white;">
+<div id= "ad-search" style = "width:auto;background-color:black;padding:20px;opacity:0.9;color:white;">
 <div class="container">
     <div class="row">
         <div class="col-xs-8 col-xs-offset-2">
@@ -313,7 +348,7 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
                       </ul>
                 </div>
                 <input type="hidden" name="search_param" value="all" id="search_param">
-                <input type="text" class="form-control" name="x" placeholder="Search ...">
+                <input type="text" class="form-control" name="x" id = "search-text" placeholder="Search ...">
                 <span class="input-group-btn">
                     <button class="btn btn-default" id="main_search" onclick="javascript:void();" type="button"><span onclick="javascript:void();" class="glyphicon glyphicon-search"></span></button>
                 </span>
@@ -325,22 +360,29 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
 
 <center>
 <div class="container"> <div class="row"> <div id="filter-panel" class="collapse filter-panel"> <div class="panel panel-default"> <div class="panel-body" > <form class="form-inline" role="form">
-<h3 style = 'color:black;'>Price Range</h3>
 
-    <div class="col-md-12">
-    <input type="text" id="price-range" name="price-range" value="" />
-    </div>sta
-    <div class="clearfix"></div>
+<h2 style = "color: black;" ><b>System</b></h2>
 
 
-    <h3 style = 'color:black;'>Release Date Range</h3>
-    <div class="col-md-12">
-    <input type="text" id="date-range" name="date-range" value="" />
-    </div>sta
-    <div class="clearfix"></div>
+<h4 style = 'color:black;'>Storage Range(GB)</h4>
+<div class="col-md-12">
+<input type="text" id="storage-range" name="storage-range" value="" />
+</div>sta
+<div class="clearfix"></div>
 
+
+
+<h4 style = 'color:black;'>RAM Range(GB)</h4>
+<div class="col-md-12">
+<input type="text" id="ram-range" name="ram-range" value="" />
+</div>sta
+<div class="clearfix"></div>
+
+
+
+<h3 style = "color: black;" > Minimum System Requirements : </h3>
 <p style="color:black;">OS:
-<select id ="os">
+<select id ="min_os">
   <option value="All" selected>All</option>
   <option value="winxp">Win Xp</option>
   <option value="vista">Vista</option>
@@ -352,32 +394,112 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
   <option value="10-64">Win10-64bit</option>
 </select>
 Graphic Card:
-<select id="graphic_card">
+<select id="min_graphic_card">
   <option value="All" selected>All</option>
   <option value="nvdia">Nvdia</option>
   <option value="intel">Intel</option>
   <option value="amd">AMD</option>
 </select>
 Proccesor:
-<select id="proccessor">
+<select id="min_proccessor">
   <option value="All" selected>All</option>
   <option value=" Intel">Intel</option>
   <option value="AMD">AMD</option>
 
 </select>
 DirectX:
-<select id="directx">
+<select id="min_directx">
   <option value="All" selected>All</option>
   <option value="d-10">DirectX-10</option>
   <option value="d-11">DirectX-11</option>
   <option value="d-12">DirectX-12</option>
-
 </select>
  </p>
 
+<hr>
+
+
+<h3 style = "color: black;" > Recommended System Requirements : </h3>
+<p style="color:black;">OS:
+<select id ="rec_os">
+  <option value="All" selected>All</option>
+  <option value="winxp">Win Xp</option>
+  <option value="vista">Vista</option>
+  <option value="7-32">Win7-32bit</option>
+  <option value="7-64">Win7-64bit</option>
+  <option value="8-32">Win8-32bit</option>
+  <option value="8-64">Win8-64bit</option>
+  <option value="10-32">Win10-32bit</option>
+  <option value="10-64">Win10-64bit</option>
+</select>
+Graphic Card:
+<select id="rec_graphic_card">
+  <option value="All" selected>All</option>
+  <option value="nvdia">Nvdia</option>
+  <option value="intel">Intel</option>
+  <option value="amd">AMD</option>
+</select>
+Proccesor:
+<select id="rec_proccessor">
+  <option value="All" selected>All</option>
+  <option value=" Intel">Intel</option>
+  <option value="AMD">AMD</option>
+
+</select>
+DirectX:
+<select id="rec_directx">
+  <option value="All" selected>All</option>
+  <option value="d-10">DirectX-10</option>
+  <option value="d-11">DirectX-11</option>
+  <option value="d-12">DirectX-12</option>
+</select>
+ </p>
+
+<hr>
+<h2 style = "color: black;" ><b>Other Informations</b></h2>
+    <h4 style = 'color:black;'>Price Range</h4>
+    <div class="col-md-12">
+    <input type="text" id="price-range" name="price-range" value="" />
+    </div>sta
+    <div class="clearfix"></div>
+
+    <h4 style = 'color:black;'>Discount Range</h4>
+    <div class="col-md-12">
+    <input type="text" id="discount-range" name="price-range" value="" />
+    </div>sta
+    <div class="clearfix"></div>
+
+
+    <h4 style = 'color:black;'>Release Date Range</h4>
+    <div class="col-md-12">
+    <input type="text" id="date-range" name="date-range" value="" />
+    </div>sta
+    <div class="clearfix"></div>
+
+
+    <h4 style = 'color:black;'>Overall</h4>
+    <div class="col-md-12">
+    <input type="text" id="overall" name="overall" value="" />
+    </div>sta
+    <div class="clearfix"></div>
+
+    <h4 style = 'color:black;'>Statics</h4>
+    <div class="col-md-12">
+    <input type="text" id="static" name="statics" value="" />
+    </div>sta
+    <div class="clearfix"></div>
 
 
 
+        <h4 style = 'color:black;'>Reviews</h4>
+        <div class="col-md-12">
+        <input type="text" id="review" name="review" value="" />
+        </div>sta
+        <div class="clearfix"></div>
+
+<p style = "color:black;">Details:
+      <textarea name="post_text" placeholder="Write Something Here : "class="form-control" rows="5" id="details" style="width:500px;height:100px" ></textarea></p>
+<hr>
 </form> </div> </div> </div> <button type="button" class="btn btn-primary" style="background-color:rgb(255,192,0);color:black;" data-toggle="collapse" data-target="#filter-panel">
 <span class="glyphicon glyphicon-cog"></span> Advanced Search </button> </div> </div>
 </center>
@@ -421,6 +543,79 @@ $("#price-range").ionRangeSlider({
   from: 200,
   to: 800,
   prefix: "$"
+});
+
+
+
+$("#storage-range").ionRangeSlider({
+  type: "double",
+  grid: true,
+  min: 1,
+  max: 100,
+  from: 1,
+  to: 20,
+  postfix: "GB"
+});
+
+
+$("#ram-range").ionRangeSlider({
+    type : "double",
+    grid: true,
+    from: 5,
+    values: [
+        "128MB", "256MB",
+        "512MB", "1GB",
+        "2GB", "3GB",
+        "4GB", "5GB",
+        "6GB", "7GB",
+        "8GB"
+    ]
+});
+
+
+
+
+
+$("#overall").ionRangeSlider({
+    type : "double",
+    grid: true,
+    from: 5,
+    values: [
+        "Mostly Positive","Overwhelmingly Positive", "Positive", "Very Positive"
+    ]
+});
+
+
+
+
+$("#discount-range").ionRangeSlider({
+  type: "double",
+  grid: true,
+  min: 0,
+  max: 100,
+  from: 0,
+  to: 10,
+  prefix: "%"
+});
+
+$("#static").ionRangeSlider({
+  type: "double",
+  grid: true,
+  min: 0,
+  max: 100,
+  from: 0,
+  to: 100,
+  prefix: "%"
+});
+
+
+$("#review").ionRangeSlider({
+  type: "double",
+  grid: true,
+  min: 0,
+  max: 1000000,
+  from: 0,
+  to: 1000000
 });
 $("#date-range").ionRangeSlider({
   type:"double",
