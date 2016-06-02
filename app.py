@@ -339,6 +339,7 @@ def get_purchase_price(content):
         price_string = string_corrector(price[0].text.encode("utf-8"))
         # if type(price_string) == str:
         #     return '0'
+        print price_string
         price_string = price_string.split(" ")[0]
         price_string = price_string.replace("$", "")
         return price_string
@@ -624,7 +625,7 @@ def go_in_link_ver3(url):
         result.update(funcs[11])
     except TypeError:
         pass
-    add_game(result)
+    #add_game(result)
     return result
 
 
@@ -807,13 +808,37 @@ def updater():
     scrapper_ver7()
     first_layer_pages_scrapper_with_sema_release_date()
     return True
+
+
+
+def go_in_link_ver4(url):
+    request = requests.get(url)
+    content = request.content
+    funcs = threaded_calculator_one(content)
+    result = dict()
+    result.update({'title':funcs[0],'purchase_price': funcs[1],
+                   'details':funcs[2], 'description':funcs[3],
+                   'user_tags':funcs[4],'overall':funcs[5],'release_date':funcs[6],
+                   'discount': funcs[7], 'original_price': funcs[8],
+                   'after_discount': funcs[9], 'url': url})
+    result.update(funcs[10])
+    try:
+        result.update(funcs[11])
+    except TypeError:
+        pass
+    add_game(result)
+    return result
+
+
+
+
 #print go_in_first_page_release_date(1)
 
-print updater()
+#print updater()
 #print scrapper_first_layer_release_date('1')
 
 
-
+print scrapper_ver6(1)
 #print scrapper_ver7(1)
 #print first_layer_pages_scrapper_with_sema(10)
 #print lab_cpu2()
