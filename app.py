@@ -334,8 +334,8 @@ def get_purchase_price(content):
         # print content
         soup = BeautifulSoup(content, "lxml")
         price = soup.find_all("div",{"class":"game_purchase_price price"},True)
-        print "kir"
-        print price
+        #print "kir"
+        #print price
         price_string = string_corrector(price[0].text.encode("utf-8"))
         # if type(price_string) == str:
         #     return '0'
@@ -511,7 +511,7 @@ def threaded_calculator_two(content):
 
 def go_in_first_page(page):
     page = str(page)
-    url = 'http://store.steampowered.com/search/results?sort_by=_ASC&tags=-1&category1=998&page=%s&snr=1_7_7_230_7' % (page,)
+    url = 'http://store.steampowered.com/search/results?sort_by=Released_DESC&tags=-1&category1=998&page=%s&snr=1_7_7_230_7' % (page,)
     request = requests.get(url)
     content = request.content
     urls = scrapper_first_layer(page)
@@ -836,6 +836,27 @@ def go_in_link_ver4(url):
 
 
 
+#print scrapper_ver6(1)                          baziha
+#print first_layer_pages_scrapper_with_sema(1)      summary
+#print go_in_link_ver4(url)
+#print updater()               3bazi avval
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #print go_in_first_page_release_date(1)
 
@@ -843,7 +864,7 @@ def go_in_link_ver4(url):
 #print scrapper_first_layer_release_date('1')
 
 
-print scrapper_ver6(100)
+#print scrapper_ver6(100)
 #print scrapper_ver7(1)
 #print first_layer_pages_scrapper_with_sema(2)
 #print lab_cpu2()
@@ -884,3 +905,5 @@ print scrapper_ver6(100)
 #print scrapper_ver5(1)
 #print go_in_link('http://store.steampowered.com/app/252950/?snr=1_7_7_230_150_1')
 
+
+#'http://store.steampowered.com/search/results?sort_by=_ASC&tags=-1&category1=998&page=%s&snr=1_7_7_230_7'
