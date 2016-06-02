@@ -151,6 +151,7 @@ def add_game(kwargs):
         if "Free" in kwargs['purchase_price'] or "Play" in kwargs['purchase_price']:
             kwargs['purchase_price'] = "0"
         kwargs["discount"].replace("Save up to ", "")
+        print  "PURCHASE PRICE = " + kwargs['purchase_price']
         for col_name in cols:
             if col_name not in kwargs.keys():
                 kwargs.update({col_name: " "})
@@ -173,6 +174,7 @@ def add_game(kwargs):
                 query_tuple += (kwargs[col_name].encode('utf-8'),)
             else:
                 query_tuple += (kwargs[col_name],)
+        print "TUPLE = ", query_tuple
         into_string = ""
         url = kwargs["url"]
         if check_game_exists(url):
