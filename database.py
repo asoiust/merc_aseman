@@ -294,6 +294,8 @@ def add_summary(input_list):
                         "final_price = %s,image = %s,game_id = %s WHERE url = %s",(title, url, release_date, discount, price,
                                                                                    final_price, image, game_id, url))
                 else:
+                    if not price:
+                        price = '0'
                     cursor.execute("INSERT INTO summary(title,url,release_date,discount,price,final_price,image,game_id) "
                                    "VALUES(%s,%s,%s,%s,%s,%s,%s,%s)",
                                    (title, url, release_date, discount, price, final_price, image, str(game_id)))
@@ -339,8 +341,8 @@ def add_user(username, password, email):
         connection_obj = MySql.connection()
         with connection_obj:
             cursor = connection_obj.cursor()
-            # if not check_user_with_email(email) and not check_user_with_username(username):
-            #     return False
+            if check_user_with_email(email) and check_user_with_username(username):
+                return False
             cursor.execute("INSERT INTO users(user_name,password,email) VALUES(%s,%s,%s)", (username, password, email))
             connection_obj.commit()
             return True
@@ -409,12 +411,12 @@ def search(input_dict):
         static_possible_search_args = ["word", "overall", "genre"]
         possible_search_args = ["min_storage", "max_storage", "min_price", "max_price"]
         possible_search_args += ["min_discount", "max_discount", "min_statics", "max_statics", "min_release_date"]
-        # possible_search_args += ["max_release_date", "min_os", "rec_os", "min_processor", "rec_processor"]
-        possible_search_args += ["max_release_date", "min_os", "min_processor"]
-        # possible_search_args += ["min_memory", "rec_memory", "min_graphics", "rec_graphics", "min_directX"]
-        possible_search_args += ["min_memory", "min_graphics", "min_directX"]
-        # possible_search_args += ["rec_directX", "min_reviews", "max_reviews"]
-        possible_search_args += ["min_reviews", "max_reviews"]
+        possible_search_args += ["max_release_date", "min_os", "rec_os", "min_processor", "rec_processor"]
+        # possible_search_args += ["max_release_date", "min_os", "min_processor"]
+        possible_search_args += ["min_memory", "rec_memory", "min_graphics", "rec_graphics", "min_directX"]
+        # possible_search_args += ["min_memory", "min_graphics", "min_directX"]
+        possible_search_args += ["rec_directX", "min_reviews", "max_reviews"]
+        # possible_search_args += ["min_reviews", "max_reviews"]
         search_string = ""
         connection_obj = MySql.connection()
         with connection_obj:
@@ -464,8 +466,7 @@ def search(input_dict):
                 search_string = search_string[:len(search_string) - 5]
         # cursor.execute("SELECT games.title,games.url,games.release_date,games.details,games.description,games.id,"
         # "summary.image FROM games WHERE " + search_string + "INNER JOIN summary ON summary.id = games.summary_id")
-        cursor.execute("SELECT games.title,games.url,games.release_date,games.details,games.description,games.id FROM"
-                       " games WHERE " + search_string)
+        cursor.execute("SELECT games.title,games.url,games.release_date,games.details,games.description,games.id FROM games WHERE " + search_string)
         result = cursor.fetchall()
         print result
         return result
