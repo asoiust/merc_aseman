@@ -843,7 +843,7 @@ def go_in_link_ver4(url):
 #print scrapper_first_layer_release_date('1')
 
 
-print scrapper_ver6(1)
+print scrapper_ver6(355)
 #print scrapper_ver7(1)
 #print first_layer_pages_scrapper_with_sema(2)
 #print lab_cpu2()

@@ -188,10 +188,6 @@ def add_game(kwargs):
                 cursor = connection_obj.cursor()
                 if type(query_tuple[0]) == tuple:
                     query_tuple = query_tuple[0]
-                print kwargs
-                print query_tuple
-                print into_string
-                print url
                 cursor.execute("UPDATE games SET " + into_string + " WHERE url = %s", query_tuple + (url,))
                 connection_obj.commit()
         else:
