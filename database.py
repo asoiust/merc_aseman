@@ -288,6 +288,8 @@ def add_summary(input_list):
                 print "DISCOUNT = " + discount
                 if not discount:
                     discount = "0"
+                if not price:
+                    price = "0"
                 if check_summary_exist(title, url):
                     cursor.execute(
                         "UPDATE summary SET title = %s, url = %s,release_date = %s,discount = %s,price = %s,"
