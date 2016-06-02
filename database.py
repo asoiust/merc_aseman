@@ -411,12 +411,12 @@ def search(input_dict):
         static_possible_search_args = ["word", "overall", "genre"]
         possible_search_args = ["min_storage", "max_storage", "min_price", "max_price"]
         possible_search_args += ["min_discount", "max_discount", "min_statics", "max_statics", "min_release_date"]
-        possible_search_args += ["max_release_date", "min_os", "rec_os", "min_processor", "rec_processor"]
-        # possible_search_args += ["max_release_date", "min_os", "min_processor"]
-        possible_search_args += ["min_memory", "rec_memory", "min_graphics", "rec_graphics", "min_directX"]
-        # possible_search_args += ["min_memory", "min_graphics", "min_directX"]
-        possible_search_args += ["rec_directX", "min_reviews", "max_reviews"]
-        # possible_search_args += ["min_reviews", "max_reviews"]
+        # possible_search_args += ["max_release_date", "min_os", "rec_os", "min_processor", "rec_processor"]
+        possible_search_args += ["max_release_date", "min_os", "min_processor"]
+        # possible_search_args += ["min_memory", "rec_memory", "min_graphics", "rec_graphics", "min_directX"]
+        possible_search_args += ["min_memory", "min_graphics", "min_directX"]
+        # possible_search_args += ["rec_directX", "min_reviews", "max_reviews"]
+        possible_search_args += ["min_reviews", "max_reviews"]
         search_string = ""
         connection_obj = MySql.connection()
         with connection_obj:
