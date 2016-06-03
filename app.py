@@ -3,6 +3,7 @@ import threading
 import requests
 from bs4 import BeautifulSoup
 from database import *
+from string import uppercase, lowercase
 
 
 class thread_scrap(threading.Thread):
@@ -340,8 +341,12 @@ def get_purchase_price(content):
         # if type(price_string) == str:
         #     return '0'
         #print price_string
+
         price_string = price_string.split(" ")[0]
         price_string = price_string.replace("$", "")
+        for word in price_string:
+            if word in lowercase or word in uppercase:
+                return "0"
         return price_string
     except:
          return '0'
