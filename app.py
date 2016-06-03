@@ -499,7 +499,8 @@ def price_lister(pr_list):
         else:
             for word in item:
                 if word in uppercase or word in lowercase:
-                    return result.append(("0"))
+                    item = "0"
+                    break
             result.append((item,))
     return result
 
