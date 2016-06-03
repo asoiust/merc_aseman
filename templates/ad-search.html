@@ -3,7 +3,7 @@
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<script src="../static/js/jquery-2.2.4.min.js"></script>
 <script>
 $(document).ready(function(){
   $("#sign-up-link").on('click', function(event) {
@@ -26,7 +26,7 @@ $(document).ready(function(){
 
 <style>
 body{
-  background-image:url("static/pictures/bg.jpg");
+  /*background-image:url("../static/pictures/bg.jpg");*/
   background-repeat: no-repeat;
   background-attachment: fixed;
   min-height: 500px;
@@ -42,8 +42,9 @@ body{
   background-color:rgba(255,255,255,.8);
 }
 #login-dp .help-block{
+    font-size:12px
 }
-  font-size:12px
+
 #login-dp .bottom{
   background-color:rgba(255,255,255,.8);
   border-top:1px solid #ddd;
@@ -153,7 +154,7 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../static/styles/ion.rangeslider.css" type="text/css">
+  <link rel="stylesheet" href="../static/styles/ion.rangeSlider.css" type="text/css">
   <link rel="stylesheet" href="../static/styles/ion.rangeSlider.skinFlat.css" type="text/css">
 
   <link rel="stylesheet" href="../static/styles/ion.rangeSlider.skinModern.css" type="text/css">
@@ -164,21 +165,20 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
 
 
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>-->
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-</script>
      <script type=text/javascript>
     $(function() {
       $('#main_search').bind('click',function() {
-        console.log("kir");
-        var storage = $("#storage-range").prop("value").split(";");
-        var ram = $("#ram-range").prop("value").split(";");
-        var price = $("#price-range").prop("value").split(";");
-        var discount = $('#discount-range').prop("value").split(";");
-        var review = $('#review').prop("value").split(";");
-        var staitcs = $('#statics').prop("value").split(";");
-        var overall = $('#overall').prop("value").split(";");
-        var date = $('#date-range')prop("value").split(";");
+          var storage = $("#storage-range").prop("value").split(";");
+          var ram = $("#ram-range").prop("value").split(";");
+          var price = $("#price-range").prop("value").split(";");
+          var discount = $('#discount-range').prop("value").split(";");
+          var review = $('#review').prop("value").split(";");
+//          var staitcs = $('#statics').prop("value").split(";");         //
+          var overall = $('#overall').prop("value").split(";");
+          var date = $('#date-range');
+//          prop("value").split(";");
 
         $.getJSON('/search', {
           min_storage : storage[0],
@@ -199,20 +199,18 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
           max_discount: discount[1],
           min_reviews: review[0],
           max_reviews: review[1],
-          min_statics: staitcs[0],
-          max_statics: staitcs[1],
+//          min_statics: staitcs[0],
+//          max_statics: staitcs[1],
+          min_statics: "",
+          max_statics: "",
           min_overall: overall[0],
-          max_overall: overall[1]
+          max_overall: overall[1],
           genre: $('#details').val(),
           word: $('#search-text').val(),
           min_release_date:date[0],
-          max_release_date:date[1],
-
-
-
-
+          max_release_date:date[1]
         }, function(data) {
-          document.getElementById("result").innerHTML=""// $("#result").text(data);
+          document.getElementById("result").innerHTML="";// $("#result").text(data);
           // for (i = 1; i < data.length; i++) {
               // document.getElementById("result").innerHTML+=data[i]+"<br><br><br><br><br><br><br>";
               // document.getElementById("result").appendChild(data[i]);
@@ -221,7 +219,7 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
       // document.getElementById("result").innerHTML+=data[key]+"<br><br><br><br><br><br>";
 
 
-      document.getElementById("result").innerHTML+=+"<article class='search-result row' id = 'result'>"+
+      document.getElementById("result").innerHTML+="<article class='search-result row' id = 'result'>"+
   			"<div class='col-xs-12 col-sm-12 col-md-3'>"+
   				"<a href='#' title='Chronicle' class='thumbnail'><img src='"+data[key][5]+"' alt='1' style='border=0px;'/></a></div>"+
   			"<div class='col-xs-12 col-sm-12 col-md-2'>"+
@@ -229,7 +227,7 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
   					"<li style = 'word-wrap: break-word;'><i class='glyphicon glyphicon-calendar'></i> <span style = 'word-wrap: break-word;'>"+data[key][2]+"</span></li>"+
   					"<li style = 'word-wrap: break-word;'><i class='glyphicon glyphicon-tags'></i> <span style = 'word-wrap: break-word;'>"+data[key][3]+"</span></li>"+
   				"</ul></div>"+
-  			"<div class='col-xs-12 col-sm-12 col-md-7 excerpet' style = 'word-wrap: break-word;'>"+
+  			"<div class='col-xs-12 col-sm-12 col-md-7 excerpet' style = 'word-wrap: break-word'>"+
   				"<h3><a href='#' title='12'>"+data[key][0]+"</a></h3>"+
           "<p>"+data[key][4]+"</p></center>"+
             "<span><a href='"+data[key][1]+"'>+More...</a></span><hr><br>"+
@@ -293,14 +291,14 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
 					 <div class="row">
 							<div class="col-md-12">
 
-								 <form class="form" role="form" method="post" action="login" accept-charset="UTF-8" id="login-nav">
+								 <form class="form" role="form" method="post" action="/login" accept-charset="UTF-8" id="login-nav">
 										<div class="form-group">
 											 <label class="sr-only" for="exampleInputEmail2">Email address</label>
-											 <input type="text" class="form-control" id="username" placeholder="Username" required>
+											 <input type="text" class="form-control" name = "username" id="username" placeholder="Username" required>
 										</div>
 										<div class="form-group">
 											 <label class="sr-only" for="exampleInputPassword2" >Password</label>
-											 <input type="password" class="form-control" id="password" placeholder="Password" required>
+											 <input type="password" class="form-control" name = "password" id="password" placeholder="Password" required>
                                              <div class="help-block text-right"><a id="forget-pass" href="#" onclick="forgetpass()">Forget the password ?</a></div>
 										</div>
 										<div class="form-group">
@@ -308,7 +306,7 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
 										</div>
 										<div class="checkbox">
 											 <label>
-											 <input type="checkbox"> keep me logged-in
+											 <input type="checkbox" name="check"> keep me logged-in
 											 </label>
 										</div>
 								 </form>

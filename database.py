@@ -108,6 +108,19 @@ def create_cpu_table():
         print(e)
 
 
+def create_new_games_table():
+    try:
+        connection_obj = MySql.connection()
+        with connection_obj:
+            cursor = connection_obj.cursor()
+            cursor.execute("CREATE TABLE IF NOT EXISTS new_games(id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,"
+                           "title VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci,url VARCHAR(255),"
+                           "release_date DATE,discount FLOAT,price FLOAT,final_price FLOAT,image VARCHAR(255),")
+            connection_obj.commit()
+    except Exception as e:
+        print(e)
+
+
 def check_game_exists(url):
     """
     | This function gets url and if a game with same url exists return that's id number in a tuple.
@@ -639,11 +652,94 @@ def get_gpu(title):
         return 0
 
 
+
+
+def add_new_game(input_list):
+    connection_onj = MySql.connection()
+    print input_list
+    for input_dict in input_list:
+        if not input_dict:
+            continue
+        limit = len(input_dict['title'])
+        print "limit = ", limit
+        with connection_onj:
+            for counter in range(limit):
+                print "kir"
+                title = input_dict['title'][counter].encode('utf-8')
+                url = input_dict['url'][counter].encode('utf-8')
+                discount = input_dict['discount'][counter].encode('utf-8')
+                if discount:
+                    discount = discount.replace("-", "").replace("%", "")           # Remove useless characters from discount
+                price_tuple = input_dict['price'][counter]
+                print price_tuple
+                if len(price_tuple) == 1:
+                    price = price_tuple[0].encode('utf-8').replace("$", "")
+                    final_price = "0"
+                else:
+                    # price = price_tuple[0].encode('utf-8')
+                    price = price_tuple[1].encode('utf-8').replace("$", "")
+                    final_price = price_tuple[1].encode('utf-8')
+                if "Free" in price:
+                    price = "0"
+                if "Free" in final_price:
+                    final_price = "0"
+                image = input_dict["pics"][0].encode("utf-8")
+                release = input_dict['rdate'][counter]
+                months_name = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+                date_list = release.encode("utf-8").split(" ")
+                print "RElease Date = ",release
+                print date_list
+                try:
+                    if len(date_list) == 3:
+                        release_date = date_list[2] + "-" + str(months_name.index(date_list[1].replace(',', "")) + 1) + "-" + date_list[0]
+                    elif len(date_list) == 2:
+                        release_date = date_list[1] + "-" + str(months_name.index(date_list[0].replace(',', "")) + 1) + "-0"
+                    elif date_list[0]:
+                        release_date = date_list[0] + "-0-0"
+                    else:
+                        release_date = "0-0-0"
+                except Exception:
+                    release_date = "0-0-0"
+                # Send to the database
+                discount.replace("Save up to ", "")
+                cursor = connection_onj.cursor()
+                cursor.execute("SELECT id FROM games WHERE url = %s", (url,))
+                try:
+                    # print "CURSOR = ", cursor.fetchone()
+                    print url
+                    game_id = str(cursor.fetchone()[0])
+                except IndexError:
+                    print "Index Error"
+                    print cursor.fetchone()
+                    continue
+                except TypeError:
+                    print "Type error"
+                    print cursor.fetchone()
+                    continue
+                print "DISCOUNT = " + discount
+                if not discount:
+                    discount = "0"
+                if not price:
+                    price = "0"
+
+                print "UPDATE summary SET title = %s, url = %s,release_date = %s,discount = %s,price = %s,final_price = %s,image = %s,game_id = %s WHERE url = %s"%(title, url, release_date, discount, price,final_price, image, game_id, url)
+                if check_summary_exist(title, url):
+                    return
+                else:
+                    if not price:
+                        price = '0'
+                    cursor.execute("INSERT INTO new_games(title,url,release_date,discount,price,final_price,image,game_id) "
+                                   "VALUES(%s,%s,%s,%s,%s,%s,%s,%s)",
+                                   (title, url, release_date, discount, price, final_price, image, str(game_id)))
+                connection_onj.commit()
+
+
 def create_s():
     create_game_table()
     create_summary_table()
     create_users_table()
     create_cpu_table()
     create_gpu_table()
+    create_new_games_table()
 
 

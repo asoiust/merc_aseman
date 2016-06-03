@@ -26,6 +26,7 @@ def f_home():
 def f_login():
     if request.method == 'POST':
         user = request.form['username']
+        print "inja"
         passw = request.form['password']
         check = request.form.getlist('check')
         if check_user(user, passw):
