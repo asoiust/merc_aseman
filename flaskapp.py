@@ -85,6 +85,7 @@ def f_search():
             slis = [list(i) for i in stup]
             for item in slis:
                 item[2] = str(item[2])
+                item[3] = str(item[3]).replace("Publisher", "")
             return json.dumps(slis)
         return "0"
     return redirect(url_for("f_home"))
@@ -99,7 +100,7 @@ def f_summary():
             stup = list(get_summary(page_number))
             slis = [list(i) for i in stup]
             for item in slis:
-                item[2] = str(item[2])
+                item[3] = str(item[3])
             return json.dumps(slis)
         return "0"
     return redirect(url_for("f_home"))
@@ -112,7 +113,8 @@ def f_game():
         print "123"
         if get_post(inf):
             stup = list(get_post(inf))
-            stup[2] = str(stup[2])
+            stup[8] = str(stup[8])
+            stup[17] = str(stup[17]).replace("Publisher", "")
             return json.dumps(stup)
         return "0"
     return redirect(url_for("f_home"))
@@ -138,6 +140,7 @@ def f_stat():
                 res = [list(i) for i in inf]
                 for item in res:
                     item[8] = str(item[8])
+                    item[17] = str(item[17]).replace("Publisher", "")
                 return json.dumps(res)
             if json_request['requestType'] == "aveofall":
                 ave_of_no_discount = float(get_res("SELECT AVG(purchase_price) FROM games WHERE discount='0';")[0][0])
@@ -152,6 +155,7 @@ def f_stat():
                 res = [list(i) for i in inf]
                 for item in res:
                     item[8] = str(item[8])
+                    item[17] = str(item[17]).replace("Publisher", "")
                 return json.dumps(res)
             if json_request['requestType'] == "topreviews":
                 inf = get_res("SELECT * FROM games ORDER BY reviews DESC LIMIT 10;")
@@ -159,6 +163,7 @@ def f_stat():
                 res = [list(i) for i in inf]
                 for item in res:
                     item[8] = str(item[8])
+                    item[17] = str(item[17]).replace("Publisher", "")
                 return json.dumps(res)
             if json_request['requestType'] == "count_of_all_games":
                 inf = get_res("SELECT COUNT(overall) FROM games;")
