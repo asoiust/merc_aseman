@@ -279,7 +279,12 @@ def add_summary(input_list):
                 date_list = release.encode("utf-8").split(" ")
                 print "RElease Date = ",release
                 print date_list
-                release_date = date_list[2] + "-" + str(months_name.index(date_list[1].replace(',', "")) + 1) + "-" + date_list[0]
+                if len(date_list) == 3:
+                    release_date = date_list[2] + "-" + str(months_name.index(date_list[1].replace(',', "")) + 1) + "-" + date_list[0]
+                elif len(date_list) == 2:
+                    release_date = date_list[1] + "-" + str(months_name.index(date_list[0].replace(',', "")) + 1) + "-0"
+                else:
+                    release_date = date_list[0] + "-0-0"
                 # Send to the database
                 discount.replace("Save up to ", "")
                 cursor = connection_onj.cursor()
