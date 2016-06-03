@@ -3,6 +3,7 @@ __author__ = 'sargdsra'
 
 from flask import Flask, render_template, session, request, json, redirect, url_for
 from database import check_user, add_user, search, get_summary, get_post, create_s, get_res
+from req import check
 
 app = Flask(__name__)
 app.secret_key = '\xa2\x1a\xb2B\x7f\x06\x95q\x00&\xe2\x0e\x89C\xbe\x84\xbb\xbf\xb1\x917\x96T\xbb'
@@ -126,7 +127,8 @@ def f_stat():
             if request.form['requestType'] == "overall":
                 very_positive = get_res("SELECT COUNT(overall) FROM games WHERE overall='Very Positive';")
                 positive = get_res("SELECT COUNT(overall) FROM games WHERE overall='Positive';")
-                overwhelmingly_positive = get_res("SELECT COUNT(overall) FROM games WHERE overall='Overwhelmingly Positive';")
+                overwhelmingly_positive = get_res(
+                    "SELECT COUNT(overall) FROM games WHERE overall='Overwhelmingly Positive';")
                 mostly_positive = get_res("SELECT COUNT(overall) FROM games WHERE overall='Mostly Positive';")
                 res = [very_positive[0][0], positive[0][0], overwhelmingly_positive[0][0], mostly_positive[0][0]]
                 return json.dumps(res)
@@ -139,7 +141,8 @@ def f_stat():
                 return json.dumps(res)
             if json_request['requestType'] == "aveofall":
                 ave_of_no_discount = float(get_res("SELECT AVG(purchase_price) FROM games WHERE discount='0';")[0][0])
-                ave_of_have_discount = float(get_res("SELECT AVG(original_price) FROM games WHERE discount<>'0';")[0][0])
+                ave_of_have_discount = float(
+                    get_res("SELECT AVG(original_price) FROM games WHERE discount<>'0';")[0][0])
                 # if error occurs change <> into !=
                 ave = "{0:.2f}".format((ave_of_no_discount + ave_of_have_discount) / 2)
                 return json.dumps(ave)
@@ -166,6 +169,14 @@ def f_stat():
                 inf = get_res("SELECT AVG(static) FROM games;")
                 inf = float(inf[0][0])
                 res = "{0:.2f}".format(inf)
+                return json.dumps(res)
+            if json_request['requestType'] == "user_tags":
+                inf = get_res("SELECT user_tags FROM games")
+                res = check(inf, "tg")
+                return json.dumps(res)
+            if json_request['requestType'] == "genre":
+                inf = get_res("SELECT details FROM games")
+                res = check(inf, "ge")
                 return json.dumps(res)
     return redirect(url_for("f_home"))
 
