@@ -48,42 +48,36 @@ def f_sign_up():
     return render_template("main.html")
 
 
-@app.route('/search')
+@app.route('/search', methods=['GET'])
 def f_search():
     if session.get("user"):
         search_dict = {}
-        """static_possible_search_args = ["word", "overall", "genre"]
-		possible_search_args = ["min_storage", "max_storage", "min_price", "max_price"]
-		possible_search_args += ["min_discount", "max_discount", "min_statics", "max_statics", "min_release_date"]
-		possible_search_args += ["max_release_date", "min_os", "max_os", "min_processor", "max_processor"]
-		possible_search_args += ["min_memory", "max_memory", "min_graphics", "max_graphics", "min_directX"]
-		possible_search_args += ["max_directX", "min_reviews", "max_reviews"]"""
-        # search_dict["min_os"] = request.args.get("os", "", type=str)
-        search_dict["min_os"] = ""
-        search_dict["min_graphics"] = ""
-        search_dict["min_processor"] = ""
-        search_dict["min_directX"] = ""
-        search_dict["word"] = ""
-        search_dict["overall"] = ""
-        search_dict["genre"] = ""
-        search_dict["min_storage"] = ""
-        search_dict["max_storage"] = ""
-        search_dict["min_price"] = ""
-        search_dict["max_price"] = ""
-        search_dict["min_discount"] = ""
-        search_dict["max_discount"] = ""
-        search_dict["min_statics"] = ""
-        search_dict["max_statics"] = ""
-        search_dict["min_release_date"] = ""
-        search_dict["max_release_date"] = ""
-        search_dict["rec_os"] = ""
-        search_dict["rec_processor"] = ""
-        search_dict["min_memory"] = ""
-        search_dict["rec_memory"] = ""
-        search_dict["rec_graphics"] = ""
-        search_dict["rec_directX"] = ""
-        search_dict["min_reviews"] = "1100"
-        search_dict["max_reviews"] = ""
+        search_dict["min_storage"] = request.args.get("min_storage", "", type=str)
+        search_dict["max_storage"] = request.args.get("max_storage", "", type=str)
+        search_dict["min_memory"] = request.args.get("min_memory", "", type=str)
+        search_dict["rec_memory"] = request.args.get("max_memory", "", type=str)
+        search_dict["min_os"] = request.args.get("min_os", "", type=str)
+        search_dict["rec_os"] = request.args.get("rec_os", "", type=str)
+        search_dict["min_graphics"] = request.args.get("min_graphics", "", type=str)
+        search_dict["rec_graphics"] = request.args.get("rec_graphics", "", type=str)
+        search_dict["min_processor"] = request.args.get("min_processor", "", type=str)
+        search_dict["rec_processor"] = request.args.get("rec_processor", "", type=str)
+        search_dict["min_price"] = request.args.get("min_price", "", type=str)
+        search_dict["max_price"] = request.args.get("max_price", "", type=str)
+        search_dict["min_directX"] = request.args.get("min_directX", "", type=str)
+        search_dict["rec_directX"] = request.args.get("rec_directX", "", type=str)
+        search_dict["min_discount"] = request.args.get("min_discount", "", type=str)
+        search_dict["max_discount"] = request.args.get("max_discount", "", type=str)
+        search_dict["min_reviews"] = request.args.get("min_reviews", "", type=str)
+        search_dict["max_reviews"] = request.args.get("max_reviews", "", type=str)
+        search_dict["min_statics"] = request.args.get("min_statics", "", type=str)
+        search_dict["max_statics"] = request.args.get("max_statics", "", type=str)
+        search_dict["min_overall"] = request.args.get("min_overall", "", type=str)
+        search_dict["max_overall"] = request.args.get("max_overall", "", type=str)
+        search_dict["genre"] = request.args.get("genre", "", type=str)
+        search_dict["word"] = request.args.get("word", "", type=str)
+        search_dict["min_release_date"] = request.args.get("min_release_date", "", type=str)
+        search_dict["max_release_date"] = request.args.get("max_release_date", "", type=str)
         print "123"
         if search(search_dict):
             stup = list(search(search_dict))
@@ -162,6 +156,16 @@ def f_stat():
                 res = [list(i) for i in inf]
                 for item in res:
                     item[8] = str(item[8])
+                return json.dumps(res)
+            if json_request['requestType'] == "count_of_all_games":
+                inf = get_res("SELECT COUNT(overall) FROM games;")
+                inf = inf[0][0]
+                res = inf
+                return json.dumps(res)
+            if json_request['requestType'] == "count_of_all_free_games":
+                inf = get_res("SELECT AVG(static) FROM games;")
+                inf = float(inf[0][0])
+                res = "{0:.2f}".format(inf)
                 return json.dumps(res)
     return redirect(url_for("f_home"))
 
