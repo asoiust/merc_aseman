@@ -511,7 +511,7 @@ def threaded_calculator_two(content):
 
 def go_in_first_page(page):
     page = str(page)
-    url = 'http://store.steampowered.com/search/results?sort_by=Released_DESC&tags=-1&category1=998&page=%s&snr=1_7_7_230_7' % (page,)
+    url = 'http://store.steampowered.com/search/results?sort_by=Released_DESC&tags=-1&category1=998&page=%s' % (page,)
     request = requests.get(url)
     content = request.content
     urls = scrapper_first_layer(page)
@@ -867,10 +867,10 @@ def go_in_link_ver4(url):
 
 #print scrapper_ver6(100)
 
-print scrapper_ver6(342)
+# print scrapper_ver6(342)
 
 #print scrapper_ver7(1)
-#print first_layer_pages_scrapper_with_sema(2)
+print first_layer_pages_scrapper_with_sema(342)
 #print lab_cpu2()
 #print lab_gpu2()
 

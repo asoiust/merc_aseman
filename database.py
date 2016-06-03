@@ -246,10 +246,15 @@ def check_summary_exist(title, url):
 
 def add_summary(input_list):
     connection_onj = MySql.connection()
+    print input_list
     for input_dict in input_list:
+        if not input_dict:
+            continue
         limit = len(input_dict['title'])
+        print "limit = ", limit
         with connection_onj:
             for counter in range(limit):
+                print "kir"
                 title = input_dict['title'][counter].encode('utf-8')
                 url = input_dict['url'][counter].encode('utf-8')
                 discount = input_dict['discount'][counter].encode('utf-8')
@@ -276,20 +281,25 @@ def add_summary(input_list):
                 # Send to the database
                 discount.replace("Save up to ", "")
                 cursor = connection_onj.cursor()
-                print url
-                print discount
                 cursor.execute("SELECT id FROM games WHERE url = %s", (url,))
                 try:
+                    print "CURSOR = ", cursor.fetchone()
+                    print url
                     game_id = cursor.fetchone()[0]
                 except IndexError:
-                    return
+                    print "Index Error"
+                    print cursor.fetchone()
+                    continue
                 except TypeError:
-                    return
+                    print "Type error"
+                    print cursor.fetchone()
+                    continue
                 print "DISCOUNT = " + discount
                 if not discount:
                     discount = "0"
                 if not price:
                     price = "0"
+                print "UPDATE summary SET title = %s, url = %s,release_date = %s,discount = %s,price = %s,final_price = %s,image = %s,game_id = %s WHERE url = %s"%(title, url, release_date, discount, price,final_price, image, game_id, url)
                 if check_summary_exist(title, url):
                     cursor.execute(
                         "UPDATE summary SET title = %s, url = %s,release_date = %s,discount = %s,price = %s,"
