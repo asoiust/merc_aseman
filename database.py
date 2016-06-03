@@ -277,15 +277,17 @@ def add_summary(input_list):
                 release = input_dict['rdate'][counter]
                 months_name = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
                 date_list = release.encode("utf-8").split(" ")
+                print "RElease Date = ",release
+                print date_list
                 release_date = date_list[2] + "-" + str(months_name.index(date_list[1].replace(',', "")) + 1) + "-" + date_list[0]
                 # Send to the database
                 discount.replace("Save up to ", "")
                 cursor = connection_onj.cursor()
                 cursor.execute("SELECT id FROM games WHERE url = %s", (url,))
                 try:
-                    print "CURSOR = ", cursor.fetchone()
+                    # print "CURSOR = ", cursor.fetchone()
                     print url
-                    game_id = cursor.fetchone()[0]
+                    game_id = str(cursor.fetchone()[0])
                 except IndexError:
                     print "Index Error"
                     print cursor.fetchone()
