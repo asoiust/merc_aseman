@@ -398,7 +398,12 @@ def get_rdate(content):
         soup = BeautifulSoup(content, "lxml")
         rdate = soup.find_all("span",{"class":"date"},True)
         date_list= string_corrector(rdate[0].text.encode("utf-8")).split(" ")
-        result = date_list[2] + "-" + str(months_name.index(date_list[1].replace(",", "")) + 1) + "-" + date_list[0]
+        if len(date_list) == 3:
+            result = date_list[2] + "-" + str(months_name.index(date_list[1].replace(",", "")) + 1) + "-" + date_list[0]
+        elif len(date_list) == 2:
+            result = date_list[1] + "-" + str(months_name.index(date_list[0].replace(",", "")) + 1) + "-0"
+        else:
+            result = date_list[0] + "-0-0"
         return result
     except:
         return '0-0-0'
