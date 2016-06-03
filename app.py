@@ -485,8 +485,21 @@ def price_lister(pr_list):
         splited = item.split('%')
         # print splited
         if len(splited) == 2:
-            result.append((splited[1].split("$")[1], splited[1].split("$")[2]))
+            first_price = splited[1].split("$")[1]
+            second_price = splited[1].split("$")[2]
+            for word in first_price:
+                if word in uppercase or word in lowercase:
+                    first_price = "0"
+                    break
+            for word in second_price:
+                if word in uppercase or word in lowercase:
+                    second_price = "0"
+                    break
+            result.append((first_price, second_price))
         else:
+            for word in item:
+                if word in uppercase or word in lowercase:
+                    return "0"
             result.append((item,))
     return result
 
