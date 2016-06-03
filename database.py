@@ -279,12 +279,17 @@ def add_summary(input_list):
                 date_list = release.encode("utf-8").split(" ")
                 print "RElease Date = ",release
                 print date_list
-                if len(date_list) == 3:
-                    release_date = date_list[2] + "-" + str(months_name.index(date_list[1].replace(',', "")) + 1) + "-" + date_list[0]
-                elif len(date_list) == 2:
-                    release_date = date_list[1] + "-" + str(months_name.index(date_list[0].replace(',', "")) + 1) + "-0"
-                else:
-                    release_date = date_list[0] + "-0-0"
+                try:
+                    if len(date_list) == 3:
+                        release_date = date_list[2] + "-" + str(months_name.index(date_list[1].replace(',', "")) + 1) + "-" + date_list[0]
+                    elif len(date_list) == 2:
+                        release_date = date_list[1] + "-" + str(months_name.index(date_list[0].replace(',', "")) + 1) + "-0"
+                    elif date_list[0]:
+                        release_date = date_list[0] + "-0-0"
+                    else:
+                        release_date = "0-0-0"
+                except Exception:
+                    release_date = "0-0-0"
                 # Send to the database
                 discount.replace("Save up to ", "")
                 cursor = connection_onj.cursor()
@@ -306,6 +311,7 @@ def add_summary(input_list):
                     discount = "0"
                 if not price:
                     price = "0"
+
                 print "UPDATE summary SET title = %s, url = %s,release_date = %s,discount = %s,price = %s,final_price = %s,image = %s,game_id = %s WHERE url = %s"%(title, url, release_date, discount, price,final_price, image, game_id, url)
                 if check_summary_exist(title, url):
                     cursor.execute(
