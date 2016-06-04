@@ -608,7 +608,7 @@ def add_gpu(title_list):
                 connection_obj = MySql.connection()
                 with connection_obj:
                     cursor = connection_obj.cursor()
-                    cursor.execute("INSERT INTO gpu(title) VALUES(%s)" ,( title,))
+                    cursor.execute("INSERT INTO gpu(title) VALUES(%s)",(title,))
                     connection_obj.commit()
             return True
     except Exception as e:
@@ -626,7 +626,7 @@ def get_cpu(title):
         connection_obj = MySql.connection()
         with connection_obj:
             cursor = connection_obj.cursor()
-            cursor.execute("SELECT * FROM cpu WHERE title LIKE CONVERT(%s USING utf8) ",
+            cursor.execute("SELECT * FROM cpu WHERE title LIKE CONVERT(%s USING utf8) COLLATE utf8_unicode_ci",
                            (unicode(u'%' + title + u'%'),))
             return cursor.fetchall()
     except Exception as e:
@@ -644,7 +644,7 @@ def get_gpu(title):
         connection_obj = MySql.connection()
         with connection_obj:
             cursor = connection_obj.cursor()
-            cursor.execute("SELECT * FROM gpu WHERE title LIKE CONVERT(%s USING utf8) ",
+            cursor.execute("SELECT * FROM gpu WHERE title LIKE CONVERT(%s USING utf8) COLLATE utf8_unicode_ci",
                            (unicode(u'%' + title + u'%'),))
             return cursor.fetchall()
     except Exception as e:
