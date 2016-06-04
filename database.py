@@ -115,7 +115,7 @@ def create_new_games_table():
             cursor = connection_obj.cursor()
             cursor.execute("CREATE TABLE IF NOT EXISTS new_games(id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,"
                            "title VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci,url VARCHAR(255),"
-                           "release_date DATE,discount FLOAT,price FLOAT,final_price FLOAT,image VARCHAR(255),")
+                           "release_date DATE,discount FLOAT,price FLOAT,final_price FLOAT,image VARCHAR(255))")
             connection_obj.commit()
     except Exception as e:
         print(e)
