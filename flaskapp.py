@@ -195,7 +195,7 @@ def f_stat():
                 inf = get_res("SELECT details FROM games")
                 res = check(inf, "ge")
                 return json.dumps(res)
-            elif request.form['requestType'] == "averageDiscount":
+            if request.form['requestType'] == "averageDiscount":
                 result = get_res("SELECT AVG(final_price) FROM summary WHERE discount > 0")
                 return json.dumps(result[0])
     return redirect(url_for("f_home"))
