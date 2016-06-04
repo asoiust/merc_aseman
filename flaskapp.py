@@ -86,8 +86,9 @@ def f_search():
             for item in slis:
                 item[2] = str(item[2])
                 item[3] = str(item[3])
-                d = item[3].index("Publisher")
-                item[3] = item[3][:d]
+                if "Publisher" in item[3]:
+                    d = item[3].index("Publisher")
+                    item[3] = item[3][:d]
             return json.dumps(slis)
         return "0"
     return redirect(url_for("f_home"))
@@ -117,8 +118,9 @@ def f_game():
             stup = list(get_post(inf))
             stup[8] = str(stup[8])
             stup[17] = str(stup[17])
-            d = stup[17].index("Publisher")
-            stup[17] = stup[17][:d]
+            if "Publisher" in stuo[17]:
+                d = stup[17].index("Publisher")
+                stup[17] = stup[17][:d]
             return json.dumps(stup)
         return "0"
     return redirect(url_for("f_home"))
@@ -143,8 +145,9 @@ def f_stat():
                 for item in res:
                     item[8] = str(item[8])
                     item[17] = str(item[17])
-                    d = item[17].index("Publisher")
-                    item[17] = item[17][:d]
+                    if "Publisher" in item[17]:
+                        d = item[17].index("Publisher")
+                        item[17] = item[17][:d]
                 return json.dumps(res)
             if request.form['requestType'] == "aveofall":
                 ave_of_no_discount = float(get_res("SELECT AVG(purchase_price) FROM games WHERE discount='0';")[0][0])
@@ -160,8 +163,9 @@ def f_stat():
                 for item in res:
                     item[8] = str(item[8])
                     item[17] = str(item[17])
-                    d = item[17].index("Publisher")
-                    item[17] = item[17][:d]
+                    if "Publisher" in item[17]:
+                        d = item[17].index("Publisher")
+                        item[17] = item[17][:d]
                 return json.dumps(res)
             if request.form['requestType'] == "topreviews":
                 inf = get_res("SELECT * FROM games ORDER BY reviews DESC LIMIT 10;")
@@ -170,8 +174,9 @@ def f_stat():
                 for item in res:
                     item[8] = str(item[8])
                     item[17] = str(item[17])
-                    d = item[17].index("Publisher")
-                    item[17] = item[17][:d]
+                    if "Publisher" in item[17]:
+                        d = item[17].index("Publisher")
+                        item[17] = item[17][:d]
                 return json.dumps(res)
             if request.form['requestType'] == "count_of_all_games":
                 inf = get_res("SELECT COUNT(overall) FROM games;")
