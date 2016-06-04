@@ -139,20 +139,15 @@ def f_stat():
                 res = [very_positive[0][0], positive[0][0], overwhelmingly_positive[0][0], mostly_positive[0][0]]
                 return json.dumps(res)
             if request.form['requestType'] == "topstatics":
-                inf = get_res("SELECT * FROM games ORDER BY static DESC LIMIT 10;")
+                inf = get_res("SELECT title,static,purchase_price,after_discount FROM games ORDER BY static DESC LIMIT 10;")
                 inf = list(inf)
                 res = [list(i) for i in inf]
-                for item in res:
-                    item[8] = str(item[8])
-                    item[17] = str(item[17])
-                    if "Publisher" in item[17]:
-                        d = item[17].index("Publisher")
-                        item[17] = item[17][:d]
+                print res
                 return json.dumps(res)
             if request.form['requestType'] == "aveofall":
-                ave_of_no_discount = float(get_res("SELECT AVG(purchase_price) FROM games WHERE discount='0';")[0][0])
+                ave_of_no_discount = float(get_res("SELECT AVG(price) FROM summary WHERE discount = 0")[0][0])
                 ave_of_have_discount = float(
-                    get_res("SELECT AVG(original_price) FROM games WHERE discount<>'0';")[0][0])
+                    get_res("SELECT AVG(final_price) FROM summary WHERE discount<>'0';")[0][0])
                 # if error occurs change <> into !=
                 ave = "{0:.2f}".format((ave_of_no_discount + ave_of_have_discount) / 2)
                 return json.dumps((ave,))
@@ -200,8 +195,8 @@ def f_stat():
                 inf = get_res("SELECT details FROM games")
                 res = check(inf, "ge")
                 return json.dumps(res)
-            if request.form['requestType'] == "averageDiscount":
-                result = get_res("SELECT AVG(discount * 0.01 * original_price) FROM games WHERE discount > 0")
+            elif request.form['requestType'] == "averageDiscount":
+                result = get_res("SELECT AVG(final_price) FROM summary WHERE discount > 0")
                 return json.dumps(result[0])
     return redirect(url_for("f_home"))
 
