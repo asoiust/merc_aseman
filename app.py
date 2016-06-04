@@ -833,11 +833,15 @@ def first_layer_pages_scrapper_with_sema_release_date(page=1):   #maybe u need t
     add_summary(results)
     return results  #age khasti extractor ro bardar
 
+
 def updater():
     scrapper_ver7()
     first_layer_pages_scrapper_with_sema_release_date()
     return True
 
+
+##########################################################################################
+#one game
 
 
 def go_in_link_ver4(url):
@@ -859,29 +863,128 @@ def go_in_link_ver4(url):
     return result
 
 
+################################################################################################
+# updater ver_2
+
+
+def scrapper_first_layer_release_date_ver2(page):
+    url = 'http://store.steampowered.com/search/results?sort_by=Released_DESC&tags=-1&category1=998&page=%s' % (page,)
+    request = requests.get(url)
+    content = request.content
+    soup = BeautifulSoup(content, "lxml")
+    my_html = soup.find_all("a",{"class":"search_result_row ds_collapse_flag"},True)
+    return link_extractor(my_html)
+
+
+
+def go_in_first_page_release_date_ver2(page):
+    page = str(page)
+    url = 'http://store.steampowered.com/search/results?sort_by=Released_DESC&tags=-1&category1=998&page=%s' % (page,)
+    request = requests.get(url)
+    content = request.content
+    urls = scrapper_first_layer_release_date_ver2(page)
+    funcs = threaded_calculator_two(content)
+    result = dict()
+    result.update({'title': funcs[0], 'rdate': funcs[1],
+
+                   'price': funcs[2], 'discount': funcs[3], 'url': urls, 'pics': funcs[4]})
+    return result
+
+
+
+def scrapper_ver8(page=1):
+    link_in_pages = []
+    results = []
+    first_layer_threads = []
+    second_layer_threads = []
+    for i in range(1, page+1):
+        t = thread_scrap(scrapper_first_layer_release_date_ver2, str(i))
+        first_layer_threads.append(t)
+        t.start()
+    for j in first_layer_threads:
+        j.join()
+        link_in_pages += j.get_result()
+        #print link_in_pages
+    #semaphore = threading.BoundedSemaphore(15)
+    semaphore = threading.Semaphore(10)
+    #counter = 0
+    for link in link_in_pages:
+        t = semaphore_thread(go_in_link_ver3, link, semaphore)
+        second_layer_threads.append(t)
+        t.start()
+        #counter += 1
+        #print counter
+    for l in second_layer_threads:
+        l.join()
+        pre_result = l.get_result()
+        results.append(pre_result)
+        add_game(pre_result)
+    return results
+    #return True
+
+
+def first_layer_pages_scrapper_with_sema_release_date_ver2(page=1):   #maybe u need this
+    results = []
+    threads = []
+    for i in range(1,page+1):
+        #semaphore = threading.BoundedSemaphore(5)
+        semaphore = threading.Semaphore(5)
+        t = semaphore_thread(go_in_first_page_release_date_ver2, i, semaphore)
+        threads.append(t)
+        t.start()
+    for j in threads:
+        j.join()
+        results.append(j.get_result())
+    add_summary(results)
+    return results  #age khasti extractor ro bardar
+
+
+def updater_ver2():
+    scrapper_ver8(3)
+    first_layer_pages_scrapper_with_sema_release_date_ver2(3)
+    return True
+
+
+
+
+#######################################################################################################
+#refresh
+
+
+def refresh(page=1):   #maybe u need this
+    results = []
+    threads = []
+    for i in range(1,page+1):
+        #semaphore = threading.BoundedSemaphore(5)
+        semaphore = threading.Semaphore(5)
+        t = semaphore_thread(go_in_first_page, i, semaphore)
+        threads.append(t)
+        t.start()
+    for j in threads:
+        j.join()
+        results.append(j.get_result())
+    add_new_game(results)
+    return results  #age khasti extractor ro bardar
+
+
+
+
+######################################################################################################
+
+
+
 
 #print scrapper_ver6(1)                          baziha
 #print first_layer_pages_scrapper_with_sema(1)      summary
 #print go_in_link_ver4(url)          vorood be safheye bazi khas va gereftan etelaat
 #print updater()               3bazi avval
 
+#print updater_ver2()               3safhe avval
 
+#print refresh(2)    refresh bottom
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#print refresh(2)
+#print updater_ver2()
 #print go_in_first_page_release_date(1)
 
 #print updater()
@@ -894,7 +997,7 @@ def go_in_link_ver4(url):
 # print scrapper_ver6(342)
 
 #print scrapper_ver7(1)
-print first_layer_pages_scrapper_with_sema(342)
+#print first_layer_pages_scrapper_with_sema(342)
 #print lab_cpu2()
 #print lab_gpu2()
 
