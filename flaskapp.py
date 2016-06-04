@@ -4,6 +4,7 @@ __author__ = 'sargdsra'
 from flask import Flask, render_template, session, request, json, redirect, url_for
 from database import check_user, add_user, search, get_summary, get_post, create_s, get_res
 from req import check
+from app import go_in_link_ver4
 
 app = Flask(__name__)
 app.secret_key = '\xa2\x1a\xb2B\x7f\x06\x95q\x00&\xe2\x0e\x89C\xbe\x84\xbb\xbf\xb1\x917\x96T\xbb'
@@ -230,11 +231,15 @@ def f_lab():
 @app.route('/game/<int:game_id>')
 def f_g_p_game(game_id):
     if session.get("user"):
+        inf = str(get_res("SELECT url FROM games WHERE id=" + str(game_id) + ";")[0][0])
+        go_in_link_ver4(inf)
         inf = list(get_res("SELECT id, title, description, min_processor, min_memory, min_graphics, min_storage, rec_storage, rec_processor, rec_memory, rec_graphics FROM games WHERE id=" + str(
             game_id) + ";")[0])
         res = str(get_res("SELECT image FROM summary WHERE game_id=" + str(game_id) + ";")[0][0])
         inf.append(res)
         return render_template("game.html", item=inf, Username=session["user"])
+    return render_template("main.html", items=get_4())
+
 
 def get_4():
     inf = get_res("SELECT id, description FROM games ORDER BY static DESC LIMIT 4;")
