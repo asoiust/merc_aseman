@@ -19,7 +19,7 @@ def f_home():
     if session.get("user"):
         user = session["user"]
         return render_template("ad-search.html", Username=user)
-    return render_template("main.html")
+    return render_template("main.html", items=get_4())
 
 
 @app.route("/login", methods=['POST'])
@@ -32,7 +32,7 @@ def f_login():
             if check:
                 session['user'] = user
             return render_template("ad-search.html", Username=user)
-    return render_template("main.html")
+    return render_template("main.html", items=get_4())
 
 
 @app.route("/signup", methods=['POST'])
@@ -46,7 +46,7 @@ def f_sign_up():
             if add_user(user, passw, email):
                 session['user'] = user
                 return render_template("ad-search.html", Username=user)
-    return render_template("main.html")
+    return render_template("main.html", items=get_4())
 
 
 @app.route('/search', methods=['GET'])
@@ -205,15 +205,24 @@ def f_stat():
 def f_go_search():
     if request.method == 'POST' and session.get("user"):
         return render_template("ad-search.html")
-    return render_template("main.html")
+    return render_template("main.html", items=get_4())
 
 
 @app.route("/p_inf")
 def f_go_info():
     if session.get("user"):
         return render_template("info.html")
-    return render_template("main.html")
+    return render_template("main.html", items=get_4())
 
 
+def get_4():
+    inf = get_res("SELECT id, description FROM games ORDER BY static DESC LIMIT 4;")
+    inf = list(inf)
+    res = [list(i) for i in inf]
+    for item in res:
+        st = "SELECT image FROM summary WHERE game_id=" + str(item[0]) + ";"
+        inf = get_res(st)
+        item.append(str(inf[0][0]))
+    return res
 if __name__ == '__main__':
     app.run(debug=True, port=4958)
