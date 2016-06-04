@@ -81,7 +81,7 @@ def f_search():
         search_dict["min_release_date"] = request.args.get("min_release_date", "", type=str)
         search_dict["max_release_date"] = request.args.get("max_release_date", "", type=str)
         print "123"
-        search_result = search(search_dict)
+        search_result = search(search_dict, "0")
         print search_result
         if search_result:
             stup = list(search_result)

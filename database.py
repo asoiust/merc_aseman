@@ -437,7 +437,7 @@ def check_user_with_username(username):
         return 0
 
 
-def search(input_dict):
+def search(input_dict, page):
     """
     | This function gets a dictionary and returns result as a tuple.
     :param input_dict:dict
@@ -470,17 +470,17 @@ def search(input_dict):
                     search_string += "purchase_price >= " + input_dict[arg] + " OR after_discount >= " + \
                                      input_dict[arg] + " AND after_discount > 0 OR "
                 elif arg == "min_discount":
-                    search_string += "discount >= " + input_dict[arg] + " AND "
+                    search_string += "games.discount >= " + input_dict[arg] + " AND "
                 elif arg == "max_discount":
-                    search_string += "discount <= " + input_dict[arg] + " AND "
+                    search_string += "games.discount <= " + input_dict[arg] + " AND "
                 elif arg == "min_statics":
                     search_string += "static >= " + input_dict[arg] + " AND "
                 elif arg == "max_statics":
                     search_string += "static <= " + input_dict[arg] + " AND "
                 elif arg == "min_release_date":
-                    search_string += "release_date >= " + input_dict[arg] + " AND "
+                    search_string += "games.release_date >= " + input_dict[arg] + " AND "
                 elif arg == "max_release_date":
-                    search_string += "release_date <= " + input_dict[arg] + " AND "
+                    search_string += "games.release_date <= " + input_dict[arg] + " AND "
                 elif arg == "min_reviews":
                     search_string += "reviews >= " + input_dict[arg] + " AND "
                 elif arg == "max_reviews":
@@ -505,10 +505,12 @@ def search(input_dict):
         if search_string.split(" ")[-2] == "OR":
             search_string = search_string[:len(search_string) - 5]
     cursor.execute("SELECT games.title,games.url,games.release_date,games.details,games.description,games.id,"
-    "summary.image FROM games INNER JOIN summary ON games.id = summary.game_id WHERE " + search_string)
+    "summary.image FROM games INNER JOIN summary ON games.id = summary.game_id WHERE " + search_string + " LIMIT 10 "
+                                                                                                         "OFFSET " + page)
     # cursor.execute("SELECT games.title,games.url,games.release_date,games.details,games.description,games.id FROM games WHERE " + search_string)
     result = cursor.fetchall()
-    print result
+    for i in result:
+        print i
     return result
 
     # except Exception as e:
