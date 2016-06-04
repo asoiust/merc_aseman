@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $("#sign-up-link").on('click', function(event) {
+    if (this.hash !== "") {
+      event.preventDefault();
+      var hash = this.hash;
+        $('html, body').animate({
+        scrollTop: $(hash).offset().top
+      }, 1200, function(){
+        window.location.hash = hash;
+      });
+    }
+  });
+});
+
+
+
+
+</script>
+
+<style>
+body{
+  background-image:url("static/pictures/bg.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 500px;
+  background-position: center;
+  background-size: cover;
+  padding:0px;
+}
+
+#login-dp{
+  min-width: 250px;
+  padding: 14px 14px 0;
+  overflow:hidden;
+  background-color:rgba(255,255,255,.8);
+}
+#login-dp .help-block{
+}
+  font-size:12px
+#login-dp .bottom{
+  background-color:rgba(255,255,255,.8);
+  border-top:1px solid #ddd;
+  clear:both;
+  padding:14px;
+}
+#login-dp .social-buttons{
+  margin:12px 0
+}
+#login-dp .social-buttons a{
+  width: 49%;
+}
+#login-dp .form-group {
+  margin-bottom: 10px;
+}
+.btn-fb{
+  color: #fff;
+  background-color:#3b5998;
+}
+.btn-fb:hover{
+  color: #fff;
+  background-color:#496ebc
+}
+.btn-tw{
+  color: #fff;
+  background-color:#55acee;
+}
+.btn-tw:hover{
+  color: #fff;
+  background-color:#59b5fa;
+}
+@media(max-width:768px){
+  #login-dp{
+      background-color: inherit;
+      color: #fff;
+  }
+  #login-dp .bottom{
+      background-color: inherit;
+      border-top:0 none;
+  }
+}
+
+#discription{
+
+
+    background-color: #f2f2f2;
+    width:798px;
+    margin-bottom:1.5cm;
+    opacity: 0.7;
+    filter: alpha(opacity=80); @Lyo=@ For IE8 and earlier @Ki8=@
+
+}
+.carousel-inner > .item > img,
+  .carousel-inner > .item > a > img {
+      width: 70%;
+      margin: auto;
+  }
+
+
+#logo{
+  opacity: 0.8;
+  margin-top: -1cm;
+  margin-left:0cm;
+  width: inherit;
+}
+
+
+
+
+
+@import "http://fonts.googleapis.com/css?family=Roboto:300,400,500,700";
+
+.container { margin-top: 20px; }
+.mb20 { margin-bottom: 20px; }
+
+hgroup { padding-left: 15px; border-bottom: 1px solid #ccc; }
+hgroup h1 { font: 500 normal 1.625em "Roboto",Arial,Verdana,sans-serif; color: #2a3644; margin-top: 0; line-height: 1.15; }
+hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; color: #2a3644; margin: 0; padding-bottom: 10px; }
+
+.search-result .thumbnail { border-radius: 0 !important; }
+.search-result:first-child { margin-top: 0 !important; }
+.search-result { margin-top: 20px; }
+.search-result .col-md-2 { border-right: 1px dotted #ccc; min-height: 140px; }
+.search-result ul { padding-left: 0 !important; list-style: none;  }
+.search-result ul li { font: 400 normal .85em "Roboto",Arial,Verdana,sans-serif;  line-height: 30px; }
+.search-result ul li i { padding-right: 5px; }
+.search-result .col-md-7 { position: relative; }
+.search-result h3 { font: 500 normal 1.375em "Roboto",Arial,Verdana,sans-serif; margin-top: 0 !important; margin-bottom: 10px !important; }
+.search-result h3 > a, .search-result i { color: #248dc1 !important; }
+.search-result p { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; }
+.search-result span.plus { position: absolute; right: 0; top: 126px; }
+.search-result span.plus a { background-color: #248dc1; padding: 5px 5px 3px 5px; }
+.search-result span.plus a:hover { background-color: #414141; }
+.search-result span.plus a i { color: #fff !important; }
+.search-result span.border { display: block; width: 97%; margin: 0 15px; border-bottom: 1px dotted #ccc; }
+
+
+
+
+</style>
+
+<head>
+  <title>GamesYouWant</title>
+  <meta
+  name="viewport" content="width=device-width, initial-scale=1"><link
+  rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../static/styles/ion.rangeslider.css" type="text/css">
+  <link rel="stylesheet" href="../static/styles/ion.rangeSlider.skinFlat.css" type="text/css">
+
+  <link rel="stylesheet" href="../static/styles/ion.rangeSlider.skinModern.css" type="text/css">
+
+  <link rel="stylesheet" href="../static/styles/normalize.css" type="text/css">
+
+
+
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</script>
+     <script type=text/javascript>
+    $(function() {
+      $('#main_search').bind('click',function() {
+        console.log("kir");
+        var storage = $("#storage-range").prop("value").split(";");
+        var ram = $("#ram-range").prop("value").split(";");
+        var price = $("#price-range").prop("value").split(";");
+        var discount = $('#discount-range').prop("value").split(";");
+        var review = $('#review').prop("value").split(";");
+        var staitcs = $('#statics').prop("value").split(";");
+        var overall = $('#overall').prop("value").split(";");
+        var date = $('#date-range')prop("value").split(";");
+
+        $.getJSON('/search', {
+          min_storage : storage[0],
+          max_storage : storage[1],
+          min_memory : ram[0],
+          max_memory : ram[1],
+          min_os: $('#min_os').val(),
+          rec_os: $('#rec_os').val(),
+          min_graphics: $('#min_graphics').val(),
+          rec_graphics: $('#rec_graphics').val(),
+          min_directX: $('#min_directx').val(),
+          rec_directX: $('#rec_directx').val(),
+          min_processor: $('#min_processor').val(),
+          rec_processor: $('#rec_processor').val(),
+          min_price: price[0],
+          max_price: price[1],
+          min_discount: discount[0],
+          max_discount: discount[1],
+          min_reviews: review[0],
+          max_reviews: review[1],
+          min_statics: staitcs[0],
+          max_statics: staitcs[1],
+          min_overall: overall[0],
+          max_overall: overall[1]
+          genre: $('#details').val(),
+          word: $('#search-text').val(),
+          min_release_date:date[0],
+          max_release_date:date[1],
+
+
+
+
+        }, function(data) {
+          document.getElementById("result").innerHTML=""// $("#result").text(data);
+          // for (i = 1; i < data.length; i++) {
+              // document.getElementById("result").innerHTML+=data[i]+"<br><br><br><br><br><br><br>";
+              // document.getElementById("result").appendChild(data[i]);
+    //  }
+    Object.keys(data).forEach(function(key){
+      // document.getElementById("result").innerHTML+=data[key]+"<br><br><br><br><br><br>";
+
+
+      document.getElementById("result").innerHTML+=+"<article class='search-result row' id = 'result'>"+
+  			"<div class='col-xs-12 col-sm-12 col-md-3'>"+
+  				"<a href='#' title='Chronicle' class='thumbnail'><img src='"+data[key][5]+"' alt='1' style='border=0px;'/></a></div>"+
+  			"<div class='col-xs-12 col-sm-12 col-md-2'>"+
+  				"<ul class='meta-search'>"+
+  					"<li style = 'word-wrap: break-word;'><i class='glyphicon glyphicon-calendar'></i> <span style = 'word-wrap: break-word;'>"+data[key][2]+"</span></li>"+
+  					"<li style = 'word-wrap: break-word;'><i class='glyphicon glyphicon-tags'></i> <span style = 'word-wrap: break-word;'>"+data[key][3]+"</span></li>"+
+  				"</ul></div>"+
+  			"<div class='col-xs-12 col-sm-12 col-md-7 excerpet' style = 'word-wrap: break-word;'>"+
+  				"<h3><a href='#' title='12'>"+data[key][0]+"</a></h3>"+
+          "<p>"+data[key][4]+"</p></center>"+
+            "<span><a href='"+data[key][1]+"'>+More...</a></span><hr><br>"+
+  			"</div>"+
+  			"<span ></span>"+
+        "</article>";
+
+
+    });
+        });
+        return false;
+      });
+    });
+  </script>
+
+
+</head>
+
+<body id ="body">
+<p type="hidden" hidden><a href="javascript:void();"><input type = "button" value="search"></a>
+<nav class="navbar navbar-default navbar-inverse" role="navigation">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">GamesYouWant</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Games</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Category<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Adveture</a></li>
+            <li><a href="#">Racing</a></li>
+
+            <li><a href="#">Sports</a></li>
+            </ul>
+        </li>
+      </ul>
+      <form class="navbar-form navbar-left" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search For Games...">
+        </div>
+        <button type="submit" class="btn btn-default"  style="background-color:rgb(255,192,0);border:solid black 2px;color:black;">Search</button>
+      </form>
+      <ul class="nav navbar-nav navbar-right">
+        <li><p class="navbar-text">Already have an account?</p></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b>Login</b> <span class="caret"></span></a>
+			<ul id="login-dp" class="dropdown-menu">
+				<li>
+					 <div class="row">
+							<div class="col-md-12">
+
+								 <form class="form" role="form" method="post" action="login" accept-charset="UTF-8" id="login-nav">
+										<div class="form-group">
+											 <label class="sr-only" for="exampleInputEmail2">Email address</label>
+											 <input type="text" class="form-control" id="username" placeholder="Username" required>
+										</div>
+										<div class="form-group">
+											 <label class="sr-only" for="exampleInputPassword2" >Password</label>
+											 <input type="password" class="form-control" id="password" placeholder="Password" required>
+                                             <div class="help-block text-right"><a id="forget-pass" href="#" onclick="forgetpass()">Forget the password ?</a></div>
+										</div>
+										<div class="form-group">
+											 <button type="submit" class="btn btn-primary btn-block" style="background-color:rgb(255,192,0);border:solid black 2px;color:black;">Sign in</button>
+										</div>
+										<div class="checkbox">
+											 <label>
+											 <input type="checkbox"> keep me logged-in
+											 </label>
+										</div>
+								 </form>
+							</div>
+							<div class="bottom text-center">
+								New here ? <a id = "sign-up-link" href="#sign-up-bg"><b>Join Us</b></a>
+							</div>
+              <br>
+					 </div>
+				</li>
+			</ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav><center>
+<div id= "ad-search" style = "width:250px;background-color:rgb(255,192,0);border-radius:20px 20px 0px 0px;padding:20px;opacity:0.80;color:black;height:100px;">
+<h3 align="center">Game Name</h3><br>
+</div>
+<div id= "ad-search" style = "width:80%;background-color:black;padding:20px;opacity:0.9;color:white;">
+<center>
+<img src="http://cdn.addictinggames.com/newGames/game-links/must-a-mine-dupe-links/must-a-mine-dupe-links.png?c=7" style ="width:auto;"/></center>
+<br>
+<div id= "ad-search" style = "width:inherit;background-color:rgb(255,192,0);padding:20px;opacity:0.9;color:white;">
+<h3 align= 'center' style = "color:black" >System Reqirements</h3>
+</div>
+<div id= "ad-search" style = "width:inherit;background-color:black;padding:20px;opacity:0.9;color:white;border: solid rgb(255,192,0);word-break:break-all;">
+<left>
+<ul>
+  <li>Graphic card :</li>
+  <li>Processor :</li>
+  <li>RAM :</li>
+  <li>Storage :</li>
+
+</ul>
+
+</left>
+</div>
+
+<br>
+<br>
+<div id= "ad-search" style = "width:inherit;background-color:rgb(255,192,0);padding:20px;opacity:0.9;color:white;">
+<h3 align= 'center' style = "color:black" >Discriptions</h3>
+</div>
+
+
+
+<div id= "ad-search" style = "width:inherit;background-color:black;padding:20px;opacity:0.9;color:white;border: solid rgb(255,192,0);word-break:break-all;">
+<p align='left'> Your Discription Here :</p>
+</div>
+
+</div>
+
+</div>
+</div>
+<br><br>
+</body>
+<html>
