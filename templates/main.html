@@ -232,7 +232,7 @@ body{
       <div id="myCarousel" class="carousel slide" data-ride="carousel" >
         <!-- Indicators -->
         <ol class="carousel-indicators">
-          <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+          <li data-target="#myCarousel" data-slide-to="0"></li>
           <li data-target="#myCarousel" data-slide-to="1"></li>
           <li data-target="#myCarousel" data-slide-to="2"></li>
           <li data-target="#myCarousel" data-slide-to="3"></li>
@@ -241,17 +241,17 @@ body{
   <!-- Wrapper for slides -->
         <div class="carousel-inner" role="listbox">
           <div class="item active">
-            <img src="{{ url_for('static',filename='pictures/Chronicle.jpg') }}" alt="Chania" width="460" height="345">
-            <center><p id="discription">Play with the fate of Legends in a battle of wits, strategy and combat, where lives are gambled on the turn of your cards. Leave your minions behind as you fight your own battles, expand and master your deck, and face the challenge of unique card combat. Chronicle is a new kind of card gaming experience.</p></center>
-
+            <img src="{{ items[0][2] }}" alt="Chania" width="460" height="345">
+            <center><p id="discription">{{ items[0][1] }}</p></center>
           </img>
             </div>
-          <div class="item">
-            <img src="{{ url_for('static',filename='pictures/Istrolid.jpg') }}" alt="Chania" width="460" height="345"></img>
-            <center><p id="discription">In Istrolid you design your own unique spaceships from a large number of parts to fit your strategy and play style. With no set units or factions you are free to create a fleet where each ship has its own balanced strengths and weaknesses, from basic fighters and bombers to hulking battleships and ...</p></center>
+          {% for item in items[1:] %}
+            <div class="item">
+            <img src="{{ item[2] }}" alt="Chania" width="460" height="345"></img>
+            <center><p id="discription">{{ item[1] }}</p></center>
           </div>
-
-          <div class="item">
+            {% endfor %}
+         <!--<div class="item">
             <img src="{{ url_for('static',filename='pictures/wormis.jpg') }}" alt="Flower" width="460" height="345"></img>
             <center><p id="discription">Smash worms or slither trying! Warning: Incredibly addicting Multiplayer Game!</p></center>
           </div>
@@ -259,7 +259,7 @@ body{
           <div class="item">
             <img src="{{ url_for('static',filename='pictures/ForgeofGods.jpg') }}" alt="Flower" width="460" height="345"></img>
             <center><p id="discription">Join the action in this highly addictive multiplayer card strategy RPG “FORGE OF GODS”! Collect and train as many monsters as you can to assemble the greatest team and burst through hordes of enemies in thrilling, addictive and fast-paced game!</p></center>
-          </div>
+          </div>-->
         </div>
 
         <!-- Left and right controls -->
