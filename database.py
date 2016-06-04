@@ -505,7 +505,7 @@ def search(input_dict, page):
         if search_string.split(" ")[-2] == "OR":
             search_string = search_string[:len(search_string) - 5]
     cursor.execute("SELECT games.title,games.url,games.release_date,games.details,games.description,games.id,"
-    "summary.image FROM games INNER JOIN summary ON games.id = summary.game_id WHERE " + search_string + " LIMIT 10 "
+    "summary.image FROM games INNER JOIN summary ON games.id = summary.game_id WHERE " + search_string + " LIMIT 100 "
                                                                                                          "OFFSET " + page)
     # cursor.execute("SELECT games.title,games.url,games.release_date,games.details,games.description,games.id FROM games WHERE " + search_string)
     result = cursor.fetchall()
