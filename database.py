@@ -447,8 +447,9 @@ def search(input_dict):
     for encoder in input_dict:
         input_dict[encoder] = input_dict[encoder].encode("utf-8")
     input_dict.update({'overall': ""})
+
     static_possible_search_args = ["word", "overall", "genre"]
-    possible_search_args = ["min_storage", "max_storage", "min_price", "max_price"]
+    possible_search_args = ["min_price", "max_price"]
     possible_search_args += ["min_discount", "max_discount", "min_statics", "max_statics", "min_release_date"]
     possible_search_args += ["max_release_date", "min_os", "rec_os", "min_processor", "rec_processor"]
     # possible_search_args += ["max_release_date", "min_os", "min_processor"]
@@ -484,8 +485,6 @@ def search(input_dict):
                     search_string += "reviews >= " + input_dict[arg] + " AND "
                 elif arg == "max_reviews":
                     search_string += "reviews <= " + input_dict[arg] + " AND "
-                elif arg == "max_storage":
-                    search_string += "rec_storage LIKE % " + input_dict[arg] + " % AND "
                 elif arg.split("_")[0] == "min":
                     search_string += arg + " <= " + input_dict[arg] + " AND "
                 elif arg.split("_")[0] == "rec":
