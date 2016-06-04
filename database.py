@@ -704,33 +704,20 @@ def add_new_game(input_list):
                 discount.replace("Save up to ", "")
                 cursor = connection_onj.cursor()
                 cursor.execute("SELECT id FROM games WHERE url = %s", (url,))
-                try:
-                    # print "CURSOR = ", cursor.fetchone()
-                    print url
-                    game_id = str(cursor.fetchone()[0])
-                except IndexError:
-                    print "Index Error"
-                    print cursor.fetchone()
-                    continue
-                except TypeError:
-                    print "Type error"
-                    print cursor.fetchone()
-                    continue
-                print "DISCOUNT = " + discount
                 if not discount:
                     discount = "0"
                 if not price:
                     price = "0"
 
-                print "UPDATE summary SET title = %s, url = %s,release_date = %s,discount = %s,price = %s,final_price = %s,image = %s,game_id = %s WHERE url = %s"%(title, url, release_date, discount, price,final_price, image, game_id, url)
+                print "UPDATE summary SET title = %s, url = %s,release_date = %s,discount = %s,price = %s,final_price = %s,image = %s WHERE url = %s"%(title, url, release_date, discount, price,final_price, image, url)
                 if check_summary_exist(title, url):
                     return
                 else:
                     if not price:
                         price = '0'
-                    cursor.execute("INSERT INTO new_games(title,url,release_date,discount,price,final_price,image,game_id) "
-                                   "VALUES(%s,%s,%s,%s,%s,%s,%s,%s)",
-                                   (title, url, release_date, discount, price, final_price, image, str(game_id)))
+                    cursor.execute("INSERT INTO new_games(title,url,release_date,discount,price,final_price,image) "
+                                   "VALUES(%s,%s,%s,%s,%s,%s,%s)",
+                                   (title, url, release_date, discount, price, final_price, image))
                 connection_onj.commit()
 
 
