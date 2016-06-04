@@ -118,7 +118,7 @@ def f_game():
             stup = list(get_post(inf))
             stup[8] = str(stup[8])
             stup[17] = str(stup[17])
-            if "Publisher" in stuo[17]:
+            if "Publisher" in stup[17]:
                 d = stup[17].index("Publisher")
                 stup[17] = stup[17][:d]
             return json.dumps(stup)
