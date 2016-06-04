@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Information</title>
+    <link href="../static/styles/bootstrap.min.css" type="text/css" rel="stylesheet">
     <script src="{{url_for('static', filename='js/jquery-2.2.4.min.js')}}"></script>
     <script src="{{url_for('static', filename='js/highcharts.js')}}"></script>
     <script src="{{url_for('static', filename='js/highcharts-3d.js')}}">   </script>
@@ -10,7 +11,21 @@
     <script src="{{url_for('static', filename='js/modules/solid-gauge.js')}}"></script>
 </head>
 <body>
-<div id="overall" style="width: 600px; height: 600px; margin: 0 auto"></div>
+<section class="container">
+    <div class="row">
+        <div id="overall" class="col-md-6 col-md-push-3"></div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="row">
+
+        <div class="col-md-6">
+            <div id="price-average"></div>
+        </div>
+        <div class="col-md-6">
+                <div id="discount-average"></div>
+        </div>
+    </div>
+</section>
 <script src="{{url_for('static', filename='js/info.js')}}"></script>
 </body>
 </html>

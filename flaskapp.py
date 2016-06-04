@@ -124,7 +124,6 @@ def f_game():
 def f_stat():
     if session.get("user"):
         if request.method == 'POST':
-            json_request = request.get_json(silent=True)
             # if json_request['requestType'] == "overall":
             if request.form['requestType'] == "overall":
                 very_positive = get_res("SELECT COUNT(overall) FROM games WHERE overall='Very Positive';")
@@ -134,7 +133,7 @@ def f_stat():
                 mostly_positive = get_res("SELECT COUNT(overall) FROM games WHERE overall='Mostly Positive';")
                 res = [very_positive[0][0], positive[0][0], overwhelmingly_positive[0][0], mostly_positive[0][0]]
                 return json.dumps(res)
-            if json_request['requestType'] == "topstatics":
+            if request.form['requestType'] == "topstatics":
                 inf = get_res("SELECT * FROM games ORDER BY static DESC LIMIT 10;")
                 inf = list(inf)
                 res = [list(i) for i in inf]
@@ -142,14 +141,14 @@ def f_stat():
                     item[8] = str(item[8])
                     item[17] = str(item[17]).replace("Publisher", "")
                 return json.dumps(res)
-            if json_request['requestType'] == "aveofall":
+            if request.form['requestType'] == "aveofall":
                 ave_of_no_discount = float(get_res("SELECT AVG(purchase_price) FROM games WHERE discount='0';")[0][0])
                 ave_of_have_discount = float(
                     get_res("SELECT AVG(original_price) FROM games WHERE discount<>'0';")[0][0])
                 # if error occurs change <> into !=
                 ave = "{0:.2f}".format((ave_of_no_discount + ave_of_have_discount) / 2)
-                return json.dumps(ave)
-            if json_request['requestType'] == "newgames":
+                return json.dumps((ave,))
+            if request.form['requestType'] == "newgames":
                 inf = get_res("SELECT * FROM games ORDER BY release_date DESC LIMIT 10;")
                 inf = list(inf)
                 res = [list(i) for i in inf]
@@ -157,7 +156,7 @@ def f_stat():
                     item[8] = str(item[8])
                     item[17] = str(item[17]).replace("Publisher", "")
                 return json.dumps(res)
-            if json_request['requestType'] == "topreviews":
+            if request.form['requestType'] == "topreviews":
                 inf = get_res("SELECT * FROM games ORDER BY reviews DESC LIMIT 10;")
                 inf = list(inf)
                 res = [list(i) for i in inf]
@@ -165,24 +164,27 @@ def f_stat():
                     item[8] = str(item[8])
                     item[17] = str(item[17]).replace("Publisher", "")
                 return json.dumps(res)
-            if json_request['requestType'] == "count_of_all_games":
+            if request.form['requestType'] == "count_of_all_games":
                 inf = get_res("SELECT COUNT(overall) FROM games;")
                 inf = inf[0][0]
                 res = inf
                 return json.dumps(res)
-            if json_request['requestType'] == "count_of_all_free_games":
+            if request.form['requestType'] == "count_of_all_free_games":
                 inf = get_res("SELECT AVG(static) FROM games;")
                 inf = float(inf[0][0])
                 res = "{0:.2f}".format(inf)
                 return json.dumps(res)
-            if json_request['requestType'] == "user_tags":
+            if request.form['requestType'] == "user_tags":
                 inf = get_res("SELECT user_tags FROM games")
                 res = check(inf, "tg")
                 return json.dumps(res)
-            if json_request['requestType'] == "genre":
+            if request.form['requestType'] == "genre":
                 inf = get_res("SELECT details FROM games")
                 res = check(inf, "ge")
                 return json.dumps(res)
+            elif request.form['requestType'] == "averageDiscount":
+                result = get_res("SELECT AVG(discount * 0.01 * original_price) FROM games WHERE discount > 0")
+                return json.dumps(result[0])
     return redirect(url_for("f_home"))
 
 
