@@ -3,7 +3,7 @@
 <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 
 
-<script src="../static/js/jquery-2.2.4.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 <script>
 $(document).ready(function(){
   $("#sign-up-link").on('click', function(event) {
@@ -26,7 +26,7 @@ $(document).ready(function(){
 
 <style>
 body{
-  /*background-image:url("../static/pictures/bg.jpg");*/
+  background-image:url("static/pictures/bg.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed;
   min-height: 500px;
@@ -42,9 +42,8 @@ body{
   background-color:rgba(255,255,255,.8);
 }
 #login-dp .help-block{
-    font-size:12px
 }
-
+  font-size:12px
 #login-dp .bottom{
   background-color:rgba(255,255,255,.8);
   border-top:1px solid #ddd;
@@ -165,26 +164,57 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
 
 
 
-  <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>-->
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
+</script>
      <script type=text/javascript>
-    $(function() {
-      $('#main_search').bind('click',function() {
-          var storage = $("#storage-range").prop("value").split(";");
-          var ram = $("#ram-range").prop("value").split(";");
-          var price = $("#price-range").prop("value").split(";");
-          var discount = $('#discount-range').prop("value").split(";");
-          var review = $('#review').prop("value").split(";");
-//          var staitcs = $('#statics').prop("value").split(";");         //
-          var overall = $('#overall').prop("value").split(";");
-          var date = $('#date-range');
-//          prop("value").split(";");
 
+    $(function() {
+     
+      $('#main_search').bind('click',function() {
+        console.log('test2');
+        
+       var storage = $("#storage-range").data("ionRangeSlider");
+       var storage_min = storage.result.from;
+       var storage_max = storage.result.to;
+
+       var ram = $("#ram-range").data("ionRangeSlider");
+       var ram_min = ram.result.from;
+       var ram_max = ram.result.to;
+
+       var price = $("#price-range").data("ionRangeSlider");
+       var price_min = price.result.from;
+       var price_max = price.result.to;
+
+       var discount = $("#discount-range").data("ionRangeSlider");
+       var discount_min = discount.result.from;
+       var discount_max = discount.result.to;
+
+       /*var review = $('#static').data("ionRangeSlider");
+       var review_min = review.result.from;
+       var review_max = review.result.to;*/
+
+       var review = $("#review").data("ionRangeSlider");
+       var review_min = review.result.from;
+       var review_max = review.result.to;
+
+       var statics = $("#static").data("ionRangeSlider");
+       var statics_min = statics.result.from;
+       var statics_max = statics.result.to;
+
+       var overall = $("#overall").data("ionRangeSlider");
+       var overall_min = overall.result.from;
+       var overall_max = overall.result.to;
+
+       var release_date = $("#date-range").data("ionRangeSlider");
+       var release_date_min = release_date.result.from;
+       var release_date_max = release_date.result.to;
+ 
         $.getJSON('/search', {
-          min_storage : storage[0],
-          max_storage : storage[1],
-          min_memory : ram[0],
-          max_memory : ram[1],
+          min_storage : storage_min,
+          max_storage : storage_max,
+          min_memory : ram_min,
+          max_memory : ram_max,
           min_os: $('#min_os').val(),
           rec_os: $('#rec_os').val(),
           min_graphics: $('#min_graphics').val(),
@@ -193,22 +223,20 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
           rec_directX: $('#rec_directx').val(),
           min_processor: $('#min_processor').val(),
           rec_processor: $('#rec_processor').val(),
-          min_price: price[0],
-          max_price: price[1],
-          min_discount: discount[0],
-          max_discount: discount[1],
-          min_reviews: review[0],
-          max_reviews: review[1],
-//          min_statics: staitcs[0],
-//          max_statics: staitcs[1],
-          min_statics: "",
-          max_statics: "",
-          min_overall: overall[0],
-          max_overall: overall[1],
+          min_price: price_min,
+          max_price: price_max,
+          min_discount: discount_min,
+          max_discount: discount_max,
+          min_reviews: review_min,
+          max_reviews: review_max,
+          min_statics: statics_min,
+          max_statics: statics_max,
+          min_overall: overall_min,
+          max_overall: overall_max,
           genre: $('#details').val(),
           word: $('#search-text').val(),
-          min_release_date:date[0],
-          max_release_date:date[1]
+          min_release_date:release_date_min,
+          max_release_date:release_date_max
         }, function(data) {
           document.getElementById("result").innerHTML="";// $("#result").text(data);
           // for (i = 1; i < data.length; i++) {
@@ -219,7 +247,7 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
       // document.getElementById("result").innerHTML+=data[key]+"<br><br><br><br><br><br>";
 
 
-      document.getElementById("result").innerHTML+="<article class='search-result row' id = 'result'>"+
+      document.getElementById("result").innerHTML+=+"<article class='search-result row' id = 'result'>"+
   			"<div class='col-xs-12 col-sm-12 col-md-3'>"+
   				"<a href='#' title='Chronicle' class='thumbnail'><img src='"+data[key][5]+"' alt='1' style='border=0px;'/></a></div>"+
   			"<div class='col-xs-12 col-sm-12 col-md-2'>"+
@@ -227,7 +255,7 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
   					"<li style = 'word-wrap: break-word;'><i class='glyphicon glyphicon-calendar'></i> <span style = 'word-wrap: break-word;'>"+data[key][2]+"</span></li>"+
   					"<li style = 'word-wrap: break-word;'><i class='glyphicon glyphicon-tags'></i> <span style = 'word-wrap: break-word;'>"+data[key][3]+"</span></li>"+
   				"</ul></div>"+
-  			"<div class='col-xs-12 col-sm-12 col-md-7 excerpet' style = 'word-wrap: break-word'>"+
+  			"<div class='col-xs-12 col-sm-12 col-md-7 excerpet' style = 'word-wrap: break-word;'>"+
   				"<h3><a href='#' title='12'>"+data[key][0]+"</a></h3>"+
           "<p>"+data[key][4]+"</p></center>"+
             "<span><a href='"+data[key][1]+"'>+More...</a></span><hr><br>"+
@@ -258,16 +286,12 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/">GamesYouWant</a>
-        <a class="navbar-brand" href="/p_inf">Info</a>
+      <a class="navbar-brand" href="#">GamesYouWant</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav navbar-right">
-        <li><p class="navbar-text">Hi {{ Username }}  |  </p></li>
-        <li><a class="navbar-brand" href="/logout">Logout</a></li>
-      <!--<ul class="nav navbar-nav">
+      <ul class="nav navbar-nav">
         <li class="active"><a href="#">Games</a></li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Category<span class="caret"></span></a>
@@ -295,14 +319,14 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
 					 <div class="row">
 							<div class="col-md-12">
 
-								 <form class="form" role="form" method="post" action="/login" accept-charset="UTF-8" id="login-nav">
+								 <form class="form" role="form" method="post" action="login" accept-charset="UTF-8" id="login-nav">
 										<div class="form-group">
 											 <label class="sr-only" for="exampleInputEmail2">Email address</label>
-											 <input type="text" class="form-control" name = "username" id="username" placeholder="Username" required>
+											 <input type="text" class="form-control" id="username" placeholder="Username" required>
 										</div>
 										<div class="form-group">
 											 <label class="sr-only" for="exampleInputPassword2" >Password</label>
-											 <input type="password" class="form-control" name = "password" id="password" placeholder="Password" required>
+											 <input type="password" class="form-control" id="password" placeholder="Password" required>
                                              <div class="help-block text-right"><a id="forget-pass" href="#" onclick="forgetpass()">Forget the password ?</a></div>
 										</div>
 										<div class="form-group">
@@ -310,7 +334,7 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
 										</div>
 										<div class="checkbox">
 											 <label>
-											 <input type="checkbox" name="check"> keep me logged-in
+											 <input type="checkbox"> keep me logged-in
 											 </label>
 										</div>
 								 </form>
@@ -320,7 +344,7 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
 							</div>
               <br>
 					 </div>
-				</li>-->
+				</li>
 			</ul>
         </li>
       </ul>
@@ -352,7 +376,7 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
                 <input type="hidden" name="search_param" value="all" id="search_param">
                 <input type="text" class="form-control" name="x" id = "search-text" placeholder="Search ...">
                 <span class="input-group-btn">
-                    <button class="btn btn-default" id="main_search" onclick="javascript:void();" type="button"><span onclick="javascript:void();" class="glyphicon glyphicon-search"></span></button>
+                    <button class="btn btn-default" id="main_search" onclick="javascript:void" type="button"><span onclick="javascript:void" class="glyphicon glyphicon-search"></span></button>
                 </span>
             </div>
         </div>
@@ -537,6 +561,7 @@ DirectX:
 
 
 <script type="text/javascript">
+
 $("#price-range").ionRangeSlider({
   type: "double",
   grid: true,
@@ -628,6 +653,8 @@ $("#date-range").ionRangeSlider({
         return moment(num, "X").format("LL");
     }
 });
+
+
 </script>
 
 

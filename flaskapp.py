@@ -53,7 +53,7 @@ def f_sign_up():
 @app.route('/search', methods=['GET'])
 def f_search():
     if session.get("user"):
-        search_dict = {}
+        search_dict = dict()
         search_dict["min_storage"] = request.args.get("min_storage", "", type=str)
         search_dict["max_storage"] = request.args.get("max_storage", "", type=str)
         search_dict["min_memory"] = request.args.get("min_memory", "", type=str)
@@ -81,8 +81,10 @@ def f_search():
         search_dict["min_release_date"] = request.args.get("min_release_date", "", type=str)
         search_dict["max_release_date"] = request.args.get("max_release_date", "", type=str)
         print "123"
-        if search(search_dict):
-            stup = list(search(search_dict))
+        search_result = search(search_dict)
+        print search_result
+        if search_result:
+            stup = list(search_result)
             slis = [list(i) for i in stup]
             for item in slis:
                 item[2] = str(item[2])

@@ -443,75 +443,78 @@ def search(input_dict):
     :param input_dict:dict
     :return:tuple|int
     """
-    try:
-        for encoder in input_dict:
-            input_dict[encoder] = input_dict[encoder].encode("utf-8")
-        static_possible_search_args = ["word", "overall", "genre"]
-        possible_search_args = ["min_storage", "max_storage", "min_price", "max_price"]
-        possible_search_args += ["min_discount", "max_discount", "min_statics", "max_statics", "min_release_date"]
-        possible_search_args += ["max_release_date", "min_os", "rec_os", "min_processor", "rec_processor"]
-        # possible_search_args += ["max_release_date", "min_os", "min_processor"]
-        possible_search_args += ["min_memory", "rec_memory", "min_graphics", "rec_graphics", "min_directX"]
-        # possible_search_args += ["min_memory", "min_graphics", "min_directX"]
-        possible_search_args += ["rec_directX", "min_reviews", "max_reviews"]
-        # possible_search_args += ["min_reviews", "max_reviews"]
-        search_string = ""
-        connection_obj = MySql.connection()
-        with connection_obj:
-            cursor = connection_obj.cursor()
-            for arg in possible_search_args:
-                if input_dict[arg]:
-                    if arg == "min_price":
-                        search_string += "purchase_price <= " + input_dict[arg] + " OR after_discount <= " + \
-                         input_dict[arg] + "IF after_discount > 0 OR "
-                    elif arg == "max_price":
-                        search_string += "purchase_price >= " + input_dict[arg] + " OR after_discount >= " + \
-                                         input_dict[arg] + "IF after_discount > 0 OR "
-                    elif arg == "min_discount":
-                        search_string += "discount >= " + input_dict[arg] + " AND "
-                    elif arg == "max_discount":
-                        search_string += "discount <= " + input_dict[arg] + " AND "
-                    elif arg == "min_statics":
-                        search_string += "static >= " + input_dict[arg] + " AND "
-                    elif arg == "max_statics":
-                        search_string += "static <= " + input_dict[arg] + " AND "
-                    elif arg == "min_release_date":
-                        search_string += "release_date >= " + input_dict[arg] + " AND "
-                    elif arg == "max_release_date":
-                        search_string += "release_date <= " + input_dict[arg] + " AND "
-                    elif arg == "min_reviews":
-                        search_string += "reviews >= " + input_dict[arg] + " AND "
-                    elif arg == "max_reviews":
-                        search_string += "reviews <= " + input_dict[arg] + " AND "
-                    elif arg.split("_")[0] == "min":
-                        search_string += arg + " <= " + input_dict[arg] + " AND "
-                    elif arg.split("_")[0] == "rec":
-                        search_string += arg + " >= " + input_dict[arg] + " AND "
-                    else:
-                        search_string += arg + " = " + input_dict[arg] + " AND "
-            if search_string.split(" ")[-2] == "AND":
-                search_string = search_string[:len(search_string) - 5]
-            if (input_dict["word"] or input_dict["overall"]) and (input_dict["word"] or input_dict["genre"]) and \
-                    (input_dict["overall"] or input_dict["genre"]):
-                for arg in static_possible_search_args:
-                    if arg:
-                        like_string = "LIKE %s', (unicode(u'%' " + input_dict[arg] + "u'%')"
-                        search_string += "title " + like_string + " OR "
-                        search_string += "description " + like_string + " OR "
-                        search_string += "user_tags " + like_string + " OR "
-                        search_string += "details " + like_string + " OR "
-            if search_string.split(" ")[-2] == "Or":
-                search_string = search_string[:len(search_string) - 5]
-        # cursor.execute("SELECT games.title,games.url,games.release_date,games.details,games.description,games.id,"
-        # "summary.image FROM games WHERE " + search_string + "INNER JOIN summary ON summary.id = games.summary_id")
-        cursor.execute("SELECT games.title,games.url,games.release_date,games.details,games.description,games.id FROM games WHERE " + search_string)
-        result = cursor.fetchall()
-        print result
-        return result
+    # try:
+    for encoder in input_dict:
+        input_dict[encoder] = input_dict[encoder].encode("utf-8")
+    input_dict.update({'overall': ""})
+    static_possible_search_args = ["word", "overall", "genre"]
+    possible_search_args = ["min_storage", "max_storage", "min_price", "max_price"]
+    possible_search_args += ["min_discount", "max_discount", "min_statics", "max_statics", "min_release_date"]
+    possible_search_args += ["max_release_date", "min_os", "rec_os", "min_processor", "rec_processor"]
+    # possible_search_args += ["max_release_date", "min_os", "min_processor"]
+    possible_search_args += ["min_memory", "rec_memory", "min_graphics", "rec_graphics", "min_directX"]
+    # possible_search_args += ["min_memory", "min_graphics", "min_directX"]
+    possible_search_args += ["rec_directX", "min_reviews", "max_reviews"]
+    # possible_search_args += ["min_reviews", "max_reviews"]
+    search_string = ""
+    connection_obj = MySql.connection()
+    with connection_obj:
+        cursor = connection_obj.cursor()
+        for arg in possible_search_args:
+            if input_dict[arg] and input_dict[arg] != "All" and input_dict[arg] != "Al":
+                if arg == "min_price":
+                    search_string += "purchase_price <= " + input_dict[arg] + " OR after_discount <= " + \
+                     input_dict[arg] + " AND after_discount > 0 OR "
+                elif arg == "max_price":
+                    search_string += "purchase_price >= " + input_dict[arg] + " OR after_discount >= " + \
+                                     input_dict[arg] + " AND after_discount > 0 OR "
+                elif arg == "min_discount":
+                    search_string += "discount >= " + input_dict[arg] + " AND "
+                elif arg == "max_discount":
+                    search_string += "discount <= " + input_dict[arg] + " AND "
+                elif arg == "min_statics":
+                    search_string += "static >= " + input_dict[arg] + " AND "
+                elif arg == "max_statics":
+                    search_string += "static <= " + input_dict[arg] + " AND "
+                elif arg == "min_release_date":
+                    search_string += "release_date >= " + input_dict[arg] + " AND "
+                elif arg == "max_release_date":
+                    search_string += "release_date <= " + input_dict[arg] + " AND "
+                elif arg == "min_reviews":
+                    search_string += "reviews >= " + input_dict[arg] + " AND "
+                elif arg == "max_reviews":
+                    search_string += "reviews <= " + input_dict[arg] + " AND "
+                elif arg == "max_storage":
+                    search_string += "rec_storage LIKE % " + input_dict[arg] + " % AND "
+                elif arg.split("_")[0] == "min":
+                    search_string += arg + " <= " + input_dict[arg] + " AND "
+                elif arg.split("_")[0] == "rec":
+                    search_string += arg + " >= " + input_dict[arg] + " AND "
+                else:
+                    search_string += arg + " = " + input_dict[arg] + " AND "
+        if search_string.split(" ")[-2] == "AND":
+            search_string = search_string[:len(search_string) - 5]
+        if (input_dict["word"] or input_dict["overall"]) and (input_dict["word"] or input_dict["genre"]) and \
+                (input_dict["overall"] or input_dict["genre"]):
+            for arg in static_possible_search_args:
+                if arg:
+                    like_string = "LIKE %s', (unicode(u'%' " + input_dict[arg] + "u'%')"
+                    search_string += "title " + like_string + " OR "
+                    search_string += "description " + like_string + " OR "
+                    search_string += "user_tags " + like_string + " OR "
+                    search_string += "details " + like_string + " OR "
+        if search_string.split(" ")[-2] == "OR":
+            search_string = search_string[:len(search_string) - 5]
+    cursor.execute("SELECT games.title,games.url,games.release_date,games.details,games.description,games.id,"
+    "summary.image FROM games INNER JOIN summary ON games.id = summary.game_id WHERE " + search_string)
+    # cursor.execute("SELECT games.title,games.url,games.release_date,games.details,games.description,games.id FROM games WHERE " + search_string)
+    result = cursor.fetchall()
+    print result
+    return result
 
-    except Exception as e:
-        print e
-        return 0
+    # except Exception as e:
+    #     print e
+    #     return 0
 
 
 def get_post(identifier):
@@ -652,8 +655,6 @@ def get_gpu(title):
         return 0
 
 
-
-
 def add_new_game(input_list):
     connection_onj = MySql.connection()
     print input_list
@@ -709,7 +710,7 @@ def add_new_game(input_list):
                 if not price:
                     price = "0"
 
-                print "UPDATE summary SET title = %s, url = %s,release_date = %s,discount = %s,price = %s,final_price = %s,image = %s WHERE url = %s"%(title, url, release_date, discount, price,final_price, image, url)
+
                 if check_summary_exist(title, url):
                     return
                 else:
