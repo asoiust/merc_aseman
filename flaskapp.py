@@ -215,6 +215,13 @@ def f_go_info():
     return render_template("main.html", items=get_4())
 
 
+@app.route("/logout")
+def f_logout():
+    if session.get("user"):
+        session.clear()
+    return render_template("main.html", items=get_4())
+
+
 def get_4():
     inf = get_res("SELECT id, description FROM games ORDER BY static DESC LIMIT 4;")
     inf = list(inf)
@@ -224,5 +231,7 @@ def get_4():
         inf = get_res(st)
         item.append(str(inf[0][0]))
     return res
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=4958)
