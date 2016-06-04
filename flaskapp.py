@@ -26,7 +26,6 @@ def f_home():
 def f_login():
     if request.method == 'POST':
         user = request.form['username']
-        print "inja"
         passw = request.form['password']
         check = request.form.getlist('check')
         if check_user(user, passw):
@@ -136,7 +135,7 @@ def f_stat():
                 res = [very_positive[0][0], positive[0][0], overwhelmingly_positive[0][0], mostly_positive[0][0]]
                 return json.dumps(res)
             if json_request['requestType'] == "topstatics":
-                inf = get_res("SELECT * FROM games ORDER BY statics DESC LIMIT 10;")
+                inf = get_res("SELECT * FROM games ORDER BY static DESC LIMIT 10;")
                 inf = list(inf)
                 res = [list(i) for i in inf]
                 for item in res:
