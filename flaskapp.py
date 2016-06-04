@@ -222,6 +222,20 @@ def f_logout():
     return render_template("main.html", items=get_4())
 
 
+@app.route('/lab', methods=['GET'])
+def f_lab():
+    return render_template("main.html", items=get_4())
+
+
+@app.route('/game/<int:game_id>')
+def f_g_p_game(game_id):
+    if session.get("user"):
+        inf = list(get_res("SELECT id, title, description, min_processor, min_memory, min_graphics, min_storage, rec_storage, rec_processor, rec_memory, rec_graphics FROM games WHERE id=" + str(
+            game_id) + ";")[0])
+        res = str(get_res("SELECT image FROM summary WHERE game_id=" + str(game_id) + ";")[0][0])
+        inf.append(res)
+        return render_template("game.html", item=inf, Username=session["user"])
+
 def get_4():
     inf = get_res("SELECT id, description FROM games ORDER BY static DESC LIMIT 4;")
     inf = list(inf)
