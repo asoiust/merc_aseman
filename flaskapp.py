@@ -85,7 +85,9 @@ def f_search():
             slis = [list(i) for i in stup]
             for item in slis:
                 item[2] = str(item[2])
-                item[3] = str(item[3]).replace("Publisher", "")
+                item[3] = str(item[3])
+                d = item[3].index("Publisher")
+                item[3] = item[3][:d]
             return json.dumps(slis)
         return "0"
     return redirect(url_for("f_home"))
@@ -114,7 +116,9 @@ def f_game():
         if get_post(inf):
             stup = list(get_post(inf))
             stup[8] = str(stup[8])
-            stup[17] = str(stup[17]).replace("Publisher", "")
+            stup[17] = str(stup[17])
+            d = stup[17].index("Publisher")
+            stup[17] = stup[17][:d]
             return json.dumps(stup)
         return "0"
     return redirect(url_for("f_home"))
@@ -124,7 +128,6 @@ def f_game():
 def f_stat():
     if session.get("user"):
         if request.method == 'POST':
-            # if json_request['requestType'] == "overall":
             if request.form['requestType'] == "overall":
                 very_positive = get_res("SELECT COUNT(overall) FROM games WHERE overall='Very Positive';")
                 positive = get_res("SELECT COUNT(overall) FROM games WHERE overall='Positive';")
@@ -139,7 +142,9 @@ def f_stat():
                 res = [list(i) for i in inf]
                 for item in res:
                     item[8] = str(item[8])
-                    item[17] = str(item[17]).replace("Publisher", "")
+                    item[17] = str(item[17])
+                    d = item[17].index("Publisher")
+                    item[17] = item[17][:d]
                 return json.dumps(res)
             if request.form['requestType'] == "aveofall":
                 ave_of_no_discount = float(get_res("SELECT AVG(purchase_price) FROM games WHERE discount='0';")[0][0])
@@ -154,7 +159,9 @@ def f_stat():
                 res = [list(i) for i in inf]
                 for item in res:
                     item[8] = str(item[8])
-                    item[17] = str(item[17]).replace("Publisher", "")
+                    item[17] = str(item[17])
+                    d = item[17].index("Publisher")
+                    item[17] = item[17][:d]
                 return json.dumps(res)
             if request.form['requestType'] == "topreviews":
                 inf = get_res("SELECT * FROM games ORDER BY reviews DESC LIMIT 10;")
@@ -162,18 +169,24 @@ def f_stat():
                 res = [list(i) for i in inf]
                 for item in res:
                     item[8] = str(item[8])
-                    item[17] = str(item[17]).replace("Publisher", "")
+                    item[17] = str(item[17])
+                    d = item[17].index("Publisher")
+                    item[17] = item[17][:d]
                 return json.dumps(res)
             if request.form['requestType'] == "count_of_all_games":
                 inf = get_res("SELECT COUNT(overall) FROM games;")
                 inf = inf[0][0]
                 res = inf
-                return json.dumps(res)
-            if request.form['requestType'] == "count_of_all_free_games":
+                return json.dumps((res,))
+            if request.form['requestType'] == "avg_static":
                 inf = get_res("SELECT AVG(static) FROM games;")
                 inf = float(inf[0][0])
                 res = "{0:.2f}".format(inf)
-                return json.dumps(res)
+                return json.dumps((res,))
+            if request.form['requestType'] == "count_of_all_free_games":
+                inf = get_res("SELECT COUNT(user_tags) FROM games WHERE user_tags LIKE '%Free to Play%';")
+                res = int(inf[0][0])
+                return json.dumps((res,))
             if request.form['requestType'] == "user_tags":
                 inf = get_res("SELECT user_tags FROM games")
                 res = check(inf, "tg")
@@ -182,7 +195,7 @@ def f_stat():
                 inf = get_res("SELECT details FROM games")
                 res = check(inf, "ge")
                 return json.dumps(res)
-            elif request.form['requestType'] == "averageDiscount":
+            if request.form['requestType'] == "averageDiscount":
                 result = get_res("SELECT AVG(discount * 0.01 * original_price) FROM games WHERE discount > 0")
                 return json.dumps(result[0])
     return redirect(url_for("f_home"))
