@@ -2,9 +2,9 @@
 __author__ = 'sargdsra'
 
 from flask import Flask, render_template, session, request, json, redirect, url_for
-from database import check_user, add_user, search, get_summary, get_post, create_s, get_res
+from database import check_user, add_user, search, get_summary, get_post, create_s, get_res, get_cpu, get_gpu
 from req import check
-from app import go_in_link_ver4
+from app import go_in_link_ver4, refresh
 
 app = Flask(__name__)
 app.secret_key = '\xa2\x1a\xb2B\x7f\x06\x95q\x00&\xe2\x0e\x89C\xbe\x84\xbb\xbf\xb1\x917\x96T\xbb'
@@ -53,7 +53,7 @@ def f_sign_up():
 @app.route('/search', methods=['GET'])
 def f_search():
     if session.get("user"):
-        search_dict = dict()
+        search_dict = {}
         search_dict["min_storage"] = request.args.get("min_storage", "", type=str)
         search_dict["max_storage"] = request.args.get("max_storage", "", type=str)
         search_dict["min_memory"] = request.args.get("min_memory", "", type=str)
@@ -81,10 +81,8 @@ def f_search():
         search_dict["min_release_date"] = request.args.get("min_release_date", "", type=str)
         search_dict["max_release_date"] = request.args.get("max_release_date", "", type=str)
         print "123"
-        search_result = search(search_dict, "0")
-        print search_result
-        if search_result:
-            stup = list(search_result)
+        if search(search_dict, "0"):
+            stup = list(search(search_dict, "0"))
             slis = [list(i) for i in stup]
             for item in slis:
                 item[2] = str(item[2])
@@ -227,7 +225,28 @@ def f_logout():
 
 @app.route('/lab', methods=['GET'])
 def f_lab():
-    return render_template("main.html", items=get_4())
+    if session.get("user"):
+        typ = request.args.get("type", "", type=str)
+        print typ
+        print "123"
+        if typ == 'gpu':
+            m_gpu = request.args.get("my_gpu", "", type=str)
+            g_gpu = request.args.get("game_gpu", "", type=str)
+            my_gpu1 = list(get_gpu(m_gpu))
+            game_gpu1 = list(get_gpu(g_gpu))
+            mgpu = [list(i) for i in my_gpu1]
+            ygpu = [list(i) for i in game_gpu1]
+            print "456"
+            return json.dumps([mgpu, ygpu])
+        elif typ == 'cpu':
+            m_cpu = request.args.get("my_cpu", "", type=str)
+            g_cpu = request.args.get("game_cpu", "", type=str)
+            my_cpu1 = list(get_gpu(m_cpu))
+            game_cpu1 = list(get_gpu(g_cpu))
+            mcpu = [list(i) for i in my_cpu1]
+            ycpu = [list(i) for i in game_cpu1]
+            return json.dumps([mcpu, ycpu])
+    return redirect(url_for("f_home"))
 
 
 @app.route('/game/<int:game_id>')
@@ -237,9 +256,19 @@ def f_g_p_game(game_id):
         go_in_link_ver4(inf)
         inf = list(get_res("SELECT id, title, description, min_processor, min_memory, min_graphics, min_storage, rec_storage, rec_processor, rec_memory, rec_graphics FROM games WHERE id=" + str(
             game_id) + ";")[0])
+        if inf:
+            return ('', 204)
         res = str(get_res("SELECT image FROM summary WHERE game_id=" + str(game_id) + ";")[0][0])
         inf.append(res)
         return render_template("game.html", item=inf, Username=session["user"])
+    return render_template("main.html", items=get_4())
+
+
+@app.route('/ref')
+def f_ref():
+    if session.get("user"):
+        refresh(1)
+        return ('', 204)
     return render_template("main.html", items=get_4())
 
 
@@ -252,6 +281,13 @@ def get_4():
         inf = get_res(st)
         item.append(str(inf[0][0]))
     return res
+
+
+@app.route("/p_lab")
+def f_go_lab():
+    if session.get("user"):
+        return render_template("lab.html")
+    return render_template("main.html", items=get_4())
 
 
 if __name__ == '__main__':
