@@ -248,8 +248,9 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
 
 
       document.getElementById("result").innerHTML+=+"<article class='search-result row' id = 'result'>"+
-  			"<div class='col-xs-12 col-sm-12 col-md-3'>"+
-  				"<a href='#' title='Chronicle' class='thumbnail'><img src='"+data[key][5]+"' alt='1' style='border=0px;'/></a></div>"+
+  			"<div class='col-xs-12 col-sm-12 col-md-3' style='background: none'>"+
+  				"<a href='#' title='Chronicle' class='thumbnail' style='background: none;border:none;'>" +
+              "<img src='"+data[key][6]+"' alt='1' style='border=0px; width:100%'/></a></div>"+
   			"<div class='col-xs-12 col-sm-12 col-md-2'>"+
   				"<ul class='meta-search'>"+
   					"<li style = 'word-wrap: break-word;'><i class='glyphicon glyphicon-calendar'></i> <span style = 'word-wrap: break-word;'>"+data[key][2]+"</span></li>"+
@@ -258,7 +259,7 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
   			"<div class='col-xs-12 col-sm-12 col-md-7 excerpet' style = 'word-wrap: break-word;'>"+
   				"<h3><a href='#' title='12'>"+data[key][0]+"</a></h3>"+
           "<p>"+data[key][4]+"</p></center>"+
-            "<span><a href='"+data[key][1]+"'>+More...</a></span><hr><br>"+
+            "<span><a href='game/"+ data[key][5] + "'>+More...</a></span><hr><br>"+
   			"</div>"+
   			"<span ></span>"+
         "</article>";
@@ -266,6 +267,7 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
 
     });
         });
+          document.body.innerHTML.replace("NaN", "");
         return false;
       });
     });
