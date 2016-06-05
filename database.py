@@ -723,6 +723,17 @@ def add_new_game(input_list):
                 connection_onj.commit()
 
 
+def get_new_game():
+    try:
+        connection_obj = MySql.connection()
+        with connection_obj:
+            cursor = connection_obj.cursor()
+            cursor.execute("SELECT * FROM new_games WHERE 1")
+            return cursor.fetchall()
+    except Exception as e:
+        print e
+        return 0
+
 def create_s():
     create_game_table()
     create_summary_table()
