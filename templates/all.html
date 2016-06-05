@@ -169,65 +169,26 @@ hgroup h2.lead { font: normal normal 1.125em "Roboto",Arial,Verdana,sans-serif; 
 </script>
      <script type=text/javascript>
     $(function() {
-      $('#comp').bind('click',function() {
-        $.getJSON('/lab', {
-          type : $('#type-lab').val(),
-          my_gpu: $('#my_gpu').val(),
-          my_cpu:$('#my_cpu').val(),
-          game_gpu:$('#game_gpu').val(),
-          game_cpu:$('#game_cpu').val()
-        }, function(data) {
-            console.log("123");
-document.getElementById("result").innerHTML+='<hr><h2>Results</h2><br><P><b>Check Your GPU,CPU in Result List</b><br><br>'+
-'GPUs List '+
-'list1'+
-'CPUs List:';
- document.getElementById("gpu").innerHTML='';
-            document.getElementById("cpu").innerHTML='';
-            document.getElementById("result").innerHTML='';
-            document.getElementById("gpu").innerHTML+='gpu_________<li>'+data[key]+'<li><br>';
-            document.getElementById("cpu").innerHTML+='cpu_____<li>'+data[key]+'<li><br>';
-
-    Object.keys(data).forEach(function(key){
-
+        
+        $.getJSON('/search', function(data){
+Object.keys(data).forEach(function(key){
+          document.getElementById("all").innerHTML='<div id= "ad-search" style = "width:auto;background-color:rgb' + '(255,192,0);padding:20px;opacity:0.9;color:white;">'+
+'<h3 align= "center" style = "color:black" >Game Name</h3>'+
+'</div>'+
+'<img src="http://cdn.addictinggames.com/newGames/game-links/must-a-mine-dupe-links/must-a-mine-dupe-links.png?c=7" style ="width:auto;"/>'+
+'<div id= "ad-search" style = "width:inherit;background-color:rgb(255,192,0);padding:20px;opacity:0.9;color:white;">'+
+'<h3 align= "center" style = "color:black" >Discriptions</h3>'+
+'</div>'+
+'<div id= "ad-search" style = "width:inherit;background-color:black;padding:20px;opacity:0.9;color:white;border: solid rgb(255,192,0);word-break:break-all;">'+
+'<p align="left"> Your Discription Here :</p>'+
+'</div>'+
+'<br>'+
+'<hr>'
+})
     });
-        });
-      });
-    });
-
-
+});
   </script>
 
-
-<script>
-document.getElementById("my_cpu").disabled = true;
-document.getElementById("game_cpu").disabled = true;
-
-function changetype(){
-var type = document.getElementById("type-lab").value;
-if (type == 'cpu'){
-document.getElementById("my_gpu").disabled = true;
-document.getElementById("game_gpu").disabled = true;
-
-document.getElementById("my_cpu").disabled = false;
-document.getElementById("game_cpu").disabled = false;
-
-
-}
-
-
-if (type == 'gpu'){
-document.getElementById("my_gpu").disabled = false;
-document.getElementById("game_gpu").disabled = false;
-
-document.getElementById("my_cpu").disabled = true;
-document.getElementById("game_cpu").disabled = true;
-
-
-}
-
-}
-</script>
 
 </head>
 
@@ -308,41 +269,12 @@ document.getElementById("game_cpu").disabled = true;
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav><center>
-<div id= "ad-search" style = "width:250px;background-color:rgb(255,192,0);padding:20px;opacity:0.80;color:black;height:100px;">
-<h3 align="center">Labratoar</h3><br>
+<div id= "ad-search" style = "width:250px;background-color:rgb(255,192,0);border-radius:20px 20px 0px 0px;padding:20px;opacity:0.80;color:black;height:100px;">
+<h3 align="center">Games List</h3><br>
 </div>
 <div id= "ad-search" style = "width:80%;background-color:black;padding:20px;opacity:0.9;color:white;">
 <center>
-
-<P><b>Please Select If You Want to check your GPU or CPU :</b>
-<p style='color:black'>
-<select id ="type-lab" onchange="changetype()">
-  <option value="gpu" selected>GPU</option>
-  <option value="cpu">CPU</option>
-</select>
-</P>
-Your GPU Pattern:
-<input type = "text" style="color:black;" id='my_gpu'>
- | Game GPU Pattern:
-<input type = "text" style="color:black;" id='game_gpu'>
-</p>
-<hr>
-<P>
-Your CPU Pattern:
-<input type = "text" style="color:black;" id='my_cpu' >
- | Game CPU Pattern:
-<input type = "text" style="color:black;" id='game_cpu'>
-</p>
-<button id="comp" type="button" class="btn btn-primary" style="background-color:rgb(255,192,0);color:black;" onclick='javascript:void()'>Compare</button>
-
-<p id= "result"></p>
-<p id= "list">
-<p id='gpu'>
-<p id='cpu'>
-</p></p></p>
-</div>
-
-</div>
-<br><br>
+<p id='all'></p>
+</center>
 </body>
 <html>
